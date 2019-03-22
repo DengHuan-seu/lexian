@@ -1,0 +1,142 @@
+.main > h2{
+    color: #FF4200;
+    padding-top: 20px;
+}
+.carTitle{
+    margin-top: 20px;
+    border-bottom: 1px solid #e9e5e3;
+}
+.carTitle > span{
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+}
+.active{
+    border-bottom: 2px solid #FF4200;
+}
+
+.goodsTitle >table{
+    width: 100%;
+}
+.goodsTitle > table td{
+    height: 60px;
+    line-height: 60px;
+}
+.goodsDetails .bg{
+    padding: 10px 0;
+    text-indent: 20px
+}
+.goodsDetails >.bg  span{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 50px;
+    background: url(../icons/smalllogo.png)no-repeat 20% center;
+}
+.goodsDetails .lists table{
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #e9e5e3;
+    margin-top: 10px;
+
+}
+.tdd1{
+    width: 200px;
+}
+.tdd2{
+    width: 150px;
+}
+.tdd3{
+    width: 200px;
+}
+.tdd3.tdd4,.tdd5,.tdd6{
+	text-align:center
+}
+.tdd4{
+    width: 200px;
+}
+.tdd5{
+    width: 100px;
+}
+.tdd6{
+    width: 100px;
+}
+.tdd7{
+    width: 80px;
+}
+.td1{
+    width: 200px;
+    text-align: center;
+}
+.td2{
+    width: 150px;
+    text-align:center;
+}
+.td3{
+    width: 200px;
+    line-height: 30px;
+}
+.td4{
+    width: 200px;
+}
+.td5{
+    width: 100px;
+}
+.td6{
+    width: 100px;
+}
+.td7{
+    width: 80px;
+}
+.td3 >p{
+    text-align: left;
+}
+.td3 .p1{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient: vertical;
+}
+.td3 .p2{
+    margin-top: 20px;
+}
+.settleAccounts{
+    margin-top: 20px;
+}
+.settleAccounts table{
+    width: 100%;
+    border: 1px solid #e9e5e3;
+}
+.ttd1{
+    text-indent: 20px;
+    width:200px;
+}
+.paddingLeft{
+    padding-left: 5px;
+}
+.span1,.span3,.td7,.tta{
+    cursor: pointer;
+}
+.goodsDetails .span1,.goodsDetails .span3{
+    width: 30px;
+    height: 20px;
+    line-height: 20px;
+}
+.goodsDetails .span1,.goodsDetails .span2,.goodsDetails .span3{
+    text-align: center;
+    border: 1px solid #e9e5e3;
+    display: inline-block;
+    background:none;
+}
+.goodsDetails .span2{
+    height: 30px;
+    line-height: 30px;
+    width: 40px;
+}
+.tta{
+    text-align: right;
+}
+

@@ -1,0 +1,164 @@
+@font-face {
+	font-family: "msyh";
+	src: url("font/msyh.ttf");
+}
+
+body,html {
+	height: 100%;
+}
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
+}
+
+.footer {
+	width: 100%;
+	left: 0;
+	bottom: 0;
+}
+
+.main {
+	width: 100%;
+	background: url("../images/logo-bg.png") no-repeat top center;
+	padding-bottom: 20px;
+	background-size: 100%
+}
+
+.main .title {
+	width: 1210px;
+	margin: 0 auto;
+}
+
+.main .title a {
+	display: inline-block;
+	margin: 40px 0 30px 120px;
+}
+
+.main .left {
+	width: 50%;
+	float: left;
+	text-align: right
+}
+
+.main .left a {
+	display: inline-block;
+	margin-left: 45%;
+}
+
+.main .right {
+	width: 50%;
+	float: right;
+}
+
+.loginBox {
+	width: 380px;
+	height: 460px;
+	background: #ffffff;
+	border-radius: 8px;
+	margin-left: 100px;
+	margin-top: 60px
+}
+
+.boxWrap {
+	width: 84%;
+	margin: 0 auto;
+}
+
+.titleL {
+	padding-top: 25px;
+	padding-bottom: 30px;
+}
+
+.titleL span {
+	font-size: 20px;
+	color: #000000;
+	font-weight: bold;
+	font-family: msyh;
+}
+
+.titleL>a {
+	float: right;
+	color: #39C1D8;
+	font-size: 14px
+}
+
+input {
+	border: 1px solid #DFDDDD;
+	height: 36px;
+	line-height: 36px;
+	width: 100%;
+	text-indent: 1em;
+	font-size: 14px;
+}
+
+.th {
+	padding: 10px 0;
+	font-size: 14px
+}
+
+.th a {
+	float: right;
+	color: #39C1D8;
+}
+
+.lg a {
+	display: inline-block;
+	width: 100%;
+	background: #ff4200;
+	color: #ffffff;
+	font-size: 14px;
+	text-align: center;
+	margin-top: 30px;
+	height: 38px;
+	line-height: 38px;
+	font-family: msyh;
+	letter-spacing: 3px;
+	border-radius: 4px;
+}
+
+.hz {
+	padding: 20px 0;
+	font-size: 14px
+}
+
+.other li {
+	width: 33%;
+	float: left;
+	text-align: center;
+	padding: 5px 0;
+	text-indent: 30px;
+}
+
+.icon1 {
+	background: url("../icons/ttr1.jpg") no-repeat 20% center;
+}
+
+.icon2 {
+	background: url("../icons/ttr2.jpg") no-repeat 20% center;
+}
+
+.icon3 {
+	background: url("../icons/ttr3.jpg") no-repeat 20% center;
+}
+
+.nav_left {
+	position: relative;
+}
+
+.nav_left>span {
+	position: absolute;
+	left: 100px;
+	top: 25px;
+	font-size: 16px;
+	font-weight: bold
+}
+
+.other a:hover {
+	color: #676565;
+	cursor: default
+}
+
+.other {
+	margin-top: 60px
+}

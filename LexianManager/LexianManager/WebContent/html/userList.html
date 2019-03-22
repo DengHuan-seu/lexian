@@ -1,0 +1,117 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>会员管理
+				</span> <span><img src="../img/rright.jpg" alt="" /></span> <span>查看会员信息</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: 4px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'username',iconCls:'icon-ok'">会员名</div>
+						<div data-options="name:'phone',iconCls:'icon-ok'">手机号</div>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable"></table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, username) {
+					var data = {};
+					if (value) {
+						data[username] = value;
+					}
+					util.fillTable("/user/findUsers.do", data);
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+			init();
+		});
+		function init() {
+			var array = [ [//每个列具体内容
+					{
+						field : 'username',
+						title : '会员名',
+						width : util.getWidth('#content', 0.1)
+					}, {
+						field : 'phone',
+						title : '手机号',
+						width : util.getWidth('#content', 0.2)
+					}, {
+						field : 'lastlogintime',
+						title : '最后登录时间',
+						width : util.getWidth('#content', 0.2)
+					}, {
+						field : 'rec',
+						width : util.getWidth('#content', 0.1),
+						title : '状态',
+						formatter : function(value, rec, index) {
+							if (rec.status == 1) {
+								return '<span style="color:#3399cc">启用</span>';
+							} else {
+								return '<span style="color:red">禁用</span>';
+							}
+						}
+					}, {
+						field : 'minfo',
+						width : util.getWidth('#content', 0.2),
+						title : '操作',
+						formatter : function(value, minfo, index) {
+							var id = minfo.id;
+							var status = minfo.status;
+							if (status == 1) {
+								return '<span><a href=javascript:forbiddenManager(\''
+										+ id + '\') style="color:red">禁用</a></span>';
+							} else {
+								return '<span><a href=javascript:enabledManager(\''
+										+ id + '\') style="color:#3399cc">启用</a></span>';
+							}
+						}
+					} ] ];
+			util.fillTable("/user/findUsers.do", {}, array);
+		};
+		function forbiddenManager(userId) {
+			var data = {
+				id : userId,
+				status : 2
+			};
+			util.differentRequest("/user/updateUser.do", data, "禁用成功");
+			init();
+		};
+		function enabledManager(userId) {
+			var data = {
+				id : userId,
+				status : 1
+			};
+			util.differentRequest("/user/updateUser.do", data, "启用成功");
+			init();
+		};
+	</script>
+</body>
+</html>

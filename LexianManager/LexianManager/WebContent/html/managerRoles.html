@@ -1,0 +1,115 @@
+
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看管理员信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>关联角色</span>
+				<span><a href="javascript:history.go(-1);location.reload()">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="role-name">
+				<span>管理员帐号：</span>
+				<input type="text" id="managerName" disabled="disabled" style="outline: none;" />
+			</div>
+			<div class="role-power" style="margin-top: 10px; margin-bottom: 10px">
+				<span>&nbsp;&nbsp;&nbsp;角色：</span>
+				<div class="inline-block power-list " id="box"></div>
+			</div>
+			<div class="role-save">
+				<a href="javascript:void(0)" id="save">保存</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var name = $.trim(decodeURI(util.getParam("managerName")));
+			var managerId = decodeURI(util.getParam("managerId"));
+			$("#managerName").val(name);
+			$.postAjax("/management/findRoles.do", {}, function(json) {
+				if (json.code) {
+					return asyncbox.tips("数据加载失败", asyncbox.Level.success);
+				}
+				var data = json.rows;
+				for ( var i = 0; i < data.length; i++) {
+					if ((i + 1) % 5 == 0) {
+						$("#box").append(
+							"<span><input type='checkbox' value='?' />?</span><br />"
+									.format(data[i].roleId, data[i].description));
+					} else {
+						$("#box").append(
+							"<span><input type='checkbox' value='?' />?</span>"
+									.format(data[i].roleId, data[i].description));
+					}
+				}
+	
+				$.postAjax("/management/findManagerRoles.do", {
+					managerId : managerId
+				}, function(json) {
+					if (json.code) {
+						return asyncbox.tips("数据加载失败", asyncbox.Level.success);
+	
+					}
+					var data = json.rows || [];
+					for ( var index in data) {
+						$("input:checkbox[value='" + data[index].roleId + "']").attr("checked", true);
+					}
+				}, function() {
+					asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+					return;
+				});
+			}, function() {
+				asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+				return;
+			});
+	
+			$("#save").click(function() {
+				var managerId = $.trim(util.getParam("managerId"));
+				if (!managerId || !validateUtil.validateMaxLength(managerId, 10)) {
+					asyncbox.tips("管理员id有误！", asyncbox.Level.error);
+					return;
+				}
+				var ids = util.box("请选择需要关联的角色！");
+				var data = {
+					managerId : managerId,
+					roleIds : ids
+				};
+				$.postAjax("/management/updateManagerRole.do", data, function(json) {
+					if (json.code) {
+						return;
+					}
+					asyncbox.tips("关联角色成功", asyncbox.Level.error);
+					window.location = 'index.html';
+				}, function() {
+					asyncbox.tips("网络连接错误", asyncbox.Level.error);
+				});
+	
+				window.location.href = "managerList.html"
+			});
+			function prevPage() {
+				window.location.href = "managerList.html"
+			}
+		});
+	</script>
+</body>
+</html>

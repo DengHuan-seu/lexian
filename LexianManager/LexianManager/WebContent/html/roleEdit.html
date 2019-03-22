@@ -1,0 +1,88 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>修改角色信息</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+</head>
+<body>
+	<div class="main_section">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看角色信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>修改角色信息</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<form action="">
+				<div>
+					<label>角色名称：</label><input id="roleName" type="text"　disabled="disabled" />
+				</div>
+				<div style="margin-top: 10px; margin-bottom: 10px;">
+					<label>角色描述：</label><input id="description" type="text" />
+				</div>
+				<div class="button">
+					<input id="save" type="button" value="保存" style="cursor: pointer;" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var urlroleName = decodeURI(util.getParam("roleName"));
+			var urldescription = decodeURI(util.getParam("description"));
+			$("#roleName").val(urlroleName);
+			$("#description").val(urldescription);
+			$("#save").click(
+				function() {
+					var roleId = util.getParam("roleId");
+					var roleName = $.trim($("#roleName").val());
+					var description = $.trim($("#description").val());
+					if (!validateUtil.validateEmpty(roleName)
+							|| !validateUtil.validateEmpty(description)
+							|| !validateUtil.validateEmpty(roleId)) {
+						asyncbox.tips("角色名或描述不能为空", asyncbox.Level.error);
+						return;
+					}
+					if (!validateUtil.validateMaxLength(roleName, 50)
+							|| !validateUtil.validateMaxLength(description, 200)) {
+						asyncbox.tips("角色名或描述过长", asyncbox.Level.error);
+						return;
+					}
+					var data = {
+						roleId : roleId,
+						roleName : roleName,
+						description : description
+					};
+					$.postAjax("/management/updateRole.do", data,
+						function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message,　asyncbox.Level.error);
+								return;
+							}
+							asyncbox.tips("保存成功", asyncbox.Level.success);
+							setTimeout(function() {
+								window.location.href = "roleList.html";
+							}, 2000);
+						}, function() {
+							asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+						});
+				});
+		});
+	</script>
+</body>
+</html>

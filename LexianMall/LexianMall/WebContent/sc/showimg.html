@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-更换头像</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/usersetting.css" />
+	<link rel="stylesheet" type="text/css" href="css/showimg.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.pbackcolor1 {
+			color: #676565;
+		}
+		
+		.pbackcolor2 {
+			color: #fff;
+		}
+		
+		.navp_color {
+			background: #DBDCDC;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--主体部分-->
+		<div class="main">
+			<div class="mainsection" style="margin: 0;">
+				<div>
+					<ul class="content_z_left">
+						<li><a class="com_z">我的订单</a></li>
+						<li><a href="unpaidorders.html">待付款订单</a></li>
+						<li><a href="paidorders.html">待取货订单</a></li>
+						<li><a class="com_z">账户设置</a></li>
+						<li><a href="usersetting.html">个人信息</a></li>
+						<li><a href="changepassword.html">修改密码</a></li>
+						<li><a href="collections.html">我的收藏</a></li>
+						<li><a class="com_z">我的钱包</a></li>
+						<li><a href="charge.html">充值</a></li>
+						<li><a href="transfer.html">转账</a></li>
+						<li><a href="bills.html">账单</a></li>
+					</ul>
+					<div class="mainright">
+						<!--内容右侧部分-->
+						<div class="right-mod">
+							<div class="right-top">
+								<ul class="fore1">
+									<li class="fore1_1"><a class="curr"><h2>头像图片</h2></a></li>
+								</ul>
+							</div>
+							<div class="right-content">
+								<div class="update-upload">
+									<div class="choice">
+										<input type="file" name="file" id="file" onchange="upload()" />
+										<div class="ftx03">
+											仅支持JPG、GIF、PNG、JPEG、BMP格式，文件小于4M<a onclick="submit()">确定</a>
+										</div>
+									</div>
+									<div class="img-cont">
+										<div class="img-b">
+											<img src="" id="preview" class="preview" style="width: 100%; max-height: 300px;" />
+										</div>
+									</div>
+								</div>
+								<div class="update-preview">
+									<div class="smt">
+										<h3>效果预览</h3>
+									</div>
+									<div class="smc">
+										你上传的图片会自动生成2种尺寸，请注意小尺寸的头像是否清晰
+										<div class="img-m-cont">
+											<div class="img-s">
+												<img src="" style="width: 100px; height: 100px;" class="preview" />
+											</div>
+										</div>
+										100*100像素
+										<div class="img-s-cont">
+											<div class="img-s">
+												<img src="" style="width: 50px; height: 50px;" class="preview" />
+											</div>
+										</div>
+										50*50像素
+									</div>
+								</div>
+								<div class="clr"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount()
+			init();
+		});
+		
+		function upload() {
+			$.ajaxFileUpload({
+				url : baseUrl + '/user/uploadToWeb.do?', // 用于文件上传的服务器端请求地址
+				secureuri : false, // 是否需要安全协议，一般设置为false
+				type : 'post',
+				fileElementId : 'file', // 文件上传域的ID
+				dataType : 'json', // 返回值类型 一般设置为json
+				// 服务器成功响应处理函数
+				success : function(json, status) {
+					if (status != 'success') {
+						alert('上传文件失败!');
+						return;
+					}
+					if (json.code) {
+						alert(json.message);
+						return;
+					}
+					$(".preview").attr("src", json.data);
+				},
+				// 服务器响应失败处理函数
+				error : function(json, status, e) {
+					alert(e);
+				}
+			});
+		}
+	
+		function submit() {
+			var portrait = $("#preview").attr("src");
+			$.postAjax("/user/updatePicture.do", {
+				portrait : portrait
+			}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				asyncbox.tips(json.message, asyncbox.Level.success);
+				setTimeout(function() {
+					window.location = "usersetting.html";
+				}, 2000)
+			}, function() {
+			});
+		}
+	
+		function init() {
+			$.postAjax("/user/getUserInfo.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				$(".preview").attr("src", json.data.fullPortrait);
+			}, function() {
+			});
+		}
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

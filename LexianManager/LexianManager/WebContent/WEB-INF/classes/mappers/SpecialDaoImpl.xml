@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.special.dao.impl.SpecialDaoImpl">
+	<insert id="addSpecial">
+		INSERT INTO special(name) values (#{specialName})
+	</insert>
+	<delete id="deleteSpecial">
+		DELETE FROM special WHERE id=#{specialId}
+	</delete>
+	<update id="updateSpecial">
+		UPDATE special SET name=#{specialName} where id=#{specialId}
+	</update>
+
+	<select id="selectSpecial" resultType="SpecialPo">
+		SELECT id specialId,name specialName FROM special where 1=1
+		<if test="specialId!=0">
+			and id = #{specialId}
+		</if>
+	</select>
+	
+	<insert id="addSpecialCommodity">
+		INSERT INTO special_commodity(commodityno,specialid) values
+		(#{commodityNo},#{specialId})
+	</insert>
+	
+	<delete id="deleteSpecialCommodity">
+		delete from special_commodity where 1=1
+		<if test="specialCommodityId!=null">
+			and id=#{specialCommodityId}
+		</if>
+		<if test="specialId!=0">
+			and specialid = #{specialId}
+		</if>
+	</delete>
+	
+	<select id="findSpecialCommodity" resultType="SpecialCommodityPo">
+		SELECT B.id AS specialCommodityId, A.commodity_no, A.name AS commodity_name, A.pictureurl, B.specialid
+		FROM commodity AS A INNER JOIN special_commodity AS B ON A.commodity_no=B.commodityNo
+		WHERE 1=1
+		<if test="specialId!=0">
+			and specialid = #{specialId}
+		</if>
+		<if test="commodityNo!=null">
+			and commodityno=#{commodityNo}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>乐鲜生活</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+    <link rel="stylesheet" type="text/css" href="css/swiper.3.1.2.min.css">
+</head>
+<body>
+	<div class="header b-hr">
+	    <div class="header-icon">
+	    	<a href="index.html">
+	    		<img src="images/logo.png" width="34" height="34"/>
+	    	</a>
+	    </div>
+	    <span id="store_name">点击定位</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="content">
+	    <div class="content_header">
+	        <div class="menu">
+	            <div class="swiper-container">
+	                <!-- 导航 -->
+	                <div class="swiper-wrapper"></div>
+	                <div class="swiper-pagination"></div>
+	            </div>
+	            <div class="menu-item"  style="border-bottom: 1px solid #dadada">
+	                <a href="categories.html">
+	                	<img src="images/icon-menu1.png"><p>商品分类</p>
+	                </a>
+	                <a href="collections.html">
+	                	<img src="images/icon-menu2.png"><p>我的收藏</p>
+	                </a>
+	                <a href="cart.html">
+	                	<img src="images/icon-menu3.png"><p>购物车</p></a>
+	                <a href="home.html">
+	                	<img src="images/icon-menu4.png"><p>个人中心</p>
+	                </a>
+	                <div class="clear-float"></div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="item" style="margin-top: 10px;">
+	        <div style="display: inline-block;width: 45%;float: left;">
+	            <a href="flashsales.html">
+	            	<img src="images/icon_menu0.png" width="100%">
+	            </a>
+	        </div>
+	        <div style="display: inline-block;width: 55%;float: left;border-left: 1px solid #dadada;margin-left: -1px;">
+	            <div style="width:100%;border-bottom: 1px solid #dadada;">
+	            	<a href="recommends.html">
+	            		<img src="images/icon_menu1.png" width="100%">
+	            	</a>
+	            </div>
+	            <div style="width:100%;">
+	                <p style="width: 50%;display: inline-block;float: left">
+	                	<a href="newarrivals.html">
+	                		<img src="images/icon_menu2.png" width="100%">
+	                	</a>
+	                </p>
+	                <p style="width: 50%;display: inline-block;float: left;border-left: 1px solid #dadada;margin-left: -1px;">
+	                	<a href="choiceness.html">
+	                		<img src="images/icon_menu3.png" width="100%">
+	                	</a>
+	                </p>
+	            </div>
+	        </div>
+	        <div style="clear: both"></div>
+	    </div>
+	    <div>
+	    	<div style="float:left; margin-left:10px">
+	    		<a>明星商品</a>
+	    	</div>
+			<div style="float:right; margin-right:10px">
+				<a onclick="switchStars();">换一批</a>
+			</div>
+			<div style="clear:both"></div>
+		</div>
+	    <div class="item" style="margin-top: 10px;">
+	        <div id="stars">
+	        </div>
+	        <div style="clear: both"></div>
+	    </div>
+	</div>
+	<footer>
+	    <div class="footer-item0">
+	        <a id="userName" href="login.html?backUrl=index.html">登录</a>
+	        <a id="cancellation" href="register.html" class="border-default">注册</a>
+	      	<a href="../version/downloadApp.do" class="border-default">下载App</a>
+	        <a href="../sc/index.html" class="border-default">电脑版</a>
+	        <div class="clear-float"></div>
+	    </div>
+	    <div class="footer-item1">
+	        <p>Copyright © 2000-2016 北京中软国际教育科技有限公司 版权所有</p>
+	    </div>
+	</footer>
+	
+	<script type="text/template" id="starTemplate">
+		<p style="width: 33.333%;display: inline-block; text-align:center">
+			<a href="commodity.html?commodityNo=###commodityNo####">
+				<img src="###fullPictureurl###" width="80%">
+			</a>
+		</p>
+	</script>
+	
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/swiper.3.1.2.jquery.min.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript">
+	 	var pageIndex = 1;
+	    var pageSize = 3;
+	    var totalPages = 0;
+	    var stars;
+	    
+	    $(function(){
+	        if(cache.getItem('storeName')!=''&&cache.getItem('storeName')!=null){
+	            $('#store_name').text(cache.getItem('storeName'));
+	        }
+	        $.get("../order/findTopCommodities.do", function(result){
+				stars = JSON.parse(result).data;
+				totalPages = parseInt(stars.length / pageSize) + (stars.length % pageSize); 
+				switchStars();
+			});
+	    });
+	    
+		function switchStars(){
+			$("#stars").html("");
+			
+			var startIndex = (pageIndex - 1) * pageSize;
+			var endIndex = pageIndex * pageSize;
+			endIndex = endIndex < stars.length ? endIndex : stars.length;
+			var template = $("#starTemplate").html();
+			for(var i = startIndex; i < endIndex; i++){
+				var star = stars[i];
+				template = template.replace(/###commodityNo####/g, star.commodityNo);
+				template = template.replace(/###fullPictureurl###/g, star.fullPictureurl);
+				$(template).appendTo($("#stars"));
+			}
+			
+			if(pageIndex == totalPages){
+				pageIndex = 1;
+			} else{
+				pageIndex++;
+			}
+		}
+	</script>
+</body>
+</html>

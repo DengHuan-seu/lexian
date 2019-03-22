@@ -1,0 +1,146 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>角色授权</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<style type="text/css">
+		.chbox {
+			display: inline-block;
+			width: 25%;
+			float: left;
+		}
+		
+		.power-list {
+			width: 90%
+		}
+	</style>
+</head>
+<body>
+	<div class="main_section">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看角色信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>角色授权</span>
+				<span><a href="javascript:prevPage();">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<form action="">
+				<div>
+					<label>角色名称：</label><input id="roleName" type="text" disabled="disabled" />
+				</div>
+				<div class="zrole-power clear" style="padding: 30px 0">
+					<span class="span_title">角色权限：</span> <a href="javascript:selectAll()">全选</a>
+				</div>
+				<div class="inline-block power-list " id="box">
+					<div></div>
+				</div>
+				<div class="button">
+					<input id="save" type="button" value="保存" style="cursor: pointer;" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var name = $.trim(decodeURI(util.getParam("roleName")));
+			var roleId = decodeURI(util.getParam("roleId"));
+			$("#roleName").val(name);
+			// 首先获取所有可用权限
+			$.postAjax("/management/findRolePrivileges.do", {},
+				function(json) {
+					if (json.code) {
+						return asyncbox.tips("数据加载失败", asyncbox.Level.success);
+					}
+					var data = json.rows || [];
+					for ( var i = 0; i < data.length; i++) {
+						if ((i + 1) % 4 == 0) {
+							$("#box").append("<div></div>");
+						}
+						$("#box>div:last").append("<span class='chbox' style='margin:0 0 20px 0'><input type='checkbox' value='?'  />?</span>"
+												.format(data[i].id,
+														data[i].privilegeName));
+					}
+					// 再获取该角色已有的权限
+					$.postAjax("/management/findRolePrivileges.do", {
+						roleId : roleId
+					}, function(json) {
+						if (json.code) {
+							return asyncbox.tips("数据加载失败", asyncbox.Level.success);
+
+						}
+						var data = json.rows || [];
+						for ( var index in data) {
+							$("input:checkbox[value='"　+ data[index].id + "']").attr("checked", true);
+						}
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+						return;
+					});
+				}
+			);
+			$("#save").click(
+				function() {
+					var roleId = $.trim(util.getParam("roleId"));
+					if (!roleId || !validateUtil.validateMaxLength(roleId,　10)) {
+						asyncbox.tips("角色id有误！", asyncbox.Level.error);
+						return;
+					}
+					var ids = util.box("请选择需要赋予的权限！");
+					if (!ids) {
+						asyncbox.tips("请选择需要赋予的权限！", asyncbox.Level.error);
+						return;
+					}
+					var data = {
+						roleId : roleId,
+						privilegeIds : ids
+					};
+					$.postAjax("/management/changeRolePrivileges.do",　data,
+						function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							window.location.href = "roleList.html";
+						});
+				});
+		});
+		function prevPage() {
+			window.location.href = "roleList.html";
+		}
+		var checked = 0
+		function selectAll() {
+			//没有全选
+			if (checked == 0) {
+				$("input:checkbox").each(function() {
+					if (!$(this).attr("checked")) {
+						$(this).attr("checked", true)
+					}
+				});
+				checked = 1
+			} else {
+				$("input:checkbox").each(function() {
+					if ($(this).attr("checked")) {
+						$(this).attr("checked", false)
+					}
+				});
+				checked = 0
+			}
+		}
+	</script>
+</body>
+</html>

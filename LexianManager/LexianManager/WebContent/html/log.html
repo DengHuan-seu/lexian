@@ -1,0 +1,80 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>系统设置</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>操作日志</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: 4px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'managerName',iconCls:'icon-ok'">用户名称</div>
+						<div data-options="name:'ip',iconCls:'icon-ok'">访问url</div>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable"></table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var array = [ [//每个列具体内容
+			{
+				field : 'managerName',
+				title : '用户名称',
+				width : util.getWidth('#content', 0.1)
+			}, {
+				field : 'content',
+				title : '操作内容',
+				width : util.getWidth('#content', 0.3)
+			}, {
+				field : 'createTime',
+				title : '操作时间',
+				width : util.getWidth('#content', 0.2)
+			}, {
+				field : 'url',
+				title : '访问url',
+				width : util.getWidth('#content', 0.2)
+			}, {
+				field : 'ip',
+				title : '访问ip',
+				width : util.getWidth('#content', 0.1)
+			} ] ];
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, name) {
+					var data = {};
+					if (value) {
+						data[name] = value;
+					}
+					util.fillTable("/login/getLogs.do", data, array);
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容",
+				width : 220
+			});
+			util.fillTable("/login/getLogs.do", {}, array);
+		});
+	</script>
+</body>
+</html>

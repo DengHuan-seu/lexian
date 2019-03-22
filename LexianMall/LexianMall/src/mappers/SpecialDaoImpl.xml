@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.searchreport.dao.impl">
+	<select id="findSpecialCommodity" resultType="SpecialCommodityPo">
+		SELECT A.commodity_no, A.name as commodity_name, A.pictureurl, B.specialId, C.commodity_price
+		FROM commodity AS A INNER JOIN special_commodity AS B ON A.commodity_no=B.commodityno 
+		INNER JOIN minpricecommodityview AS C ON B.commodityno=C.commodity_no
+		WHERE B.specialid=#{specialId}
+		<if test="specialId==6">
+			ORDER BY RAND() 
+		</if>
+		<if test="count!=null">
+			LIMIT #{count}
+		</if>
+	</select>
+</mapper>

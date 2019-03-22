@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-我的订单</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/myorders.css" />
+	<link rel="stylesheet" type="text/css" href="css/orderinfo.css" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/page.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		.update {
+			padding-top: 12px;
+			padding-left: 10px;
+			float: left
+		}
+		
+		.changeT {
+			float: left
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main">
+			<ul class="content_z_left">
+				<li><a class="com_z">我的订单</a></li>
+				<li><a href="unpaidorders.html">待付款订单</a></li>
+				<li><a href="paidorders.html">待取货订单</a></li>
+				<li><a class="com_z">账户设置</a></li>
+				<li><a href="usersetting.html">个人信息</a></li>
+				<li><a href="changepassword.html">修改密码</a></li>
+				<li><a href="collections.html">我的收藏</a></li>
+				<li><a class="com_z">我的钱包</a></li>
+				<li><a href="charge.html">充值</a></li>
+				<li><a href="transfer.html">转账</a></li>
+				<li><a href="bills.html">账单</a></li>
+			</ul>
+			<div class="content_z_right">
+				<!--内容右侧部分-->
+				<div class="sectiontop">
+					<!--右侧头部-->
+					<div class="div1_0">
+						<ul class="ul1">
+							<li class="border_botm_z_1"><a href="javascript:void(null)">我的订单</a></li> |
+							<li><a href="unpaidorders.html">待付款</a></li> |
+							<li><a href="paidorders.html">待取货</a></li>
+						</ul>
+						<div class="clr"></div>
+					</div>
+					<div class="div1_2">
+						<table class="order-goods" cellspacing="0">
+							<thead>
+								<tr class="goods-top">
+									<th>订单编号</th>
+									<th>创建时间</th>
+									<th>订单总额</th>
+									<th>支付方式</th>
+									<th>取货门店</th>
+									<th>订单状态</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody id="ordersInfo">
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="div1_3 div1_3_1">
+						<div class="tcdPageCode"></div>
+					</div>
+				</div>
+			</div>
+			<div class="clr"></div>
+		</div>
+		<div id="footer"></div>
+		
+		<div id="checkPasswd" style="display: none">
+			<div style="margin-top: 30px; margin-left: 10px">
+				<br />
+				<span style="font-size: 16px">支付密码：</span> <input
+					style="height: 18px" id="passwd" type="password" />
+			</div>
+			<p style="margin-top: 20px; font-size: 10px; text-indent: 12px; text-align: center">提示：支付密码就是您的登录密码!</p>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript" src="js/site/jquery.page.js"></script>
+	<script type="text/javascript">
+		var Pages;
+		var worth = parseFloat(0);
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			init(3, 1);
+		});
+		function init(pageSize, pageNo) {
+			var data = {
+				pageSize : pageSize,
+				pageNo : pageNo
+			};
+			$.postAjax("/order/findOrders.do", data,
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					}
+					$("#ordersInfo").empty();
+					var orders = json.data || [];
+					orders.forEach(function(order){
+						append(order);
+					});
+					
+					if (orders.length != 0) {
+						Pages = Math.ceil(json.total/3);
+						if(Pages==0){
+							Pages=1;
+						}
+						$(".tcdPageCode").createPage({
+							pageCount : Pages,
+							current : 1,
+							backFn : function(p){
+								var data1 = {
+									pageSize:pageSize,
+									pageNo : p
+								}
+								$("#ordersInfo").empty();
+								$.postAjax("/order/findOrders.do",data1,function(json){
+									if(json.code){
+										asyncbox.tips(json.message,asyncbox.Level.error);
+										return;
+									}
+									var orders = json.data ||[];
+									orders.forEach(function(order){
+										append(order);
+									});
+									
+								},function(){});
+							}
+						}); 
+					} else {
+						$(".div1_2").hide();
+						$(".div1_3").hide();
+						$(".rightspaning1_1").hide();
+						$(".sectiontop").append(
+							"<p align='center' style='margin-top:30px;font-size:20px;font-weight:bold'><a href='index.html'>您还没有订单哦~~</a></p>");
+					}
+				});
+		}
+	
+		function append(order) {
+			var div = "<tr>";
+			div += "<td>?</td>";
+			div += "<td>?</td>";
+			div += "<td>?</td>";
+			div += "<td>?</td>";
+			div += "<td>?</td>";
+			div += "<td>?</td>";
+			div += "<td>";
+			div += "<a href='#' target='_blank' onclick='goInfo(this);' data='?'>查看详情</a>&nbsp;";
+			div += "</td>";
+			div += "</tr>";
+			$("#ordersInfo").append(
+				div.format(
+					order.orderNo, order.createTime,order.totalAmount,
+					order.paymentType + " " + order.paymentSubtype,
+					order.storeName,
+					order.statesText,
+					order.orderNo
+			));
+		}
+
+		function goInfo(obj){
+			var orderNo = $(obj).attr("data");
+			$(obj).attr("href", "orderinfo.html?orderNo=" + orderNo);
+		}
+
+		//购物车的数量
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

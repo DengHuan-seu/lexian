@@ -1,0 +1,125 @@
+.header_content_a{
+    height: 40px;
+    width: auto;
+    border-bottom: 1px solid #e9e5e3;
+}
+.header_content_a ul,.header_content_a li{
+    float: left;
+    font-size: 14px;
+    font-weight: 700;
+}
+.header_content_a .li_a{
+    border-bottom: 1px solid #FF4200;
+}
+.header_content_a li{
+    height: 41px;
+    line-height: 41px;
+    text-indent: 10px;
+
+}
+.header_content_a span{
+    font-weight: 200;
+    margin-left: 3px;
+}
+.header_content_a input{
+    width:100px;
+    height: 24px;
+}
+.header_content_a button{
+    width: 30px;
+    height: 28px;
+    float:right;
+    border: 1px solid #e9e5e3;
+}
+.header_content_a .search_a{
+    margin-top: 10px;
+}
+.header_content_b{
+    width: auto;
+    height: 10%;
+}
+.header_content_b .li1{
+    width: 50px;
+    height: 17px;
+    border: 1px solid #E9E5E3;
+}
+.header_content_b ul{
+    margin-top: 10px;
+}
+.header_content_b p{
+    margin-top: 10px;
+    margin-left: 10px;
+    float: left;
+}
+.header_content_b span{
+    display: inline-block;
+    margin-left: 5px;
+
+}
+.header_content_c{
+    width: auto;
+    height: 60%;
+    margin: 20px auto auto 70px;
+}
+.header_content_c .one{
+     width: 22%;
+    height: 20%;
+    float: left;
+    margin-bottom: 20px;
+    margin-left: 2%;
+    border: 1px solid #e9e5e3;
+}
+.header_content_c p{
+    margin-top: 10px;
+    margin-left:10px;
+    font-weight: 600;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.header_content_c span{
+    display: inline-block;
+    margin-left:20px;
+    color: red;
+}
+
+.header_content_d{
+    width: auto;
+    height: 20%;
+    margin-top: 60px;
+}
+.header_content_d table{
+    float: left;
+   margin-left: 180px;
+
+}
+.header_content_d .td_a{
+    width: 60px;
+}
+.header_content_d td{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e9e5e3;
+    text-indent: 10px;
+}
+.header_content_d .td_b{
+    width: 60px;
+    font-size: 12px;
+    border: none;
+}
+.header_content_d .td_c{
+    width: 35px;
+    border: none;
+}
+.header_a .li_a span{
+    padding-left:10px;
+}
+.zxy_paragraph{
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #FF4200;
+}

@@ -1,0 +1,99 @@
+.registerForm {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.float_left {
+    float: left
+}
+
+.z-margin2 {
+    margin-top: 25px;
+    margin-left: 10px;
+}
+.z-margin1{margin-top: 15px;margin-left: 12px;}
+
+.footer_one {
+    margin-top: 60px;
+}
+
+#validateCode {
+    width: 168px;
+}
+
+.registerForm input[type='text'], .registerForm input[type='password'] {
+    text-indent: 1em;
+    outline: none;
+    border: 1px solid #C8C9CA;
+    width: 270px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.registerForm > div {
+    margin-top: 20px;
+}
+
+.registerForm .text, .submit, .validateCode {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+.registerForm .text {
+    font-size: 15px;
+    width: 120px;
+    text-align: right;
+}
+
+.submit {
+    text-align: center;
+    background-color: #FF4200;
+    font-weight: bold;
+    width: 272px;
+    color: white;
+    font-size: 18px;
+    padding: 7px 0px;
+}
+
+.validateCode {
+    text-align: center;
+    margin-left: 18px;
+    width: 100px;
+    font-size: 13.1px;
+    height: 30px;
+    vertical-align: middle;
+    line-height: 30px;
+    border: 1px solid #C8C9CA;
+    color: black;
+    background-color: #F4F4F4
+}
+
+.search .searchp-a {
+    height: 100px;
+}
+
+.header .ua {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.header .ua .li1-a {
+    width: 30%;
+    text-indent: 100px;
+    text-align: left;
+    border-bottom: none;
+    border-bottom: 2px solid #FF4200;
+}
+
+.header .ua .li4-b {
+    width: 35%;
+    margin-left: 20%;
+    text-align: left;
+    text-indent: 140px;
+    color: #000;
+}
+.z-member-type p{width: 120px;float: left;text-align: right;font-size: 15px;height: 30px;line-height: 30px}
+.z-member-type ul{float: left}
+.z-member-type ul li{display: inline-block;height: 28px;line-height:28px;text-align: center;width: 86px;border: 1px solid #c8c9ca;}
+.z-member-type ul li:hover{border: 1px solid #FF4200;cursor: pointer}

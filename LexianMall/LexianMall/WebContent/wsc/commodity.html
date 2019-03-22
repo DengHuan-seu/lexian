@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/commodity.css">
+    <link rel="stylesheet" type="text/css" href="css/swiper.3.1.2.min.css">
+</head>
+<body>
+	<div class="header">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>乐鲜购物</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center b-hr" style="margin-bottom: 40px;">
+	    <div class="item">
+	        <div class="goods-header pad-lr-10px">
+	            <div class="swiper-container">
+	                <div class="swiper-wrapper">
+	                    
+	                </div>
+	            </div>
+	            <div class="goods-info">
+	            	<p class="info-store b-hr">
+	            		取货门店：<span id="store_name" ></span>
+	            		<span class="float-r change-icon">
+	            			<img src="images/icon-sh.png" width="15em">更改门店
+	            		</span>
+	            	</p>
+	                <p class="info-price b-hr">￥<span id="price"></span></p>
+	                <p class="info-name b-hr">
+	                	<span id="name"></span>
+	                	<span class="float-r love-icon">
+	                		<img src="images/love-icon.png" width="15em">加收藏
+	                	</span>
+	                </p>
+	                <p class="info-desc"></p>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="item b-hr">
+	        <div id="goods" class="goods-select pad-lr-10px">
+	            <div class="select b-hr">
+	                <div class="float-l"><span class="label">数量：</span>
+	                    <span id="goods_num0" class="content">1件</span></div>
+	                <div class="jia-jian float-l">
+	                    <span id="red_num" class="float-l">-</span>
+	                    <span id="goods_num" class="float-l">1</span>
+	                    <span id="add_num" class="float-l">+</span>
+	                </div>
+	                <div class="float-r">
+	                    <span id="stock"></span>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="item">
+	        <div class="b-hr t-hr" style="text-align: center;height: 35px;line-height: 35px">商品详情</div>
+	        <div id="goods_info"></div>
+	    </div>
+	</div>
+	<div class="div-btn" style="position: fixed; left: 0; bottom:0; width: 100%;">
+	    <span class="span-btn" style="width:100%" id="addToCart">加入购物车(<span id="cart_num">0</span>)</span>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/swiper.3.1.2.jquery.min.js"></script>
+	<script type="text/javascript">
+	    var stock=0;
+	    var storeNo;
+	    var commodityNo = window.location.search.split('commodityNo=')[1];
+	    $(function(){
+	    	if (cache.getItem('storeNo') != '' && cache.getItem('storeNo') != null){
+				storeNo = cache.getItem('storeNo');
+			}
+    	 	if(storeNo==null || storeNo=='') {
+	            showBox('请先定位最近的门店', 'location.html');
+	        }
+	        
+		    if(commodityNo==null||commodityNo==''){
+	            showBox('商品不存在','back');
+	        }else{
+				if (cache.getItem('storeName') != '' && cache.getItem('storeName') != null) {
+					$('#store_name').text(cache.getItem('storeName'));
+				}
+				
+	            loadingShow();
+	            //获取商品基本信息
+	            $.post(baseUrl+'commodity/getCommodityInfo.do',
+                    {commodityNo : commodityNo},
+                    function(json){
+                        loadingHide();
+                        if(json.code==0){
+	                        var commodity = json.data;
+                            
+                            $('#name').text(commodity.name);
+                            $('.info-desc').text(commodity.introduce);
+                            var img = commodity.pictures;
+                            for(var i=0;i<img.length;i++){
+                                $('.swiper-wrapper').append(
+    	                                '<div class="swiper-slide"><img src=? width="80%"></div>'.
+    	                                format(img[i].fullPictureUrl));
+                            }
+                            var mySwiper = new Swiper('.swiper-container',{
+                                loop : true//循环播放
+                            });
+                            $('#goods_info').append(commodity.fullDetailed);
+                        }else{
+                            if(json.message=='该门店商品已下架'){
+                                showBox(json.message,'back');
+                            }else{
+                                showBox(json.message);
+                            }
+                        }
+                    },'json'
+	            );
+	            // 获取商品价格和库存信息
+	            $.post(baseUrl + 'commodity/getStorePrice.do', 
+	    	        {commodityNo: commodityNo, storeNo:storeNo},
+	    	    	function(result){
+		    	    	var data = JSON.parse(result).data;
+		    	    	var price = data.commodity_price;
+	    	        	$('#price').text(parseFloat(price).toFixed(2));
+	    	        	stock = parseInt(data.commodity_amont);	
+                        if(stock>0){
+                            $('#stock').text('有货');
+                            $('#goods_num').text(1);
+                            $('#goods_num0').text(1+'件');
+                        }else{
+                            $('#stock').text('无货');
+                            $('#goods_num').text(0);
+                            $('#goods_num0').text(0+'件');
+                        }
+	    	    	}
+	    	    );
+	    	    // 获取商品收藏信息
+				$.post(baseUrl + "collection/findExist.do",
+					{ commodityNo:commodityNo, storeNo:storeNo },
+					function(json){
+						var result = JSON.parse(json);
+						if (result.code) {	// 尚未登录，此时不显示收藏或取消收藏的图标
+							$(".love-icon").hide();
+						} else{				// 用户已经登录
+							$(".love-icon").show();
+							if(result.data){
+	                            $('.love-icon').html('<img src="images/loveon-icon.png" width="15em">已收藏');
+	                        } else{
+	                        	$('.love-icon').html('<img src="images/love-icon.png" width="15em">未收藏');
+		                    }
+						}
+					}
+				);
+	            //获取购物车数量
+	            $.post(
+	                    baseUrl+'commodity/getTrolleyCount.do',
+	                    function(json){
+	                        if(json.code==0){
+	                            $('#cart_num').text(json.data);
+	                        }
+	                    },'json'
+	            )
+	        }
+	    });
+	    
+	    //添加到购物车
+	    function addToCart(){
+		    getUser(function(user){
+			    if(user == null){	// 未登录
+			    	showBox('请先登录', 'login.html?backUrl=commodity.html?commodityNo=' + 
+					    	commodityNo);
+				} else{
+					if(parseInt($('#goods_num').text())<=stock&&stock!=0){
+			            $.post(
+			                    baseUrl+'commodity/saveCommomdityToTrolley.do',
+			                    {commodityNo:commodityNo,amont:$('#goods_num').text(),storeNo:storeNo},
+			                    function(json){
+			                        if(json.code==0){
+			                            $('#cart_num').text(parseInt($('#cart_num').text())+parseInt($('#goods_num').text()));
+			                        }else{
+			                            alert(json.message);
+			                        }
+			                    },'json'
+			            )
+			        }else{
+			            alert('库存不足');
+			            var s = "hello";
+			        }
+				}
+			});
+	    }
+	    
+	    $('.love-icon').click(function(){
+	        var type = $(this).text();
+	        var url = "collection/addCollection.do";
+	        if (type == "已收藏"){
+		        url = "collection/deleteCollection.do";
+		    }
+	        $.post(baseUrl + url,
+                {commodityNo:commodityNo, storeNo:storeNo},
+                function(json){
+                    loadingHide();
+                    var str = '<img src="images/loveon-icon.png" width="15em">已收藏';
+                    if(type == '已收藏'){
+                        str = '<img src="images/love-icon.png" width="15em">未收藏';
+                    }
+                    if(json.code==0){
+                        $('.love-icon').html(str);
+                    }else{
+                        showBox(json.message);
+                    }
+                },'json'
+	        );
+	    });
+	    $('.change-icon').click(function(){
+		    window.location.href = "location.html?bUrl=commodity.html?commodityNo=" + commodityNo;
+		});
+	    $('#add_num').click(function(){
+	        var a = parseInt($('#goods_num').text())+1;
+	        if(stock-a>=0){
+	            $('#goods_num').text(a);
+	            $('#goods_num0').text(a+'件');
+	        }else{
+	            showBox('库存不足！');
+	        }
+	    });
+	    $('#red_num').click(function(){
+	        var a = $('#goods_num');
+	        b = parseInt(a.text())-1;
+	        if(b>0){
+	            a.text(b);
+	            $('#goods_num0').text(b+'件');
+	        }else{
+	            showBox('购买数量不能小于1！');
+	        }
+	    });
+	    $('#addToCart').click(addToCart);
+	    $('#buy').click(function(){
+	        if(parseInt($('#goods_num').text())<=stock&&stock!=0){
+	            cache.setItem('commodityNo',commodityNo);
+	            cache.setItem('src',$('.swiper-slide img:first').attr('src'));
+	            cache.setItem('genusName',$('#name').text());
+	            var str = [];
+	            $('.span-check').filter('.active').each(function(i){
+	                str[i] = $(this).text();
+	            });
+	            cache.setItem('goodsInfo',str);
+	            cache.setItem('amout',$('#goods_num').text());
+	            cache.setItem('price',$('#price').text());
+	            location.href='order.html';
+	        }else{
+	            alert('库存不足');
+	        }
+	    });
+	</script>
+</body>
+</html>

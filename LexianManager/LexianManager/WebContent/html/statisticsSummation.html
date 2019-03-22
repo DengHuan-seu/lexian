@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.botton-h>a {
+			display: inline-block;
+			width: 120px;
+			height: 30px;
+			line-height: 30px;
+			border: 1px solid #cccccc;
+			border-radius: 5px;
+			text-align: center;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		
+		.active-h {
+			background: #ff2600;
+			color: #ffffff;
+		}
+		
+		.content-h {
+			border: 1px solid #e9e5e3;
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div class="nav-left floatLeft" style="padding: 3px 0; border-bottom: 1px solid #e9e5e3; padding-left: 15px">
+			<span><img src="../img/navt.jpg" alt="" width="20px" style="vertical-align: -25%" /></span>
+			<span style="font-size: 14px;">数据统计</span>
+			<span><img src="../img/rright.jpg" alt="" width="20px" style="vertical-align: -25%" /></span>
+			<span style="font-size: 14px;">已送达门店订单</span>
+		</div>
+		<div class="content-h">
+			<div style="margin-right: 10px; padding: 10px; text-align: right;">
+				<input id="pickmonth" class="easyui-datebox" style="text-align: center; width: 200px;" />
+				<a href="javascript:search()" style="dipaly: block; background: #555555; color: #ffffff; text-decoration: none; padding: 5px; padding-left: 20px; padding-right: 20px; border-radius: 3px;">搜索</a>
+				<a href="javascript:clear()" style="dipaly: block; background: #ff0000; color: #ffffff; text-decoration: none; padding: 5px; padding-left: 10px; padding-right: 10px; border-radius: 3px;">重置</a>
+			</div>
+			<table id="roleInfoTable"></table>
+		</div>
+		<div id="container" style="min-width: 700px; height: 400px; margin-top: 50px;"></div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.flot.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/highcharts.js"></script>
+	<script type="text/javascript">
+		var type = null;
+		var rows;
+		$(function() {
+			var times = getStartTime();
+			$(".botton-h >a").each(function(index) {
+				$(this).click(function() {
+					$(this).css({
+						"background" : "#ff2600",
+						"color" : "#ffffff"
+					}).siblings().css({
+						"background" : "#ffffff",
+						"color" : "#000000"
+					});
+				});
+			});
+	
+			change();
+	
+		});
+		var startTime = null;
+		$('#pickmonth').datebox({
+			prompt : "请选择您要检索的数据月份...",
+			onShowPanel : function() {//显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+				span.trigger('click'); //触发click事件弹出月份层
+				if (!tds)
+					setTimeout(function() {//延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+						tds = p.find('div.calendar-menu-month-inner td');
+						tds.click(function(e) {
+							e.stopPropagation(); //禁止冒泡执行easyui给月份绑定的事件
+							var year = /\d{4}/.exec(span.html())[0]//得到年份
+							, month = parseInt($(this).attr('abbr'), 10); //月份，这里不需要+1
+							if (month < 10) {
+								month = "0" + month;
+							}
+							$('#pickmonth').datebox('hidePanel')//隐藏日期对象
+							.datebox('setValue', year + '年' + month); //设置日期的值
+						});
+					}, 0)
+			},
+			parser : function(s) {
+				if (!s)
+					return new Date();
+				var arr = s.split('年');
+				return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+			},
+			formatter : function(d) {
+				/*getMonth返回的是0开始的，忘记了。。已修正*/
+				var _month = d.getMonth() + 1;
+				if (_month < 10) {
+					_month = "0" + _month;
+				}
+				return d.getFullYear() + '年' + _month + '月';
+			}
+		});
+		var p = $('#pickmonth').datebox('panel'), //日期选择对象
+		tds = false, //日期选择对象中月份
+		span = p.find('span.calendar-text'); //显示月份层的触发控件
+	
+		function change() {
+			var stateTime = $("#pickmonth").datebox("getValue");
+			if (!stateTime) {
+				var mydate = new Date();
+				var year = mydate.getFullYear();
+				var month = mydate.getMonth() + 1;
+				if (month < 10) {
+					month = "0" + month;
+				}
+				var startTime = year + "年" + month + "月";
+				$("#pickmonth").datebox("setValue", startTime);
+			}
+			var url = "/LexianManager/statistics/getSaleRepore.do";
+			var array = [ [ {
+				field : 'times',
+				title : '时间',
+				width : '15%',
+				formatter : function(value, rec, row) {
+					if (rec.times == null) {
+						rec.times = 0;
+					}
+					return rec.times;
+				}
+			}, {
+				field : 'visitor',
+				title : '访客数',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.visitor == null) {
+						rec.visitor = 0;
+					}
+					return rec.visitor;
+				}
+			}, {
+				field : 'visitNum',
+				title : '浏览量',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.visitNum == null) {
+						rec.visitNum = 0;
+					}
+					return rec.visitNum;
+				}
+			}, {
+				field : 'rate',
+				title : '转化率',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.rate == null) {
+						rec.rate = 0.00;
+					}
+					return parseFloat(rec.rate).toFixed(2);
+				}
+			}, {
+				field : 'payMan',
+				title : '支付买家数',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.payMan == null) {
+						rec.payMan = 0;
+					}
+					return rec.payMan;
+				}
+			}, {
+				field : 'payOrder',
+				title : '已支付订单数',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.payOrder == null) {
+						rec.payOrder = 0;
+					}
+					return rec.payOrder;
+				}
+			}, {
+				field : 'disableOrder',
+				title : '失效订单数',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.disableOrder == null) {
+						rec.disableOrder = 0;
+					}
+					return rec.disableOrder;
+				}
+			}, {
+				field : 'allPrice',
+				title : '下单金额',
+				width : '12%',
+				formatter : function(value, rec, row) {
+					if (rec.allPrice == null) {
+						rec.allPrice = 0.00;
+					}
+					return parseFloat(rec.allPrice).toFixed(2);
+				}
+			}
+			] ];
+	
+			$("#roleInfoTable").datagrid({
+				singleSelect : true,
+				url : url, //加载的URL
+				method : 'get',
+				collapsible : true,
+				rownumbers : true,
+				fit : false, //自动补全
+				fitColumns : true,
+				columns : array,
+				queryParams : {
+					beginTime : getStartTime()
+				},
+				rownumbers : true,
+				rowStyler : function(index, row) {
+					if (row.times == '合计：') {
+						return 'color:#ff2600;font-weight:bold;';
+					}
+				},
+				checked : true,
+				selectOnCheck : true,
+				checkOnSelect : true,
+				onLoadSuccess : function() {
+					appendRow();
+				}
+			})
+		}
+		function clear() {
+			$("#pickmonth").datetimebox("clear");
+			var startTime = getStartTime;
+			$("#roleInfoTable").datagrid("load", {
+				beginTime : startTime
+			});
+		}
+	
+		function search() {
+			var startTime = $("#pickmonth").datebox("getValue");
+			var data = {};
+			if (startTime != "") {
+				data.beginTime = startTime.split(" ")[0];
+			}
+			$("#roleInfoTable").datagrid("load", data);
+		}
+		var visitorStr = [];
+		var visitNumStr = [];
+		var rateStr = [];
+		var payManStr = [];
+		var payOrderStr = [];
+		var disableOrderStr = [];
+		var allPriceStr = [];
+		var day = [];
+		function appendRow() {
+			rows = $('#roleInfoTable').datagrid('getRows');
+			var visitor = parseInt(0);
+			var visitNum = parseInt(0);
+			var payMan = parseInt(0);
+			var payOrder = parseInt(0);
+			var rate = parseFloat(0);
+			var disableOrder = parseFloat(0);
+			var allPrice = parseFloat(0);
+			for ( var index in rows) {
+				visitorStr[index] = rows[index].visitor;
+				visitNumStr[index] = rows[index].visitNum;
+				rateStr[index] = rows[index].rate;
+				payManStr[index] = rows[index].payMan;
+				payOrderStr[index] = rows[index].payOrder;
+				disableOrderStr[index] = rows[index].disableOrder;
+				allPriceStr[index] = rows[index].allPrice;
+				day[index] = rows[index].times;
+				visitor = (parseInt(visitor) + parseInt(rows[index].visitor));
+				visitNum = (parseInt(visitNum) + parseInt(rows[index].visitNum));
+				payMan = (parseInt(payMan) + parseInt(rows[index].payMan));
+				payOrder = (parseInt(payOrder) + parseInt(rows[index].payOrder));
+				disableOrder = (parseInt(disableOrder) + parseInt(rows[index].disableOrder));
+				rate = (parseFloat(rate) + parseFloat(rows[index].rate));
+				allPrice = (parseFloat(allPrice) + parseFloat(rows[index].allPrice));
+			}
+	
+			$('#roleInfoTable').datagrid('appendRow', {
+				times : '合计：',
+				visitor : visitor,
+				visitNum : visitNum,
+				payMan : payMan,
+				disableOrder : disableOrder,
+				payOrder : payOrder,
+				rate : rate,
+				allPrice : allPrice,
+			});
+			container();
+		}
+	
+		function getStartTime() {
+			var mydate = new Date();
+			var year = mydate.getFullYear();
+			var month = mydate.getMonth() + 1;
+			if (month < 10) {
+				month = "0" + month;
+			}
+			var startTime = year + "-" + month;
+			return startTime;
+		}
+		/* function picture(){
+		  var d1 = [[times, payMan], [4, 8], [8, 5], [9, 13]]; 
+		
+		  
+		  $.plot($("#placeholder"), [ d1 ]);
+		}; */
+		function container() {
+	
+			$('#container').highcharts({
+				title : {
+					text : '数据统计',
+					x : -20
+				//center
+				},
+				credits : {
+					enabled : false
+				//右下角不显示LOGO 
+				},
+				/*  xAxis: {
+				     categories: ['1', '2', '3', '4', '5', '6','7', '8', '9', '10', '11', '12','13', '14', '15', '16', '17', '18','19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+				 }, */
+				xAxis : {
+					min : 0,
+					categories : day
+				/* ,
+				            tickPixelInterval:50 */
+				},
+				exporting : {
+					enabled : false
+				//设置导出按钮不可用 
+				},
+				plotOptions : { //设置数据点 
+					line : {
+						enableMouseTracking : true
+					//取消鼠标滑向触发提示框 
+					}
+				},
+				yAxis : {
+					title : {
+						text : '数量'
+					},
+					min : 0,
+					plotLines : [ {
+						value : 0,
+						width : 1,
+						color : '#808080'
+					} ]
+				},
+				tooltip : {
+					valueSuffix : ''
+				},
+				legend : {
+					layout : 'vertical',
+					align : 'right',
+					verticalAlign : 'middle',
+					borderWidth : 0
+				},
+				series : [ {
+					name : '访客数',
+					data : visitorStr
+				}, {
+					name : '浏览量',
+					data : visitNumStr
+				}, {
+					name : '转化率',
+					data : rateStr
+				}, {
+					name : '支付买家数',
+					data : payManStr
+				}, {
+					name : '已支付订单数',
+					data : payOrderStr
+				}, {
+					name : '失效订单数',
+					data : disableOrderStr
+				}, {
+					name : '下单金额',
+					data : allPriceStr
+				} ]
+			});
+		};
+	</script>
+</body>
+</html>

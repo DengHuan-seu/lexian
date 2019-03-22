@@ -1,0 +1,90 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+</head>
+<body>
+	<div class="main_section">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span>
+				<span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span>
+				<span>菜单管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span>
+				<span><a href="javascript:location.href='menuList.html'">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<form action="">
+				<div>
+					<label>菜单名称：</label><input type="text" id="name" />
+				</div>
+				<div style="margin-top: 10px">
+					<label>背景图片：</label><input id="file" name="file" type="file" />
+				</div>
+				<div class="button">
+					<input id="save" type="button" value="保存" style="cursor: pointer;" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		var id = util.getParam("menuId");
+		var menuname = decodeURI(util.getParam("menuName"));
+		$(function() {
+			$("#name").val(menuname)
+			$("#save").click(function() {
+				var menuName = $.trim($("#name").val());
+				var file = $.trim($("#file").val());
+
+				if (!validateUtil.validateEmpty(menuname)) {
+					asyncbox.tips("商品名称不能为空！", asyncbox.Level.error);
+					return;
+				}
+				var data = {
+					menuName : menuName,
+					menuId : id
+				};
+				$.ajaxFileUpload({
+					secureuri : false,
+					url : "/LexianManager/management/updateMenu.do",
+					data : data,
+					type : "post",
+					dataType : "json",
+					fileElementId : "file",
+					success : function(data) {
+						if (data.code) {
+							asyncbox.tips(data.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips(data.message, asyncbox.Level.success);
+						setTimeout(function() {
+							window.location.href = "menuList.html";
+						}, 1000);
+					},
+					"error" : function() {
+						asyncbox.tips(data.message,
+								asyncbox.Level.success);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>添加活动</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="role-name">
+				<span>&nbsp;名称:</span> <input value="" name="name" id="name" type="text" /><br />
+			</div>
+			<div class="role-name">
+				<span>中奖率:</span> <input value="" name='rate' id="rate" type="text" /><span>(每100人中多少)</span>
+			</div>
+			<div class="role-name">
+				<span>&nbsp;时间:</span> <input value="" name="minutes" id="minutes" type="text" /><span>(分钟)</span>
+			</div>
+
+			<div style="margin-top: 10px; margin-left: 25px;">
+				<label>开始时间: </label><input id="dt" type="text" name="birthday" />
+			</div>
+			<div class="role-save" style="margin-left: 2px">
+				<a href="javascript:void(0)" id="save">保存</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#save").click(function() {
+				var name = $.trim($("#name").val());
+				var rate = $.trim($("#rate").val());
+				var minutes = $.trim($("#minutes").val());
+				var dt = $.trim($(":hidden[name='birthday']").eq(0).val());
+				if (!validateUtil.validateEmpty(name)) {
+					asyncbox.tips("名称不能为空！", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(minutes)) {
+					asyncbox.tips("时间不能为空！", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(rate)) {
+					asyncbox.tips("中奖率不能为空！", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(dt)) {
+					asyncbox.tips("开始时间不能为空！", asyncbox.Level.error);
+					return;
+				}
+				var data = {
+					startDateTime : dt,
+					name : name,
+					rate : rate,
+					minutes : minutes
+				};
+				util.differentRequest("/shake/addConference.do", data, "添加成功");
+			});
+			$('#dt').datetimebox({
+				required : true,
+				showSeconds : false
+			});
+		});
+	</script>
+</body>
+</html>

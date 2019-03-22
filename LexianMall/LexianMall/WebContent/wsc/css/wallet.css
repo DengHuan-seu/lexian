@@ -1,0 +1,15 @@
+/*.span-menu ul li{width: 33%}*/
+.balance{display:inline-block;width:75%;color:#ef6d6f;font-size:1.7em;text-align: center}
+.a_span{display:inline-block;width: 50%;text-align: center}
+.title-name{font-size: 15px;}
+.account{padding-bottom: 15px;}
+.account-c{font-size: 14px;}
+.account-num{margin-left: 28px;}
+.integral-num{font-size: 2.22222em;color: #ef6d6f;text-align: center;padding: 13px 0;}
+.warn{padding: 10px;color: #7a7a7a;}
+.warn-title{font-size: 15px;}
+.warn-c{font-size: 13px;}
+.coupons{border-radius: 8px;width: 230px;margin:10px auto;color: #FFFFFF;font-size: 13px;padding: 10px}
+.c1{background-color: #81cccd;}
+.c2{background-color: #ffc160;}
+.coupons-money{border-bottom: 1px dashed #fff;font-size: 18px;}

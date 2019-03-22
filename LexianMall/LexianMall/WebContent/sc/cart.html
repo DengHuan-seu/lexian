@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-购物车</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/cart.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		body,html {
+			height: 100%;
+		}
+		
+		#wrapper {
+			min-height: 100%;
+			position: relative;
+		}
+		
+		.main {
+			padding-bottom: 500px;
+		}
+		
+		.footer {
+			width: 100%;
+			position: absolute;
+			left: 0;
+			bottom: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="main">
+			<h2>
+				购物车&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html" style="color: #ff4200">首页</a>
+			</h2>
+			&nbsp;
+			<hr/>
+			<div class="goodsTitle">
+				<table>
+					<tr>
+						<td class="tdd1">
+							<input type="checkbox" onclick='selectAll(this)' id="selectAll" />
+							<span class="paddingLeft">全选</span>
+							<span class="paddingLeft">|&nbsp;&nbsp;
+								<a onclick='deletetro()'>删除</a>
+							</span>
+						</td>
+						<td class="tdd2">商品介绍</td>
+						<td class="tdd3">商品图片</td>
+						<td class="tdd4">数量</td>
+						<td class="tdd5">单价(元)</td>
+						<td class="tdd6">总价(元)</td>
+						<td class="tdd7">操作</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="goodsDetails"></div>
+
+			<div class="settleAccounts">
+				<table>
+					<tr>
+						<td class="ttd1"></td>
+						<td>已选择：<span id="amont">0</span>件商品
+						</td>
+						<td>合计(不含运费)：<span id="allprice">￥0.00</span></td>
+						<td class="tta"><img src="images/se3.png" onclick='checkout()' /></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			init();
+		});
+	
+		function selectAll(obj) {
+			if ($(obj).attr("checked")) {
+				$("input:checkbox").attr("checked", true);
+			} else {
+				$("input:checkbox").attr("checked", false);
+			}
+			fun2()
+		}
+	
+		function selectStore(obj) {
+			if ($(obj).attr("checked")) {
+				var store = $(obj).parent().attr("data");
+				$("input:checkbox").each(function() {
+					var thestore = $(this).parents(".lists").prev().attr("data");
+					if (thestore == store) {
+						$(this).attr("checked", true);
+					}
+				});
+				var count1 = $(obj).parents(".goodsDetails").find(".bg>input:checkbox:checked").length;
+				var count2 = $(obj).parents(".goodsDetails").children(".bg").length;
+				if ((parseInt(count1)) == count2) {
+					$(".tdd1").children("input").attr("checked", true);
+				}
+			} else {
+				var store = $(obj).parent().attr("data");
+				$("input:checkbox").each(function() {
+					var thestore = $(this).parents(".lists").prev().attr("data");
+					if (thestore == store) {
+						$(this).attr("checked", false);
+					}
+				});
+				$(".tdd1").children("input").attr("checked", false);
+			}
+			fun2();
+		}
+	
+		function init() {
+			var data = {
+				states : 1
+			};
+			// 查询购物车
+			$.postAjax("/commodity/findAlltrolley.do", data,
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					}
+					var divbg = "<div class='bg'  data='?'><input type='checkbox' onclick='selectStore(this)' "
+							+ $("#selectAll").attr("checked")
+							+ "/><span>?</span></div>";
+					var divlist = "<div class='lists' data='?'></div>";
+					var divtable = "<table><tr>";
+					if ($("#selectAll").attr("checked") != "checked")
+						divtable += "<td class='td1'><input type='checkbox' data='?' onclick='fun1(this)'/></td>";
+					else
+						divtable += "<td class='td1'><input type='checkbox' data='?' onclick='fun1(this)' checked/></td>";
+					divtable += "<td class='td2'><a href='javascript:void()'><img src='?' width='100'/></a></td>";
+					divtable += "<td class='td3'><a onclick='togooddetail(this)' data='?'><p class='p1'>?</p><p class='p2'>?</p></a></td>";
+					divtable += "<td class='td4' data='?,?,?'>";
+					divtable += "<button class='span1' onclick='subNum(this)'>-</button>";
+					divtable += "<input type='text' class='span2' value='?' onblur='checkNum(this)'/>";
+					divtable += "<button class='span3' onclick='addNum(this)'>+</button></td>";
+					divtable += "<td class='td5'>?</td>";
+					divtable += "<td class='td6'>?</td>";
+					divtable += "<td class='td7' data='?' onclick='deletetrolley(?)'><img src='images/se4.png'/></td>";
+					divtable += "</tr></table>";
+					var objects = json.data || [];
+					$(".goodsDetails").empty();
+					var length = objects.length;
+					if (length != 0) {
+						for ( var object in objects) {
+							// 每个门店的所有商品
+							var datas = objects[object];
+							$(".goodsDetails").append((divbg + divlist).format(
+								object,
+								datas[0].storeName,
+								object));
+							datas.forEach(function(data){
+								$(".lists[data=" + data.storeNo + "]")
+									.append(divtable.format(
+										data.storeNo,
+										data.fullCommodityPicture,
+										data.commodityNo,
+										data.commodityName,
+										data.commodityIntroduce,
+										data.trolleyId,
+										data.commodityNo,
+										data.storeNo,
+										data.amont,
+										parseFloat(data.commodityPrice).toFixed(2),
+										parseFloat(data.totalPrice).toFixed(2),
+										data.trolleyId,
+										data.trolleyId));
+								var tro = {
+									commodityNo : data.commodityNo,
+									fullCommodityPicture : data.fullCommodityPicture,
+									commodityName : data.commodityName,
+									commodityIntroduce : data.commodityIntroduce,
+									amont : data.amont,
+									commodityPrice : data.commodityPrice,
+									totalPrice : data.totalPrice,
+									store : data.storeNo,
+									storeName : data.storeName
+								};
+								// 转化
+								cache.setItem("trolleyId_" + data.trolleyId, JSON.stringify(tro));
+							});
+						}
+						$(".footer").removeClass("postionT");
+					} else {
+						$(".goodsTitle").hide();
+						$(".goodsDetails").hide();
+						$(".settleAccounts").hide();
+						$(".main").append("<p align='center' style='margin-top:30px;font-size:20px;font-weight:bold'><a href='index.html'>您还没有添加的商品哦~~</a></p>");
+						$(".footer").addClass("postionT");
+					}
+
+					fun2();
+				});
+		}
+	
+		// 输入数值 限制
+		function checkNum(obj) {
+			var num = obj.value;
+			if (isNaN(num) || num <= 0) {
+				obj.value = 1;
+				num = 1;
+			}
+			if (num > 50) {
+				obj.value = 50;
+				num = 50;
+			}
+			var trolleyId = $(obj).parent().attr("data");
+			updateCount(num, trolleyId);
+		}
+	
+		// 添加
+		function addNum(obj) {
+			var a = $(obj).prev("input").val();
+			var b = parseInt(a) + 1;
+			if (b > 50) {
+				$(obj).prev("input").val(50);
+			} else {
+				$(obj).prev("input").val(b);
+				var num = $(obj).prev("input").val();
+				var params = $(obj).parent().attr("data").split(',');
+				updateCount(num, params[0], params[1], params[2]);
+			}
+		}
+		
+		// 限制最小值
+		function subNum(obj) {
+			var a = $(obj).next("input").val();
+			if ((a - 1) <= 0) {
+				$(obj).next("input").val(0);
+			}
+			$(obj).next("input").val(parseInt(a) - 1);
+			var b = $(obj).next("input").val();
+			if (b <= 0) {
+				$(obj).next("input").val(1);
+			}
+	
+			var num = $(obj).next("input").val();
+			var params = $(obj).parent().attr("data").split(',');
+			updateCount(num, params[0], params[1], params[2]);
+		}
+	
+		function updateCount(num, trolleyId, commodityNo, storeNo) {
+			var data = {
+				commodityNo : commodityNo,
+				storeNo : storeNo,
+				amont : num
+			};
+			$.postAjax("/commodity/updateTrolleyCount.do", data, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+				} else{
+					//重新设置cache
+					var t1 = util.parseJSON(cache.getItem("trolleyId_" + trolleyId));
+					t1.amont = num;
+					t1.totalPrice = parseFloat(json.data).toFixed(2);
+					cache.setItem("trolleyId_" + trolleyId, JSON.stringify(t1));
+					//改变总价
+					var data = trolleyId + "," + commodityNo + "," + storeNo;
+					$(".td4[data='" + data + "']").next().next().text(parseFloat(json.data).toFixed(2));
+					fun2();
+				}	
+			});
+		}
+	
+		// 判断是否选中需要删除的物品
+		function deletetro() {
+			var checkedbox = $(".td1>input:checkbox:checked");
+			if (!checkedbox || !checkedbox.length) {
+				asyncbox.tips("未选择商品", asyncbox.Level.error);
+				return;
+			}
+	
+			// 需要删除的id
+			var ids = "";
+			var index = 0;
+			checkedbox.each(function() {
+				ids += "," + $.trim($(this).parent().nextAll(".td6").attr("data"));
+			});
+			ids = ids.substring(1, ids.length);
+			deletetrolley(ids);
+		}
+	
+		function checkout() {
+			var checkedbox = $(".td1>input:checkbox:checked");
+			if (!checkedbox || !checkedbox.length) {
+				asyncbox.tips("未选择商品", asyncbox.Level.error);
+				return;
+			}
+	
+			var ids = "";
+			var index = 0;
+			var firststore;
+			var flag = true;
+			checkedbox
+					.each(function() {
+						if (flag) {
+							firststore = $(this).attr("data");
+							flag = false;
+						}
+						var store = $(this).attr("data");
+						if (firststore == store) {
+							var data = $(this).parent().nextAll(".td4").attr("data");
+							ids += "," + $.trim(data.split(",")[0]);
+						} else {
+							ids = "";
+							return false;
+						}
+					});
+			if (ids == "") {
+				asyncbox.confirm("请选择相同门店进行下单！", "提示框");
+			} else {
+				id = ids.substring(1, ids.length);
+				window.location = "submitorders.html?id=" + id;
+			}
+		}
+	
+		// 直接删除 
+		function deletetrolley(obj) {
+			var ids = obj;
+			asyncbox.confirm('是否删除该商品？', '确认框', function(action) {
+				if (action == 'ok') {
+					$.postAjax("/commodity/deleteTrolley.do", {
+						ids : ids
+					}, function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+	
+						asyncbox.tips(json.message, asyncbox.Level.success);
+						init();
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+					});
+				}
+			});
+		}
+	
+		// 选中触发事件
+		function fun1(obj) {
+			var count = $(obj).parents(".lists").children().length;
+			var storeNo = $(obj).parents(".lists").attr("data");
+			var co = $(".lists[data='" + storeNo + "']" + ">table>tbody>tr>td>input:checkbox:checked").length;
+			if (count != co) {
+				$(obj).parents(".lists").prev().children().attr("checked", false);
+			} else {
+				$(obj).parents(".lists").prev().children().attr("checked", true);
+			}
+			var count1 = $(obj).parents(".goodsDetails").children(".bg").length;
+			var storeNo1 = $(obj).parents(".goodsDetails").find(".bg>input:checkbox:checked").length;
+			if (count1 != storeNo1) {
+				$(".tdd1").children("input").attr("checked", false);
+			} else {
+				$(".tdd1").children("input").attr("checked", true);
+			}
+			fun2();
+		}
+	
+		function fun2() {
+			var total_price = parseFloat(0);
+			var total_amount = parseInt(0);
+			$(".td1>input:checkbox").each(
+					function() {
+						if ($(this).attr("checked")) {
+							total_price = total_price+ parseFloat($(this).parents("tr").children(".td6").text());
+							total_amount = total_amount+ parseInt($(this).parent().nextAll(".td4").children("input").val());
+						}
+					});
+			$("#amont").text(total_amount);
+			$("#allprice").text(parseFloat(total_price).toFixed(2));
+		}
+	
+		function togooddetail(obj) {
+			var commodityNo = $(obj).attr("data");
+			window.location.href = "commodity.html?commodityNo=" + commodityNo;
+		}
+	</script>
+</body>
+</html>

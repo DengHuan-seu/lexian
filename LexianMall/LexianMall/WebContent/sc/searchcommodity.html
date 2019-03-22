@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-商品搜索</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/commoditylist.css" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/page.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/searchcommodity.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div id="search"></div>
+		<div class="header">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">商品列表</li>
+					<li class="com_li com_li_color">
+						<a href="index.html" class="icon_z_1">首页</a>
+					</li>
+				</ul>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div class="main">
+			<div class="title-x clear">
+				<div id="parentsCatagory">所有与已选条件相关的宝贝：</div>
+				<div id="conditions"></div>
+			</div>
+
+			<div style="border: 1px solid #e9e5e3" class="wrap-tu">
+				<div class="lists comLists clear">
+					<div class="left heightT">价格</div>
+					<div class="right priceX heightH">
+						<div id="priceCondition">
+							<input class="start"></input>&nbsp;-&nbsp; <input class="end"></input>&nbsp;&nbsp;&nbsp;
+							<a onclick="findPrice()" style="padding: 2px 10px; background: #ff2600; border-radius: 3px; color: #ffffff">确认</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="sortX">
+				<a id="orderBySales" IsDesc="0">销量</a> 
+				<a id="orderByPrice" IsDesc="0">价格</a>
+			</div>
+
+			<div class="goodLists-x clear" id="genus_classify"></div>
+			<!-- 分页 -->
+			<div class="pagetcdPageCode">
+				<div class="tcdPageCode"></div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript" src="js/site/jquery.page.js"></script>
+	<script type="text/javascript">
+		var keyword = decodeURIComponent(util.getParam("keyword"));
+		$(function() {
+			init();
+			findShopCarCount();
+		});
+	
+		$(".content_wrap>a").live("click", function() {
+			var genusId = $(this).attr("id").split("_")[1];
+			window.location = "commodity.html?genusId=" + genusId;
+		});
+	
+		// 初始化
+		function init() {
+			// 排序
+			$(".sortX>a").click(function() {
+				var isDesc = ($(this).attr("IsDesc") == "1");
+				var orderBySales = $(this).attr("id") == "orderBySales";
+				var orderByPrice = $(this).attr("id") == "orderByPrice";
+				var priceId = $(".priceCondition").attr("data");
+				
+				var data = {
+					pageSize : 10,
+					pageNo : 1,
+					keyword : keyword,
+					isDesc : isDesc,
+					orderByPrice : orderByPrice,
+					orderBySales : orderBySales
+				}
+				ajaxfunciton(data, true);
+			});
+			
+			var data = {
+				pageSize : 10,
+				pageNo : 1,
+				keyword : keyword
+			};
+			ajaxfunciton(data, false);
+		}
+	
+		function ajaxfunciton(data, flag) {
+			var postData = data;
+			$.postAjax("/commodity/searchKeywordCommodities.do", postData,
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.success);
+						return;
+					}
+					if (flag) {
+						var element = $("#orderBySales");
+						if(postData.orderByPrice){
+							element = $("#orderByPrice");
+						}
+						var isDesc = element.attr("IsDesc");
+						element.attr("IsDesc", isDesc == "1" ? "0" : "1");
+					}
+					var data = json.data || [];
+					$("#genus_classify").empty();
+					$(".tcdPageCode").remove();
+					$(".pagetcdPageCode").append(
+							"<div class='tcdPageCode'></div>");
+					if (data.length) {
+						append(data);
+						var Pages = Math.ceil(json.total / 10);
+						if (Pages == 0) {
+							Pages = 1;
+						}
+						$(".tcdPageCode").createPage({
+							pageCount : Pages,
+							current : 1,
+							backFn : function(p) {
+								postData.pageNo = p
+								$.postAjax("/commodity/searchKeywordCommodities.do", postData,
+									function(json) {
+										if (json.code) {
+											asyncbox.tips(json.message, asyncbox.Level.error);
+											return;
+										}
+										$("#genus_classify").empty();
+										var data = json.data || [];
+										if (data.length) {
+											append(data);
+										}
+									}
+								);
+							}
+						});
+					} else {
+						$("#genus_classify").append(
+							"<p align='center' style='margin-top:30px;font-size:20px;font-weight:bold'><a href='index.html'>没有找到相关的商品哦~~</a></p>");
+					}
+				}
+			);
+		}
+		
+		function append(data) {
+			var count = 5;
+			div = "<div class='goodList-n'>";
+			div += "<div><div><a onclick='goodInfoAndCommodity(this)' data='?' ><img src='?' width='174' height='174'/></a></div>";
+			div += "<p class='priceY' style='color:#ff4200;font-size:16px;font-weight:bold;padding-top:10px'>?元</p>";
+			div += "<p class='dsp'><a>?</a></p>";
+			div += "<p>销量：?</p></div></div>";
+			// 商品列表
+			if (data.length) {
+				for ( var index in data) {
+					$("#genus_classify").append(
+						div.format(data[index].commodityNo,
+							data[index].fullPictureurl,
+							data[index].commodityPrice,
+							data[index].commodityName, 
+							data[index].salesCount));
+				}
+			}
+		}
+		// 按照价格
+		function findPrice() {
+			var startPrice = $("#priceCondition>.start").val();
+			var endPrice = $("#priceCondition>.end").val();
+			if (!validateUtil.validateMoney(startPrice)
+					|| !validateUtil.validateMoney(endPrice)) {
+				return asyncbox.tips("请输入价格区间!", asyncbox.Level.error)
+			}
+			if (parseFloat(startPrice) > parseFloat(endPrice)) {
+				return asyncbox.tips("起始价格不能大于结束价格!", asyncbox.Level.error)
+			}
+	
+			var old = $(".priceCondition").attr("data");
+			var flag = true;
+			if (old) {
+				var startPrice = $("#priceCondition>.start").val();
+				var endPrice = $("#priceCondition>.end").val();
+				$(".priceCondition[data='" + old + "']").prev().text("价格：" + startPrice + "-" + endPrice);
+				$(".priceCondition[data='" + old + "']").attr("data", startPrice + "_" + endPrice)
+				flag = false
+			}
+			if (flag) {
+				$("#conditions").append(
+					"<span class='tt-Y'><span>?：?-?</span><a class='priceCondition' onclick='deleteConditions(this)' data='?_?'>X</a></span>"
+						.format("价格", parseInt(startPrice), parseInt(endPrice), parseInt(startPrice), parseInt(endPrice)));
+			}
+			$("#priceCondition>.start").val("");
+			$("#priceCondition>.end").val("");
+			doSearch();
+		}
+	
+		function doSearch() {
+			var data = {
+				pageSize : 10,
+				pageNo : 1,
+				keyword : keyword,
+			};
+			
+			var priceId = $(".priceCondition").attr("data");
+			if(priceId){
+				var prices = priceId.split("_");
+				data.minPrice = prices[0];
+				data.maxPrice = prices[1];
+			}
+			ajaxfunciton(data, false);
+		}
+		
+		// 跳到商品详情页面
+		function goodInfoAndCommodity(obj) {
+			var commodityNo = $.trim($(obj).attr("data"));
+			window.location = "commodity.html?commodityNo=" + commodityNo;
+		}
+		
+		// 查看商品详情
+		function goodInfo(obj) {
+			var genusId = $.trim($(obj).attr("data"));
+			window.location = "commodity.html?genusId=" + genusId;
+		}
+	
+		// 购物车数量
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					//asyncbox.tips(json.message,asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopCart>span[class='tips']").text(count);
+			}, function() {
+			});
+		}
+
+		// 删除条件
+		function deleteConditions(obj) {
+			$(obj).parent(".tt-Y").remove();
+			doSearch();
+		}
+	</script>
+</body>
+</html>

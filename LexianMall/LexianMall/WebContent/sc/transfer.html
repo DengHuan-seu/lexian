@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-转账</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/charge.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--主体内容部分-->
+		<div class="main">
+			<ul class="content_z_left">
+				<li><a class="com_z">我的订单</a></li>
+				<li><a href="unpaidorders.html">待付款订单</a></li>
+				<li><a href="paidorders.html">待取货订单</a></li>
+				<li><a class="com_z">账户设置</a></li>
+				<li><a href="usersetting.html">个人信息</a></li>
+				<li><a href="changepassword.html">修改密码</a></li>
+				<li><a href="collections.html">我的收藏</a></li>
+				<li><a class="com_z">我的钱包</a></li>
+				<li><a href="charge.html">充值</a></li>
+				<li><a href="transfer.html">转账</a></li>
+				<li><a href="bills.html">账单</a></li>
+			</ul>
+			<div class="content_z_right">
+				<div class="one-2">
+					<div class="one-2-a one-2-a_marg">
+						<h3 class="cz_col" style="margin-top: 0px; padding-top: 3%;">转账</h3>
+						<form method="get">
+							<div class="ua">
+								<label class="z-lable">对方账号：</label>
+								<input type="text" id="fromPhone" placeholder="请输入对方手机号" />
+							</div>
+							<div class="ua">
+								<label class="z-lable">对方姓名：</label>
+								<input type="text" id="name" placeholder="请输入对方姓名" />
+							</div>
+							<div class="ua">
+								<label class="z-lable">转账金额：</label>
+								<input type="text" id="money" placeholder="请输入金额" />
+							</div>
+
+							<div class="ua clear" style="height: 32px">
+								<label style="float: left; line-height: 32px">手机验证码：</label>
+								<input type="text" id="code" placeholder="请输入验证码" style="width: 180px; float: left" />
+								<input class="sumbit uamarg" id="validateCode" value="获取验证码" />
+							</div>
+							<div class="ua">
+								<input class="ua_bu" type="button" value="确定" id="submit"
+									style="margin-left: 91px; margin-top: 0px;" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="clr"></div>
+			<div class="one-3 one3_bord">
+				<ul>
+					<li><br /></li>
+					<li><p>
+							<span>使用中会遇到的问题</span>
+						</p>
+						<br />
+					</li>
+					<li class="li1"><p>钱包收益什么时候会显示</p></li>
+					<li class="li2"><p>
+							答：当天15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。那么15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li3"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认.15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li4"><p>什么是钱包</p></li>
+					<li class="li5"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li6"><p>钱包有没有风险</p></li>
+					<li class="li7"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<!--  <li class="li8"><p>更多相关</p><br/></li> -->
+				</ul>
+				<br />
+				<br />
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<div id="checkPasswd" style="display: none;">
+		<div style="margin-top: 30px; margin-left: 10px">
+			<span style="font-size: 16px">支付密码：</span>
+			<input style="height: 25px; line-height: 25px" id="passwd" type="password" />
+		</div>
+		<div style="text-indent: 12px; margin-top: 20px; font-size: 15px">提示：您的支付密码和您的登录密码一样！</div>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/constants.js"></script>
+	<script type="text/javascript" src="js/site/pingpp_pay.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			var countdown = 60;
+			function settime(obj) {
+				if (countdown == 0) {
+					$(obj).attr("disabled", false);
+					$(obj).attr("value", "发送验证码");
+					$(obj).css("cursor", "");
+					countdown = 60;
+				} else {
+					$(obj).attr("disabled", true);
+					$(obj).css("cursor", "default");
+					$(obj).attr("value", countdown + "s");
+					countdown--;
+					setTimeout(function() {
+						settime(obj);
+					}, 1000);
+				}
+			}
+			// 转账获取验证码
+			$("#validateCode").click(
+				function() {
+					var data = {
+						type : 5,
+						platformCode : 2,
+					};
+					$.postAjax("/validation/getValidateCode.do", data,
+						function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							var obj = $("#validateCode");
+							settime(obj);
+						});
+				}
+			);
+			
+			// 转账提交
+			$("#submit").click(function() {
+				var code = $.trim($("#code").val());
+				var money = $.trim($("#money").val());
+				var phone = $.trim($("#fromPhone").val());
+				var name = $.trim($("#name").val());
+				if (!validateUtil.validatePhone(phone)) {
+					asyncbox.tips("请输入对方手机号码", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(name)) {
+					asyncbox.tips("请输入对方姓名", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateMoney(money)) {
+					asyncbox
+							.tips("请输入有效转账金额", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateCode(code, 6)) {
+					asyncbox.tips("请输入6位有效验证码", asyncbox.Level.error);
+					return;
+				}
+
+				asyncbox.open({
+					id : "checkPasswd",
+					title : "支付验证",
+					width : 350,
+					height : 200,
+					btnsbar : $.btn.OKCANCEL,
+					callback : function(action, opener) {
+						if (action == 'ok') {
+							var passwd = $.trim($("#passwd").val());
+							var date = {
+								password : passwd,
+								amount : money,
+								validationCode : code,
+								targetUserPhone : phone,
+								targetUserName : name
+							}
+							$.postAjax("/wallet/transferToWallet.do", date,
+								function(json) {
+									if (json.code) {
+										asyncbox.tips(json.message, asyncbox.Level.error);
+										return;
+									}
+									asyncbox.tips(json.message, asyncbox.Level.success);
+									setTimeout(
+										function() {
+											window.location = "transfer.html";
+										},
+										3000);
+								}
+							);
+						}
+					}
+				});
+			});
+		});
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			});
+		}
+	</script>
+</body>
+</html>

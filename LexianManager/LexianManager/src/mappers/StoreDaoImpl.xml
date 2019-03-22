@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.store.dao.impl.StoreDaoImpl">
+
+	<sql id="whereCondition">
+		where 1=1
+		<if test="id!=null and id>0">
+			and s.id=#{id}
+		</if>
+		<if test="citysId!=null and citysId>0">
+			and s.citys_id=#{citysId}
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			and s.storename like concat("%",#{storeName},"%")
+		</if>
+		<if test="introduce!=null and introduce!=''">
+			and s.introduce=#{introduce}
+		</if>
+		<if test="starttime!=null">
+			and s.starttime=#{starttime}
+		</if>
+		<if test="closetime!=null">
+			and s.closetime=#{closetime}
+		</if>
+		<if test="status!=null">
+			and s.status=#{status}
+		</if>
+		<if test="store_no!=null">
+			and s.store_no=#{store_no}
+		</if>
+			order by store_no asc
+	</sql>
+
+	<!-- 查找门店 -->
+	<select id="findStore" resultType="storePo" flushCache="true">
+		SELECT s.id,s.store_no,s.citys_id AS citysId,s.province_id AS
+		provinceId,s.county_id AS countyId,s.storename,s.storeaddress,
+		s.introduce, s.starttime,s.closetime,
+		s.maxlongitude,s.maxlatitude,s.minlongitude,s.minlatitude,s.status
+		FROM store s
+		<include refid="whereCondition"></include>
+	</select>
+
+	<!-- 删除门店 -->
+	<delete id="deleteStore">
+		delete from store where id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 添加门店 -->
+	<insert id="addStore" parameterType="storeVo">
+		insert into
+		store(store_no,citys_id,storename,storeaddress,introduce,starttime,closetime,status,maxlatitude,minlatitude,maxlongitude,minlongitude,province_id,county_id)
+		values(#{store_no},#{citysId},#{storeName},#{storeAddress},#{introduce},#{starttime},#{closetime},#{status},#{maxlatitude},#{minlatitude},#{maxlongitude},#{minlongitude},#{provinceId},#{countyId})
+	</insert>
+
+	<!-- 添加更新门店 -->
+	<insert id="addchangeStore" parameterType="storeVo">
+		insert into
+		store(store_no,citys_id,storename,storeaddress,introduce,starttime,closetime,status,maxlatitude,minlatitude,maxlongitude,minlongitude,province_id,county_id)
+		values(#{store_no},#{citysId},#{storeName},#{storeAddress},#{introduce},#{starttime},#{closetime},#{status},#{maxlatitude},#{minlatitude},#{maxlongitude},#{minlongitude},#{provinceId},#{countyId})
+		on duplicate key update
+		<trim suffixOverrides=",">
+			<if test="citysId!=null">
+				citys_id=#{citysId},
+			</if>
+			<if test="storeName!=null">
+				storename=#{storeName},
+			</if>
+			<if test="storeAddress!=null">
+				storeaddress=#{storeAddress},
+			</if>
+			<if test="introduce!=null">
+				introduce=#{introduce},
+			</if>
+			<if test="starttime!=null">
+				starttime=#{starttime},
+			</if>
+			<if test="closetime!=null">
+				closetime=#{closetime},
+			</if>
+			<if test="status!=null">
+				status=#{status},
+			</if>
+			<if test="maxlatitude!=null">
+				maxlatitude=#{maxlatitude},
+			</if>
+			<if test="minlatitude!=null">
+				minlatitude=#{minlatitude},
+			</if>
+			<if test="maxlongitude!=null">
+				maxlongitude=#{maxlongitude},
+			</if>
+			<if test="minlongitude!=null">
+				minlongitude=#{minlongitude},
+			</if>
+			<if test="provinceId!=null">
+				province_id=#{provinceId},
+			</if>
+			<if test="countyId!=null">
+				county_id=#{countyId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 更改门店 -->
+	<update id="updateStore">
+		update store set
+		<trim suffixOverrides=",">
+			<if test="citysId!=null ">
+				citys_id=#{citysId},
+			</if>
+			<if test="storeName!=null">
+				storename=#{storeName},
+			</if>
+			<if test="storeAddress!=null">
+				storeaddress=#{storeAddress},
+			</if>
+			<if test="introduce!=null">
+				introduce=#{introduce},
+			</if>
+			<if test="starttime!=null">
+				starttime=#{starttime},
+			</if>
+			<if test="closetime!=null">
+				closetime=#{closetime},
+			</if>
+			<if test="status!=null">
+				status=#{status},
+			</if>
+			<if test="maxlongitude!=null">
+				maxlongitude=#{maxlongitude},
+			</if>
+			<if test="minlongitude!=null">
+				minlongitude=#{minlongitude},
+			</if>
+			<if test="minlatitude!=null">
+				minlatitude=#{minlatitude},
+			</if>
+			<if test="maxlatitude!=null">
+				maxlatitude=#{maxlatitude},
+			</if>
+			<if test="provinceId!=null">
+				province_id=#{provinceId},
+			</if>
+			<if test="countyId!=null">
+				county_id=#{countyId},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+	
+	<!-- 省市县查询 -->
+	<select id="findArea" resultType="AreaPo">
+		select id,city,postcode
+		from citys
+		where 1=1
+		<if test="clazz!=null">
+			and clazz=#{clazz}
+		</if>
+		<if test="parentId!=null">
+			and parent_id=#{parentId}
+		</if>
+		<if test="cityName!=null">
+			and city=#{cityName}
+		</if>
+	</select>
+	
+	<!-- 获取门店下所有已注册的商品 -->
+	<select id="getCommodities" resultType="StoreCommodityPo">
+	    SELECT commodity_store.id, name, store_no, commodity_store.commodity_no, commodity_price, commodity_amont, real_price, type 
+		FROM commodity_store INNER JOIN commodity
+		ON commodity_store.commodity_no = commodity.commodity_no
+	 	WHERE store_no=#{storeNo} 
+	    <if test="commodityName!=null">
+			and name like concat("%", #{commodityName}, "%")
+		</if>
+		<if test="commodityNo!=null">
+			and commodity.commodity_no=#{commodityNo}
+		</if>
+		<if test="filterActive==true">
+		    and type=#{active}
+		</if>
+	</select>
+	
+	<!-- 修改门店商品价格 -->
+	<update id="changeCommodityPrice">
+	    UPDATE commodity_store SET commodity_price=#{commodity_price}, real_price=#{real_price}
+	    WHERE id=#{id}
+	</update>
+	
+	<!-- 门店商品上架、下架 -->
+	<update id="updateShelfStatus">
+	    UPDATE commodity_store SET type=#{type} WHERE id=#{id}
+	</update>
+	
+	<!-- 门店商品库存 -->
+	<update id="updateCommodityStock">
+	    UPDATE commodity_store SET commodity_amont=#{commodity_amont} WHERE id=#{id}
+	</update>
+	
+	<!-- 获取某店铺所有已注册商品的编号 -->
+	<select id="getAllCommodityNos" resultType="String">
+	    SELECT commodity_no FROM commodity_store WHERE store_no=#{commodityNo}
+	</select>
+	
+	<!-- 向店铺中注册某个商品 -->
+	<insert id="registerCommodity">
+	    INSERT INTO commodity_store(store_no, commodity_no, commodity_price, commodity_amont, real_price, type)
+		VALUES(#{store_no}, #{commodity_no}, 0, 0, 0, 1); 
+	</insert>
+</mapper>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- mybatis配置 -->
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+	</settings>
+	
+	<!-- 配置别名 可用别名代替配置文件中parameterType resultType -->
+	<typeAliases>
+	    <typeAlias type="com.chinasofti.lexian.mall.category.po.CategoryPo" alias="CategoryPo" />
+	    <typeAlias type="com.chinasofti.lexian.mall.category.po.CategoryPathInfoPo" alias="CategoryPathInfoPo" />
+	    
+	    <typeAlias type="com.chinasofti.lexian.mall.commodity.po.CategoryCommodityPo" alias="CategoryCommodityPo" />
+	    <typeAlias type="com.chinasofti.lexian.mall.commodity.po.CommodityPo" alias="CommodityPo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.mall.commodity.po.CommodityPicturePo" alias="CommodityPicturePo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.mall.commodity.po.CommodityPricePo" alias="CommodityPricePo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.mall.commodity.po.Cart" alias="Cart" />
+	    
+	    <typeAlias type="com.chinasofti.lexian.mall.collection.po.CollectionPo" alias="CollectionPo" />
+	    
+	    <typeAlias type="com.chinasofti.lexian.mall.order.po.TopSalesCommodityPo" alias="TopSalesCommodityPo" />
+	    <typeAlias type="com.chinasofti.lexian.mall.order.po.OrderPo" alias="OrderPo" />
+	    <typeAlias type="com.chinasofti.lexian.mall.order.po.OrderItemPo" alias="OrderItemPo" />
+	    <typeAlias type="com.chinasofti.lexian.mall.order.vo.OrderItemVo" alias="OrderItemVo" />
+	    
+		<typeAlias type="com.chinasofti.lexian.mall.wallet.po.WalletPo" alias="WalletPo" />
+		<typeAlias type="com.chinasofti.lexian.mall.wallet.po.WalletRecordPo" alias="WalletRecordPo" />
+		
+		<typeAlias type="com.chinasofti.lexian.mall.validation.po.ValidationCodePo" alias="ValidationCodePo" />
+		
+		<typeAlias type="com.chinasofti.lexian.mall.user.po.User" alias="User" />
+		
+		<typeAlias type="com.chinasofti.lexian.mall.browse.po.BrowsePo" alias="BrowsePo" />
+		
+		<typeAlias type="com.chinasofti.lexian.mall.store.vo.StoreVo" alias="StoreVo" />
+		<typeAlias type="com.chinasofti.lexian.mall.store.vo.StoreLocationVo" alias="StoreLocationVo" />
+		<typeAlias type="com.chinasofti.lexian.mall.store.po.AreaPo" alias="AreaPo" />
+		
+		<typeAlias type="com.chinasofti.lexian.mall.special.po.SpecialCommodityPo" alias="SpecialCommodityPo" />
+	</typeAliases>
+	
+	<!-- mybatis拦截器 -->
+	<plugins>
+		<plugin interceptor="com.chinasofti.lexian.mall.common.util.PageInterceptor"></plugin>
+	</plugins>
+</configuration>

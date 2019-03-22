@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.category.dao.impl.CategoryDaoImpl">
+	<select id="getCategories" resultType="CategoryPo">
+		select
+		id,categoryname,type,parentid as parentId from category
+		where type=1 
+	</select>
+
+	<select id="getSubcategories" resultType="CategoryPo">
+		SELECT id, categoryname, parentid, type FROM category WHERE parentid=#{parentId}
+		OR parentid IN (SELECT id FROM category WHERE parentid=#{parentId})
+		ORDER BY type
+	</select>
+	
+	<select id="getCategoryPathForCategory" resultType="CategoryPathInfoPo">
+		SELECT FirstID, FirstName, SecondID, SecondName, ThirdID, ThirdName
+		FROM categoryview WHERE ThirdID=#{categoryId}
+	</select>
+	
+	<select id="getCategoryPathForCommodity" resultType="CategoryPathInfoPo">
+		SELECT A.*, B.commodity_no AS commodityNo
+		FROM categoryview AS A INNER JOIN commodity AS B ON A.ThirdID=B.category_id
+		WHERE B.commodity_no = #{commodity_no}
+	</select>
+</mapper>

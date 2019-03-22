@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		input {
+			width: 220px;
+			padding: 5px 0;
+		}
+		
+		html,body {
+			height: 100%;
+			overflow-y: scroll;
+		}
+		
+		.deleteButton{
+			width: 30px;
+			heigth: 20px;
+			padding: 0;
+			margin: 0;
+			font-size: 8px;
+			background-color: white;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商品管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>商品基本信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>信息添加</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div>
+				商品编号：<input type="text" id="commodityNo" placeholder="13位数字，例如:978755681000"/>
+			</div>
+			<div>
+				商品名称：<input type="text" id="commodityName" />
+			</div>
+			<hr/>
+			<div>
+				类别信息：
+				<input type="hidden" id="categoryName"/>
+				<input id="firstCategory"/>
+				<input id="secondCategory"/>
+				<input id="thirdCategory"/>
+			</div>
+			<hr/>
+			<div>
+				商品简介：
+				<br/>
+				<textarea id="introduce" rows="0" cols="80" style="width:75%"></textarea>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<hr/>
+		<div class="role-save" style="text-align:center">
+			<a href="javascript:void(0)" id="save" style="margin-right: 0px">保存信息</a>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#secondCategory").combobox();
+			$("#thirdCategory").combobox();
+			var url = "/category/findCategories.do?type=1";
+			$.postAjax(url, {}, function(result){
+				$("#firstCategory").combobox({
+					data : result.rows,
+					mode : "local",
+					valueField : "id",
+					textField : "categoryName",
+					multiple : false,
+					onSelect : function() {
+						var url = "/category/findCategories.do?parentId=" + 
+							$("#firstCategory").combobox("getValue");
+						$.postAjax(url, {}, function(result){
+							$("#secondCategory").combobox({
+								data : result.rows,
+								mode : "local",
+								valueField : "id",
+								textField : "categoryName",
+								multiple : false,
+								onSelect : function(){
+									var url = "/category/findCategories.do?parentId=" + 
+										$("#secondCategory").combobox("getValue");
+									$.postAjax(url, {}, function(result){
+										$("#thirdCategory").combobox({
+											data : result.rows,
+											mode : "local",
+											valueField : "id",
+											textField : "categoryName",
+											multiple : false
+										});
+									});
+								}
+							});
+						});
+					},
+					filter : function(q, row) {
+						var opts = $(this).combobox('options');
+						return row.categoryName.indexOf(q) == 0;
+					}
+				});
+			});
+			
+			
+			$("#save").click(function() {
+				var data = {};
+				data.commodityNo = $("#commodityNo").val();
+				data.name = $("#commodityName").val();
+				data.introduce = $("#introduce").val();
+				data.categoryId = $("#thirdCategory").combobox("getValue");
+				
+				if(!validateUtil.validateNumber(data.commodityNo)){
+					asyncbox.tips("商品编号必须为数字", asyncbox.Level.error);
+					return;
+				}
+				if(data.commodityNo.length != 13){
+					asyncbox.tips("商品编号必须是13位数字", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(data.name)) {
+					asyncbox.tips("请输入商品名称", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateEmpty(data.introduce)) {
+					asyncbox.tips("请输入商品简介", asyncbox.Level.error);
+					return;
+				}
+				if (!data.categoryId) {
+					asyncbox.tips("请选择商品分类", asyncbox.Level.error);
+					return;
+				}
+				$.postAjax("/commodity/addCommodityInfo.do", data,
+					function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips("保存成功", asyncbox.Level.success);
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+				});
+			});
+			
+		});
+	</script>
+</body>
+</html>

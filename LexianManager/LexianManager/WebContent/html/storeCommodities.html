@@ -1,0 +1,267 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.promo1 {
+			margin: 25px 0 0 18px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>店铺管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>店铺商品管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span id="storeName"></span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: 3px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'commodityName',iconCls:'icon-ok'">商品名称</div>
+						<div data-options="name:'commodityNo',iconCls:'icon-ok'">商品编号</div>
+						<div data-options="name:'active',iconCls:'icon-ok'">商品状态</div>
+					</div>
+				</div>
+				<a id="register" href="" target="manager"
+					class="easyui-linkbutton" data-options="iconCls:'icon-add'">注册商品</a>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable"></table>
+			</div>
+		</div>
+	</div>
+	
+	<div id="setPrice" style="display:none">
+		<div class="promo1">
+			<span>现价:</span> <input id="listPrice" type="text" style="width: 146px" />
+		</div>
+		<div class="promo1">
+			<span>原价:</span> <input id="realPrice" type="text" style="width: 146px" />
+		</div>
+	</div>
+	
+	<div id="setStock" style="display:none">
+		<div class="promo1">
+			<span>更新库存：</span> <input id="stock" type="text" style="width:146px" />
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		var storeNo = util.getParam("storeNo");
+		var storeName = decodeURI(util.getParam("storeName"));
+		$(function() {
+			$("#storeName").text(storeName);
+			var registerUrl = "storeCommodityRegister.html?storeNo=" + storeNo + 
+				"&storeName=" + storeName;
+			$("#register").attr("href", registerUrl);
+			init();
+		});
+	
+		function init() {
+			var array = [ [//每个列具体内容
+					{
+						field : 'commodityNo',
+						title : '商品编号',
+						width : "15%"
+					},　{
+						field : 'commodityName',
+						title : '商品名称',
+						width : "20%"
+					}, {
+						field : 'stock',
+						title : '库存数量',
+						width : "10%"
+					}, {
+						field : 'listPrice',
+						title : '现价',
+						width : "10%"
+					}, {
+						field : 'realPrice',
+						title : '原价',
+						width : "10%"
+					}, {
+						field : 'active',
+						width : "15%",
+						title : '状态',
+						formatter : function(valsue, rec, index) {
+							if (rec.active) {
+								return '<span>已上架</span>';
+							} else {
+								return '<span>已下架</span>';
+							}
+						}
+					},　{
+						field : 'minfo',
+						width : "20%",
+						title : '操作',
+						formatter : function(value, minfo, index) {
+							var type = minfo.active;
+							var html;
+							if (type == 1) {
+								html = '<span>    <a href=javascript:offShelf('
+									+ minfo.id + ')>下架</a></span>';
+							} else {
+								html = '<span>     <a href=javascript:onShelf('
+									+ minfo.id + ')>上架</a></span>';
+							}
+							html += "&nbsp;&nbsp;<span><a href='javascript:showPriceDlg(" 
+								+ minfo.id + "," + minfo.listPrice + "," + minfo.realPrice
+								+ ");'>更改价格</a></span>";
+							html += "&nbsp;&nbsp;<span><a href='javascript:showStockDlg("
+								+ minfo.id + "," + minfo.stock + ");'>更改库存</a></span>";
+							return html;
+						}
+					}
+			] ];
+			
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, name) {
+					var data = {};
+					if(name == "active"){
+						data.filterActive = true;
+					}
+
+					if (value == "已上架") {
+						value = 0;
+					} else if (value == "已下架") {
+						value = 1;
+					}
+					if (value) {
+						data[name] = value;
+					}
+					data["storeNo"] = storeNo;
+					util.fillTable("/store/getCommodities.do",　data, array);
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+	
+			util.fillTable("/store/getCommodities.do", {
+				storeNo : storeNo
+			}, array);
+		}
+	
+		function onShelf(id, type) {
+			var data = {
+				id: id,
+				active : true
+			};
+			util.differentRequest("/store/updateShelfStatus.do", data, "上架成功");
+			init();
+		};
+		function offShelf(id, type) {
+			var data = {
+				id: id,
+				active : false
+			};
+			util.differentRequest("/store/updateShelfStatus.do", data, "下架成功");
+			init();
+		};
+
+		function showPriceDlg(id, originListPrice, originRealPrice){
+			asyncbox.open({
+				id : "setPrice",
+				title : "设定价格",
+				width : 350,
+				height : 250,
+				padding : 30,
+				btnsbar : $.btn.OKCANCEL,
+				callback : function(action, opener) {
+					if (action == 'ok') {
+						var listPrice = $("#listPrice").numberbox('getValue');
+						if (!listPrice) {
+							asyncbox.tips("显示价格错误！", asyncbox.Level.error);
+						}
+						var realPrice = $("#realPrice").numberbox('getValue');
+						if (!realPrice) {
+							asyncbox.tips("实际价格错误！", asyncbox.Level.error);
+						}
+						$.postAjax("/store/changeCommodityPrice.do", {
+								id: id,
+								listPrice : listPrice,
+								realPrice : realPrice
+							}, function(json) {
+									if (json.code) {
+										return asyncbox.tips(json.message, asyncbox.Level.error);
+									}
+									asyncbox.tips(json.message, asyncbox.Level.success);
+									init();
+							}, function() {
+							}
+						 );
+					}
+				}
+			});
+
+			$("#listPrice").numberbox({
+				min : 0.0,
+				max : 99999999.99,
+				precision : 2
+			});
+			$("#realPrice").numberbox({
+				min : 0.0,
+				max : 99999999.99,
+				precision : 2
+			});
+			$("#listPrice").numberbox('setValue', originListPrice);
+			$("#realPrice").numberbox('setValue', originRealPrice);
+		}
+
+		function showStockDlg(id, originStock){
+			asyncbox.open({
+				id : "setStock",
+				title : "设定库存",
+				width : 350,
+				height : 250,
+				padding : 30,
+				btnsbar : $.btn.OKCANCEL,
+				callback : function(action, opener) {
+					if (action == 'ok') {
+						var stock = $("#stock").numberbox('getValue');
+						if (!stock) {
+							asyncbox.tips("库存错误！", asyncbox.Level.error);
+						}
+						$.postAjax("/store/updateCommodityStock.do", {
+								id: id,
+								stock : stock
+							}, function(json) {
+									if (json.code) {
+										return asyncbox.tips(json.message, asyncbox.Level.error);
+									}
+									asyncbox.tips(json.message, asyncbox.Level.success);
+									init();
+							}, function() {
+							}
+						);
+					}
+				}
+			});
+
+			$("#stock").numberbox({
+				min : 0,
+				max : 9999,
+				precision : 0
+			});
+			$("#stock").numberbox('setValue', originStock);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- mybatis配置 -->
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+	</settings>
+	<!-- 配置别名 可用别名代替配置文件中parameterType resultType -->
+	<typeAliases>
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.PrivilegePo" alias="PrivilegePo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.MenuPo" alias="MenuPo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.RolePo" alias="RolePo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.RolePrivilegePo" alias="RolePrivilegePo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.RoleMenuPo" alias="RoleMenuPo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.management.po.ManagerPo" alias="ManagerPo" />
+	   
+	    <typeAlias type="com.chinasofti.lexian.manager.commodity.po.CommodityPo" alias="CommodityPo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.manager.commodity.po.CommodityPicturePo" alias="CommodityPicturePo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.manager.commodity.po.CommodityCategoryPo" alias="CommodityCategoryPo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.manager.commodity.po.CommoditySpecPo" alias="CommoditySpecPo"></typeAlias>
+	    
+	    <typeAlias type="com.chinasofti.lexian.manager.store.po.StoreCommodityPo" alias="StoreCommodityPo"></typeAlias>
+	    <typeAlias type="com.chinasofti.lexian.manager.store.vo.StoreVo" alias="storeVo" />
+		<typeAlias type="com.chinasofti.lexian.manager.store.po.StorePo" alias="storePo" />
+		<typeAlias type="com.chinasofti.lexian.manager.store.po.AreaPo" alias="AreaPo" />
+		
+	    <typeAlias type="com.chinasofti.lexian.manager.order.po.OrderPo" alias="OrderPo" />
+	    <typeAlias type="com.chinasofti.lexian.manager.order.vo.OrderItemVo" alias="OrderItemVo" />
+	
+		<typeAlias type="com.chinasofti.lexian.manager.version.po.Version" alias="Version" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.po.Record" alias="Record" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.vo.LoginVo" alias="LoginVo" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.user.po.UserPo" alias="UserPo" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.category.po.CategoryPo" alias="CategoryPo" />
+		<typeAlias type="com.chinasofti.lexian.manager.category.vo.CategoryVo" alias="CategoryVo" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.vo.LoginVo" alias="LoginVo" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.po.Record" alias="Record" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.po.LogPo" alias="LogPo" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.vo.LoginVo" alias="LoginVo" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.po.Record" alias="Record" />
+		<typeAlias type="com.chinasofti.lexian.manager.privilege.po.LogPo" alias="LogPo" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.special.po.SpecialCommodityPo" alias="SpecialCommodityPo" />
+		<typeAlias type="com.chinasofti.lexian.manager.special.po.SpecialPo" alias="SpecialPo" />
+		
+		<typeAlias type="com.chinasofti.lexian.manager.statistics.po.BrowseTop" alias="BrowseTop" />
+		<typeAlias type="com.chinasofti.lexian.manager.statistics.po.SaleTop" alias="SaleTop" />
+	</typeAliases>
+	<!-- mybatis拦截器 -->
+	<plugins>
+		<plugin interceptor="com.chinasofti.lexian.manager.common.util.PageInterceptor"></plugin>
+	</plugins>
+
+</configuration>

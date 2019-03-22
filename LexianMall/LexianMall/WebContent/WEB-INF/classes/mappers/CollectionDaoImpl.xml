@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.collection.dao.impl.CollectionDaoImpl">
+	<select id="findCollection" resultType="CollectionPo">
+		SELECT A.id, user_id, A.commodity_no, B.name AS commodity_name, B.pictureurl, 
+		A.store_no, C.storename, D.commodity_price, A.collecttime 
+		FROM commodity_collection A
+		INNER JOIN commodity B ON A.commodity_no=B.commodity_no
+		INNER JOIN store C ON A.store_no=C.store_no 
+		INNER JOIN commodity_store D ON C.store_no=D.store_no AND D.commodity_no=A.commodity_no
+		WHERE user_id=#{userId}
+	</select>
+
+	<delete id="deleteCollection">
+		DELETE from commodity_collection 
+		WHERE user_id=#{user_id} 
+		AND commodity_no=#{commodity_no}
+		AND store_no=#{store_no}
+	</delete>
+
+	<insert id="addCollection">
+		INSERT INTO
+		commodity_collection(user_id,commodity_no,collecttime,store_no)
+		VALUES(#{user_id},#{commodity_no},now(),#{store_no})
+	</insert>
+	
+	<select id="findExist" resultType="Boolean">
+	    SELECT EXISTS(SELECT id FROM commodity_collection 
+	    WHERE user_id=#{user_id}
+		AND commodity_no=#{commodity_no} AND store_no=#{store_no})
+	</select>
+
+	<select id="findCount1" resultType="int">
+		select count(0) from
+		commodity_collection where commodity_no=#{commodityNo}
+	</select>
+
+</mapper>

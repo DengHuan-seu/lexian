@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.statistics.dao.impl.StatisticsDaoImpl">
+  <!-- 销售Top -->
+	<select id="findSaleTop"  resultType="SaleTop">
+   		SELECT A.commodity_no, C.name AS commodity_name,
+   		SUM(A.amount) AS volume,
+   		SUM(A.totalprice) AS amount
+   		FROM orderitem AS A INNER JOIN orders AS B ON A.order_id=B.id
+   		INNER JOIN commodity AS C ON A.commodity_no=C.commodity_no
+   		WHERE 1=1
+	<if test="startTime!=null">
+		AND B.createtime <![CDATA[ >=]]> #{startTime}
+	</if>
+	<if test="endTime!=null">
+	 	AND B.createtime <![CDATA[ <=]]> #{endTime}
+	</if>
+	<if test="commodityNo!=null">
+		AND A.commodity_no=#{commodityNo}
+	</if>
+	<if test="storeNo!=null">
+		AND B.store_no=#{storeNo}
+	</if>
+	<if test="commodityName!=null">
+		AND C.name like concat("%",#{commodityName},"%") 
+	</if>
+	 GROUP BY A.commodity_no 
+	 ORDER BY SUM(A.totalprice) DESC
+</select>
+
+	<!-- 浏览量top-->
+	<select id="findBrowseTop" resultType="BrowseTop">
+		SELECT 
+		A.commodity_no, B.name AS commodity_name,
+		COUNT(A.commodity_no) AS volume
+	    FROM browse A JOIN commodity B ON A.commodity_no=B.commodity_no
+		<if test="startTime!=null">
+			AND B.createtime <![CDATA[ >=]]> #{startTime}
+		</if>
+		<if test="endTime!=null">
+		 	AND B.createtime <![CDATA[ <=]]> #{endTime}
+		</if>
+		<if test="commodityNo!=null">
+			AND A.commodity_no=#{commodityNo}
+		</if>
+		<if test="storeNo!=null">
+			AND B.store_no=#{storeNo}
+		</if>
+		<if test="commodityName!=null">
+			AND C.name like concat("%",#{commodityName},"%") 
+		</if>
+		GROUP BY A.commodity_no 
+		ORDER BY COUNT(A.commodity_no) DESC
+	</select>
+</mapper>

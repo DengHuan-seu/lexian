@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/login-register.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-fh"><img src="images/icon-larrow.png"></div>
+        <span>注册</span>
+    </div>
+    <div class="center">
+        <div>
+            <p class="err-msg"></p>
+        </div>
+        <div class="item-input">
+            <input type="text" class="input-sj" id="phone" oninput='javascript:changePhone();' onpropertychange='javascript:changePhone();' placeholder="请输入手机号" autofocus required/>
+            <a href="javascript:void(0)" class="item-btu btn-disable">获取手机验证码</a>
+            <div class="clear-float"></div>
+        </div>
+        <div class="item-input">
+            <input type="text" class="input-default" id="validateCode" oninput='javascript:change();' onpropertychange='javascript:change();' maxlength="6" placeholder="请输入短信验证码" required/>
+        </div>
+        <div class="item-input">
+            <input type="text" class="input-default" id="userName" oninput='javascript:change();' onpropertychange='javascript:change();' maxlength="6" placeholder="请输入真实姓名" required/>
+        </div>
+        <div class="item-input">
+            <input type="password" class="input-default" id="passwd" oninput='javascript:change();' onpropertychange='javascript:change();' placeholder="请输入6-20位登录密码" required/>
+        </div>
+        <div class="item-input">
+            <input type="password" class="input-default" id="passwdConfirmed" oninput='javascript:change();' onpropertychange='javascript:change();' placeholder="确认密码" required/>
+        </div>
+        
+        <div class="btn">
+            <a class="btn-a btn-disable" href="javascript:void(0);">注册</a>
+        </div>
+    </div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript">
+	    var phone = $('#phone');
+	    var msg = $('.err-msg');
+	    var codeBtn = $('.item-btu');
+	    var validateCode = $('#validateCode');
+	    var userName = $('#userName');
+	    var passwd = $('#passwd');
+	    var passwdConfirmed = $("#passwdConfirmed");
+	    var btn = $(".btn-a");
+	    function changePhone(){
+	        if(phone.val().trim()!=''&&phone.val!=null){
+	            codeBtn.attr('href','javascript:getCode()');
+	            codeBtn.removeClass('btn-disable');//按钮可以点击，并执行方法
+	        }else{
+	            codeBtn.addClass('btn-disable');
+	            codeBtn.attr('href','javascript:void(0)');//按钮将不能执行方法
+	        }
+	    }
+	    function getCode(){
+	        $.post(baseUrl+"validation/getValidateCode.do",
+	                {phone:phone.val().trim(),type:1,platformCode:3},
+	                function(data){
+	                    if(data.code==0){
+	                        codeBtn.addClass('btn-disable');
+	                        codeBtn.attr('href','javascript:void(0)');
+	                        Countdown(60);//倒数60秒，才可以重新发送短信验证码
+	                        msg.text('');
+	                    }else{
+	                        msg.text(data.message);
+	                    }
+	                },'json'
+	        )
+	    }
+	    function Countdown(time){
+	        if(time>=0){
+	            codeBtn.text('重新获取('+time+')');
+	            time--;
+	        }else{
+	            codeBtn.text('重新获取');
+	            codeBtn.attr('href','javascript:getCode()');
+	            codeBtn.removeClass('btn-disable');
+	            return;
+	        }
+	        setTimeout('Countdown('+time+')',1000);
+	    }
+	    function change(){
+	        var psdV = passwd.val();
+	        var psdV2 = passwdConfirmed.val();
+	        var vCV = validateCode.val();
+	        var uNV = userName.val();
+	        if(psdV != null && psdV.trim()!='' && vCV!=null && vCV.trim()!=''
+		        && uNV != null && uNV.trim()!=''
+			    && psdV == psdV2){//.trim()去掉前后空白
+	            btn.removeClass('btn-disable');
+	            btn.attr('href','javascript:Register()');
+	        }else{
+	            btn.attr('href','javascript:void(0)');
+	            btn.addClass('btn-disable');
+	        }
+	    }
+	    function Register(){
+	        btn.attr('href','javascript:void(0)');
+	        btn.addClass('btn-disable');
+	        var phone1 = phone.val().trim();
+	        var passwd1 = passwd.val().trim();
+	        var passwd2 = passwdConfirmed.val().trim();
+	        if(passwd1 != passwd2){
+		        showBox("两次输入的密码不一致！");
+		        return;
+		    }
+	        $.post(baseUrl + "user/register.do", {
+	        		userName : userName.val(),
+	        		phone : phone1,
+	        		passwd : passwd1,
+	        		validateCode : validateCode.val(),
+	        		platformCode : 3
+	        		}, function(data){
+	                    if(data.code==0){
+	                        window.location.href="login.html";
+	                    }else{
+	                        msg.text(data.message);
+	                        btn.removeClass('btn-disable');
+	                        btn.attr('href','javascript:Register()');
+	                    }
+	                },'json'
+	        );
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+a {
+	text-decoration: none;
+}
+
+.content a {
+	color: #5B697D
+}
+
+.content a:hover {
+	color: #4674B4
+}
+
+.role-save a:hover {
+	color: #fff
+}
+
+.floatLeft {
+	float: left;
+	margin-left: 15px;
+}
+
+.floatRight {
+	float: right;
+}
+
+.inline-block {
+	display: inline-block;
+}
+/*rolemanage*/
+.nav {
+	background-color: #EEEEF0;
+	border: 1px solid #dddddd;
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+}
+
+.nav span {
+	margin-left: 1px;
+}
+
+.nav img {
+	height: 20px;
+	vertical-align: -13%;
+}
+
+.nav-right {
+	margin-right: 50px;
+}
+
+/*rolechange*/
+.content {
+	margin-top: 30px;
+	padding: 10px 0px 10px 20px;
+}
+
+.content-title {
+	height: 20px;
+	line-height: 20px;
+	margin-bottom: 40px;
+	font-weight: bold;
+	color: #40A9D8;
+}
+
+.content-title img {
+	height: 20px;
+	vertical-align: top;
+	margin-right: 10px;
+}
+
+.role-name,.role-power,.role-save {
+	margin-left: 40px;
+}
+
+.role-name {
+	margin-top: 10px
+}
+
+.power-list {
+	vertical-align: top;
+}
+
+.power-list span {
+	margin-right: 20px;
+	margin-bottom: 40px;
+}
+
+.role-save a {
+	display: inline-block;
+	height: 29px;
+	line-height: 29px;
+	width: 224px;
+	text-align: center;
+	background: #606E83;
+	color: #fff;
+	margin-top: 10px;
+	font-size: 20px;
+	margin-left: 104px;
+}
+
+#roleInfoTable {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.content input[type=text],.content input[type=password] {
+	/* height:25px; 
+	line-height:25px; */
+	padding: 8px 0;
+	width: 220px;
+}
+
+.pagination-num {
+	width: 40px !important;
+	text-align: center
+}
+
+table {
+	text-align: center
+}
+
+#getmessage {
+	cursor: pointer
+}
+
+.promo {
+	padding-left: 20px;
+	text-align: left;
+	margin-top: 20px
+}
+
+.promo1 {
+	padding-left: 20px;
+	text-align: left;
+	margin-top: 10px
+}
+
+#saveform>div {
+	padding-left: 30px;
+	margin-top: 20px
+}
+
+.window .window-header {
+	background: #606e83;
+}
+
+.window {
+	background: #ffffff
+}
+
+#saveform {
+	padding-bottom: 30px
+}

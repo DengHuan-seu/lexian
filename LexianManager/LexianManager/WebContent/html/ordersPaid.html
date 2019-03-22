@@ -1,0 +1,140 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>订单管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>订单列表</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: -2px">
+				<input class="easyui-datetimebox" data-options="required:true" style="width: 150px" id="starttime"/>
+				<span>:</span>
+				<input class="easyui-datetimebox" data-options="required:true" style="width: 150px" id="endtime"/>
+				<span id="getmessage">搜索</span>
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'orderNo',iconCls:'icon-ok'">订单编号</div>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable1"></table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			init();
+		});
+		
+		function init() {
+			var array = [ [//每个列具体内容
+					{
+						field : 'orderNo',
+						title : '订单编号',
+						width : "20%"
+					}, {
+						field : 'createTime',
+						title : '下单时间',
+						width : "20%"
+					}, {
+						field : 'statesText',
+						title : '订单状态',
+						width : "10%"
+					}, {
+						field : 'totalAmount',
+						title : '订单总额',
+						width : "10%"
+					}, {
+						field : 'storeName',
+						title : '取货门店',
+						width : "10%"
+					}, {
+						field : 'Operation',
+						title : '订单详情',
+						width : "30%",
+						formatter : function(value, Operation, index) {
+							var change = util.paramFollowUrl("/printAll.html",
+									Operation, new Array("orderNo"));
+							return '<span><a href=' + change + '  target="manager">查看订单详情</a></span>' +
+								'&nbsp;<span><a onclick="deliveryOrder(\'' + Operation.orderNo + '\');">发货</a></span>';
+						}
+					} ] ];
+			
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, name) {
+					var data = {};
+					if (value) {
+						data[name] = value;
+					}
+					data.states = 2;
+					util.fillTable("/order/findOrders.do", data, array, "roleInfoTable1");
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+			
+			$("#getmessage").click(function() {
+				var begintime = $("#starttime").datetimebox('getValue');
+				var endtime = $("#endtime").datetimebox('getValue');
+				var begin = new Date(begintime.replace(/-/g, "/"));
+				var end = new Date(endtime.replace(/-/g, "/"));
+				if (begin > end) {
+					asyncbox.tips("结束日期不能小于开始日期", asyncbox.Level.error);
+					return;
+				}
+				if (begintime != '' && endtime != '') {
+					var data = {
+						dateFrom : new Date(begintime),
+						dateTo : new Date(endtime)
+					}
+				} else if (begintime != '' && endtime == '') {
+					var data = {
+						begintime : new Date(begintime)
+					}
+				} else if (begintime == '' && endtime != '') {
+					var data = {
+						endtime : new Date(endtime)
+					}
+				} else {
+					asyncbox.tips("请选择时间范围", asyncbox.Level.error);
+					return;
+				}
+				data.states = 2;
+				util.fillTable("/order/findOrders.do", data, array, "roleInfoTable1");
+			})
+			
+			util.fillTable("/order/findOrders.do", {states : 2}, array, "roleInfoTable1");
+		};
+
+		function deliveryOrder(orderNo){
+			$.postAjax('/order/deliverOrder.do', {orderNo:orderNo},
+				function(json){
+					asyncbox.tips("提交成功", asyncbox.Level.success);
+					init();
+				} 
+			);
+		}
+	</script>
+</body>
+</html>

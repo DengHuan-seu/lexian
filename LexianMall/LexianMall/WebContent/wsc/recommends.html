@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html style="height:100%">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>移动商城</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+	<link rel="stylesheet" type="text/css" href="css/basic-header.css">
+	<link rel="stylesheet" type="text/css" href="css/categories.css">
+    <link rel="stylesheet" type="text/css" href="css/commoditylist.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+</head>
+<body>
+	<div class="header b-hr">
+		<div class="header-icon">
+			<a href="index.html"><img src="images/logo.png" width="34" height="34" /></a>
+		</div>
+		<span>精彩推荐</span>
+		<div id="menu_btn" class="search-menu-icon">
+			<img src="images/icon-menu.png" width="28" height="28" />
+		</div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div style="position:relative;min-height:100%">
+	    <div class="center">
+	        <div>
+	            <div class="goods-list">
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript">
+	    var getGoodsUrl = 'special/findSpecialCommodityBySpecialId.do';
+	    $(function(){
+	        getGoods();
+	    });
+	    
+	    function getGoods(){
+	        $.post(
+                baseUrl + getGoodsUrl,
+                {specialId : 3},
+                function(json){
+                    loadingHide();
+                    if(json.code==0){
+                        var data = json.data;
+                        for(var i=0;i<data.length;i++){
+                            $('.goods-list').append('<div id=? class="goods b-hr"><div class="goods-img float-l"><img src="?" width="100%"></div><div class="goods-c"><p class="name">?</p><p class="price">￥?</p></div><div class="clear-float"></div></div>'.format(
+                                    data[i].commodity_no, data[i].fullPictureurl,
+                                    data[i].commodity_name, data[i].commodity_price));
+                        }
+                    }
+                },'json'
+	        );
+	    }
+	    $(".goods").live('click',function(){
+	        location.href='commodity.html?commodityNo='+$(this).attr('id');
+	    });
+	</script>
+</body>
+</html>

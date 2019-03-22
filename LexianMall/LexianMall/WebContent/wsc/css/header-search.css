@@ -1,0 +1,8 @@
+.header{height: 45px;line-height: 40px;position: relative}
+.header>div{display: inline-block}
+.header *{vertical-align: middle}
+.headerLeft{position: absolute;left: 0;width: 3rem;text-align: center;}
+.headerMiddle{position: absolute;left: 3rem;right: 4.8rem}
+.headerMiddle>input{width: 100%;border-radius:3px;border: 1px solid #e0e0e0;height: 1.5rem;line-height: 1.5rem}
+.headerRight{position: absolute;right: 0;width: 4.8rem;text-align: center;}
+.headerRight>a{color: #F0983D;}

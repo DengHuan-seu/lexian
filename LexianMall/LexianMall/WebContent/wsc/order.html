@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>订单确认</title>
+	<link rel="stylesheet" type="text/css" href="css/basic.css">
+	<link rel="stylesheet" type="text/css" href="css/order.css">
+	<link rel="stylesheet" type="text/css" href="css/basic-header.css">
+	<style>
+		#couponList {
+			position: absolute;
+			right: 0.35rem;
+			background: #ffffff;
+			z-index: 1000;
+			color: #686868;
+			padding: 0 1rem;
+			border: 1px solid #e0e0e0;
+			display: none
+		}
+		
+		.couponButton {
+			color: #686868;
+			font-size: 0.8rem;
+			padding-right: 1rem
+		}
+		
+		#couponList>p {
+			overflow: hidden;
+			height: 1.6rem;
+			line-height: 1.6rem;
+			cursor: pointer;
+			font-size: 0.8rem
+		}
+		
+		#couponPrice {
+			cursor: pointer
+		}
+		
+		.amont {
+			color: #F0983D
+		}
+	</style>
+</head>
+<body>
+	<div class="header b-hr">
+		<div class="header-fh">
+			<img src="images/icon-larrow.png">
+		</div>
+		<span>确认订单</span>
+		<div id="menu_btn" class="search-menu-icon">
+			<img src="images/icon-menu.png" width="28" height="28" />
+		</div>
+	</div>
+	<div class="search-menu">
+		<ul>
+			<li class="float-l" id="index">首页</li>
+			<li class="float-l" id="categories">商品分类</li>
+			<li class="float-l" id="cart">购物车</li>
+			<li id="home">个人中心</li>
+		</ul>
+		<div class="clear-float"></div>
+	</div>
+	<div class="center">
+		<div id="order_info">
+			<div id="order_list" class="item pad-lr-10px tb-hr"></div>
+			<div class="item pad-lr-10px pad-tb-6 tb-hr"
+				style="position: relative">
+				<p class="mar-tb-6">
+					订单总额<span id="total_price" class="goods-price float-r"></span>
+				</p>
+			</div>
+			<div id="delivery_mode">
+				<div class="center">
+					<div class="item pad-lr-10px pad-tb-6 tb-hr">
+						<p>支付方式</p>
+						<p id="paymentType" data-name="在线支付" class="pad-tb-6">
+							<span class="pay btn-span span-active">
+								<img src="images/icon-right.png" width="16" />在线支付
+							</span>
+						</p>
+					</div>
+					<div class="item pad-lr-10px pad-tb-6 tb-hr">
+						<p>配送方式</p>
+						<p id="deliveryType" data-name="上门自提" class="pad-tb-6">
+							<span class="pay btn-span span-active">
+								<img src="images/icon-right.png" width="16" />门店自提
+							</span>
+							<span id="storeName"></span>
+							<span id="storeNo" style="visibility: hidden"></span>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="item tb-hr div-btn">
+				<span class="total">实付款：￥<span id="sfk_price"></span></span> <span
+					class="float-r tjdd-btn" id="submit-order">提交订单</span>
+			</div>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	
+	<script type="text/javascript">
+	    loadingShow();
+	    var goods = window.location.search.split('commodityNos=')[1];
+	    var storeNo = window.location.search.split('storeNo=')[1];
+	    $(function() {
+	    	forwardLogin("order.html");
+	    	//获取购物车中的商品信息
+            $.post(baseUrl+'commodity/findAlltrolley.do', {states:1},
+                    function(json) {
+                        loadingHide();
+                        if(json.code==0){
+	                        var storeName;
+                            for(var key in json.data) {
+	                            if(key != storeNo){
+		                            continue;
+		                        }
+                                var data=json.data[key];
+                                storeName = data[0].storeName;
+                                for(var i=0;i<data.length;i++){
+                                	$('#order_list').append('<div id=? trolleyId=? class="order b-hr" style="height: 5em"><div class="goods-img float-l"><img src=? width="100%"/></div><div class="goods-info"><span class="goods_name">?<span class="amont">?</span></span><p class="goods-price">￥?</p></div><div class="clear-float"></div></div>'.
+                                            format(data[i].commodityNo,data[i].trolleyId,data[i].fullCommodityPicture,data[i].commodityName,"×"+data[i].amont,parseFloat(data[i].commodityPrice).toFixed(2)));
+                                }
+                            }
+                            loadingHide();
+                            jiSuan();
+                            $("#storeName").text(storeName);
+                            $("#storeNo").text(storeNo);
+                        }else if(json.code==3){
+                            location.href = 'login.html?backUrl=order.html'+location.search;
+                        }
+                    },'json'
+            );
+	    });
+	    
+	    //计算总金额
+	    function jiSuan() {
+	        var total = 0;
+	        $('.order>.goods-info').each(function() {
+	            total += parseFloat($(this).find('.goods-price').text().split('￥')[1])*parseFloat($(this).find('.amont').text().split('×')[1]);
+	        });
+	        $('#total_price').text('￥' + total.toFixed(2));
+	        $('#sfk_price').text(parseFloat(total).toFixed(2));
+	    }
+	    //提交订单
+	    function addOrder() {
+	        loadingShow();
+	        var trolleyIds = "";
+	        var paymentType = $("#paymentType").attr("data-name");
+	        var deliveryType = $("#deliveryType").attr("data-name");
+	        var storeNo = $("#storeNo").text();
+	        $('.order').each(function(i) {
+	        	trolleyIds += $(this).attr("trolleyid") + ",";
+	        });
+	        
+	        $.post(baseUrl+'order/addOrder.do',
+	    		{
+	    			paymentType : paymentType,
+					deliveryType : deliveryType,
+					trolleyIds : trolleyIds,
+					storeNo : storeNo
+				},
+                function(json) {
+                    loadingHide();
+                    if(json.code==0) {
+                       location.href='payment.html?orderNo='+json.data;
+                    } else {
+                        showBox(json.message);
+                    }
+                },'json'
+	        )
+	    }
+	    $('.header-fh').unbind('click');
+	    $('.header-fh').click(function() {
+	        if($('#order_info').is(':visible')) {
+	            history.go(-1);
+	        }
+	        $('#order_info').show();
+	        $('#address_info').hide();
+	        $('#invoice_info').hide();
+	        $('#delivery_mode').hide();
+	    });
+	    $("#submit-order").click(addOrder);
+	</script>
+</body>
+</html>

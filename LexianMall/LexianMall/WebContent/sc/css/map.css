@@ -1,0 +1,112 @@
+#wrapper{min-width: 1000px;}
+.left1_1{
+    float: left;
+}
+
+#dituContent {
+    height: 593px;
+    border: #ccc solid 1px;
+}
+select,
+.left1_1 a,
+select option{
+    height: 30px;
+    line-height: 30px;
+}
+
+select {
+    width: 60%;
+    margin: 0 auto;
+}
+
+select option {
+    font-size: 15px;
+}
+
+
+.left1_1 div {
+    margin-top: 20px;
+    text-indent: 3em;
+}
+
+.left1_1 .margin_top {
+    margin-top: 40px;
+}
+
+.right1_1 {
+    float: right;
+}
+
+.left1_1 {
+    width: 23%;
+}
+
+.right1_1 {
+    width: 77%;
+}
+
+.search {
+    width: 85%;
+    margin: 0 auto;
+}
+.search_z,
+.search_z input[type="text"],
+.search_z button{
+    height: 30px;
+    line-height: 30px;
+}
+.search_z input[type="text"],
+.search_z button{
+    float: left;
+    display: inline-block;
+    border: none;
+}
+.left1_1 a {
+    display: block;
+    width: 60%;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    background: #FF4200;
+    margin: 20px 0 0 88px;
+    text-indent: 0;
+}
+
+
+.fist_li_z a {
+    text-align: center;
+}
+.search_z{
+    width: 70%;
+    border: 1px solid #ccc;
+    text-indent: 0;
+    margin: 40px auto 0 auto;
+}
+.search_z input[type="text"]{
+    width: 80%;
+}
+.search_z button{
+    width: 20%;
+    background: #fff;
+    text-indent: 0;
+    cursor: pointer;
+}
+.left_two_z{display: none;}
+.left_two_z p{width: 98%;margin-left: 5px;}
+.left_two_z select{width: 33%;float: left;height: 30px;line-height: 30px;background: #EEEEEE;text-indent: 2em;}
+.left_two_z .border_com{border-right: none;}
+.msg_Name{
+    color:#518CB4;
+    font-size:15px;
+}
+.msg{
+    cursor:pointer;
+}
+.msg:hover{
+    background: #F5F5F5;
+}
+.msg span{
+    height: 25px;
+    line-height: 25px;
+}

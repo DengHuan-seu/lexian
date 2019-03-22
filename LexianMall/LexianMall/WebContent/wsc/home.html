@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-fh"><img src="images/icon-larrow.png"></div>
+        <span>个人中心</span>
+        <div id="menu_btn" class="search-menu-icon">
+            <img src="images/icon-menu.png" width="28" height="28"/>
+        </div>
+    </div>
+    <div class="search-menu">
+        <ul>
+            <li class="float-l" id="index">首页</li>
+            <li class="float-l" id="categories">商品分类</li>
+            <li class="float-l" id="cart">购物车</li>
+            <li id="home">个人中心</li>
+        </ul>
+        <div class="clear-float"></div>
+    </div>
+    <div class="center">
+        <div class="header-img">
+            <span>
+            	<img class="my-img" src="" id="imgPortrait" 
+            		onerror="this.src='images/icon-default.png'" 
+            		width="100%">
+            </span>
+            <p id="userName"></p>
+            <p id="phone"></p>
+        </div>
+        <div class="item menu-list">
+            <ul>
+                <li class="cart">
+                    <img src="images/icon-gwc.png">
+                    <p>购物车</p>
+                </li>
+                <li id="order2">
+                    <img src="images/icon-sh.png">
+                    <p>待收货</p>
+                </li>
+                <li id="order1">
+                    <img src="images/icon-fk.png">
+                    <p>待付款</p>
+                </li>
+                <li id="order">
+                    <img src="images/icon-ykt.png">
+                    <p>所有订单</p>
+                </li>
+            </ul>
+            <div class="clear-float"></div>
+            <ul>
+            	<li id="collect-list">
+                    <img src="images/icon-sc.png">
+                    <p>我的收藏</p>
+                </li>
+                <li id="wallet">
+                    <img src="images/icon-wallet.png">
+                    <p>我的钱包</p>
+                </li>
+                <li id="password">
+                    <img src="images/icon-kzh.png">
+                    <p>修改密码</p>
+                </li>
+                <li id="logout">
+                    <img src="images/icon-address.png">
+                    <p>退出登录</p>
+                </li>
+                
+            </ul>
+            <div class="clear-float"></div>
+        </div>
+    </div>
+    <footer>
+	    <div class="footer-item0">
+	        <a id="userName" href="login.html?backUrl=index.html">登录</a>
+	        <a id="cancellation" href="register.html" class="border-default">注册</a>
+	      	<a href="../version/downloadApp.do" class="border-default">下载App</a>
+	        <a href="../sc/index.html" class="border-default">电脑版</a>
+	        <div class="clear-float"></div>
+	    </div>
+	    <div class="footer-item1">
+	        <p>Copyright © 2000-2016 北京中软国际教育科技有限公司 版权所有</p>
+	    </div>
+	</footer>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript">
+	    $(function(){
+	    	forwardLogin('home.html');
+
+		    $.get("../user/getUserInfo.do", function(json){
+			    var user = JSON.parse(json).data;
+			    $("#userName").html(user.username);
+			    $("#phone").html(user.phone);
+			    $("#imgPortrait").attr('src', user.fullPortrait)
+			});
+	    });
+	    $("#wallet").click(function(){
+	        location.href="wallet.html";
+	    });
+	    $(".cart").click(function(){
+	        location.href="cart.html";
+	    });
+	    $("#order").click(function(){
+	        location.href="orderlist.html";
+	    });
+	    $("#order1").click(function(){
+	        location.href="orderlist.html?states=1";
+	    });
+	    $("#order2").click(function(){
+	        location.href="orderlist.html?states=2";
+	    });
+	    $("#collect-list").click(function(){
+	        location.href="collections.html";
+	    });
+	    $("#profile").click(function(){
+	        location.href="profile.html";
+	    });
+	    $("#password").click(function(){
+	        location.href="password.html";
+	    });
+	    $("#logout").click(function(){
+		    $.post("../user/logout.do", function(){
+			    window.location.href = "index.html";
+			});
+		});
+	</script>
+</body>
+</html>

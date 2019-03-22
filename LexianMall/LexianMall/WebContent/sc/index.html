@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-首页</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="search">
+			<div class="left">
+			</div>
+			<div class="right">
+				<form>
+					<input type="text" value="" class="txt" placeholder="请输入您想要的商品" style="font-size: 18px" />
+					<button type="submit">搜索</button>
+					<div class="clr"></div>
+				</form>
+				<div class="hotList">
+					<a href="commoditylist.html?categoryId=126">茶油</a><span>|</span>
+					<a href="commoditylist.html?categoryId=148">洗面奶</a><span>|</span>
+					<a href="commoditylist.html?categoryId=131">米</a><span>|</span>
+					<a href="commoditylist.html?categoryId=125">枣类</a><span>|</span>
+					<a href="commoditylist.html?categoryId=122">桂圆</a><span>|</span>
+					<a href="commoditylist.html?categoryId=166">纯牛奶</a><span>|</span>
+					<a href="commoditylist.html?categoryId=154">洗手液</a>
+				</div>
+				<div class="shopCart">
+					<span class="tips">0</span> <a href="cart.html"
+						id="carZ"> 我的购物车</a>
+					<div class="shopCartList">
+						<p class="line"></p>
+						购物车中还没有商品，赶快选购吧！
+					</div>
+				</div>
+			</div>
+			<div class="clr"></div>
+		</div>
+
+		<!-- 类别目录树开始 -->
+		<div class="yHeader">
+			<div class="yNavIndex">
+				<div class="pullDown">
+					<h2 class="pullDownTitle">所有分类</h2>
+					<ul class="pullDownList">
+					</ul>
+					<!-- 下拉详细列表具体分类 -->
+					<div class="yMenuListCon">
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+						<div class="yMenuListConin"></div>
+					</div>
+				</div>
+				<ul class="yMenuIndex">
+					<li><a href="javascript:void(0)" class="yMenua">首页</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- 类别目录树结束 -->
+		
+		<!-- 轮播图开始 -->
+		<div class="yBanner">
+			<div class="yBannerList z-color1">
+				<div class="yBannerListIn">
+					<div>
+						<img src="images/banner5.jpg" id="changeImg" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 轮播图结束 -->
+		
+		<!-- 主体内容部分 -->
+		<div class="main">
+			<div class="content1-z clear">
+				<div class="left" id="special5">
+				</div>
+				<div class="right">
+					<div class="top">
+						<ul class="clear">
+							<li><a onclick="changefour(this);" data="index1">限时抢购</a></li>
+							<li><a onclick="changefour(this);" data="index2">品牌精选</a></li>
+							<li><a onclick="changefour(this);" data="index3">热卖推荐</a></li>
+							<li><a onclick="changefour(this);" data="index4">新品上市</a></li>
+						</ul>
+					</div>
+					<!-- 第一个  -->
+					<div class="bottom clear" data="index1" style="display: block" id="special1"></div>
+					<!-- 第二个 -->
+					<div class="bottom clear" data="index2" style="display: none" id="special2"></div>
+					<!-- 第三个 -->
+					<div class="bottom clear" data="index3" style="display: none" id="special3"></div>
+					<!-- 第四个 -->
+					<div class="bottom clear" data="index4" style="display: none" id="special4"></div>
+				</div>
+			</div>
+			
+			<!-- 秒杀商品 -->
+			<div class="content_three_z">
+				<div class="top_z">
+					<span class="span_one">秒杀商品</span>
+					<span class="span_two">
+						<a onclick="quChange();" class="changeT">换一批</a>
+						<a class="update" onclick="quChange();"><img src="icons/icon_z_4.png" /></a>
+					</span>
+					<div id="zzjs_zx">
+						<div id="www_zzjs_net_zx"></div>
+					</div>
+				</div>
+				<div class="clr"></div>
+				<div class="bottom_two_z comT2">
+					<div class="com_z_2" id="special6"></div>
+				</div>
+			</div>
+
+			<!-- 推荐明星商品 -->
+			<div class="content_three_z content_one_z">
+				<div class="top_z">
+					<span class="span_one">明星商品</span> <span class="span_two clear">
+						<a onclick="starChange();" class="changeT">换一批</a>
+						<a class="update" onclick="starChange();"><img src="icons/icon_z_4.png" /></a>
+					</span>
+					<div id="zzjs_z">
+						<div id="www_zzjs_net_z"></div>
+					</div>
+				</div>
+				<div class="clr"></div>
+				<div class="bottom_two_z comT1">
+					<div class="com_z_2" id="starCommodity"></div>
+				</div>
+			</div>
+
+			<!-- 猜你喜欢商品 -->
+			<div class="content_two_z">
+				<div class="top_z">
+					<span class="span_one">猜你喜欢</span>
+					<span class="span_two">
+						<a onclick="changeLike();" class="changeT">换一批</a>
+						<a class="update" onclick="changeLike();"><img src="icons/icon_z_4.png" /></a>
+					</span>
+					<div id="zzjs">
+						<div id="www_zzjs_net"></div>
+					</div>
+				</div>
+				<div class="clr"></div>
+				<div class="bottom_two_z comT3" id="ttzy">
+					<div class="com_z_2" id="browseCommodity"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="footer"></div>
+	</div>
+	
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript" src="js/site/index.js"></script>
+</body>
+</html>

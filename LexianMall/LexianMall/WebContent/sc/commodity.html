@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-商品详情</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<link rel="stylesheet" type="text/css" href="css/commodity.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div id="search"></div>
+		
+		<div class="header">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">商品详情</li>
+					<li class="com_li com_li_color">
+						<a href="index.html" class="icon_z_1">首页</a>
+					</li>
+				</ul>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div class="main">
+			<div class="navigation" id="parentsCatagory">
+				<a href="index.html">
+					<span id="parentsOne">
+						<a href="#"></a>
+					</span>
+					<span>&nbsp;>&nbsp;</span>
+					<span id="parentsTwo"></span>
+					<span>&nbsp;>&nbsp;</span>
+				</a>
+				<a onclick="findThreeCatagory(this)">
+					<span id="parentsThree" data=""></span>
+				</a>
+				&nbsp;>&nbsp;
+				<span id="thegenusName"></span>
+			</div>
+			<div class="all_top">
+				<!--上半部分左边内容-->
+				<div class="left">
+					<div class="left_top">
+						<img id="picture" src="" alt="" width="100%" height="270" />
+					</div>
+					<div class="left_middle">
+						<div class="middle_div1 float_left" style="position: absolute; left: -10px; top: 0;"></div>
+						<div id="thumbnail"></div>
+						<div class="middle_div1 float_left" style="position: absolute; left: 350px; top: 0;"></div>
+						<div class="clr"></div>
+					</div>
+					<div class="left_under">
+						<div class="tyy"></div>
+						<div id="collectionOperation" class="txx" style="padding-left: 30px; display:none">
+							<a href="javascript:collect()" style="float: right">
+								<img id="collectionPic" src="images/good20.png" alt="" width="25" />
+							</a>
+						</div>
+						<div>
+							(<span id="collectionCount"></span>人已收藏)
+						</div>
+						<div class="clr">&nbsp;</div>
+					</div>
+				</div>
+				<!--上半部分右边内容-->
+				<div class="right">
+					<div class="right_first blod">
+						<span id="goodsName"></span>&nbsp;<span id="introduce"></span>
+					</div>
+					<div id="storePrice" class="right_second">
+						<p class="color1">
+							促销价：<span class="color2" id="commodityPrice"></span>&nbsp;
+							<span style="color: #ff4200; font-size: 20px; font-weight: bold;">元</span>
+						</p>
+						<p class="color1">价&nbsp;&nbsp;&nbsp;&nbsp;格：
+							<span id="realPrice" style="text-decoration: line-through; font-size: 14px"></span><span>元</span>
+						</p>
+					</div>
+					<div id="priceRange" class="right_second">
+						<p class="color1">
+							价格范围：
+							<span class="color2" id="minPrice"></span>&nbsp;元&nbsp;~&nbsp;&nbsp;
+							<span class="color2" id="maxPrice"></span>&nbsp;元
+						</p>
+					</div>
+					<!-- 门店选择 -->
+					<div class="changeAddress clear">
+						<div class="ttk" style="padding-right: 13px">门店：</div>
+						<div class="wrapText clear">
+							<div class="storeSelector">
+								<div class="title" id="addressTitle">请选择取货门店</div>
+								<div class="content" id="hiddenContent">
+									<div class="line1" id="line1"></div>
+									<div class="line2" id="line2"></div>
+									<div class="contentLists">
+										<div class="mt">
+											<ul class="tabs" id="tabs">
+												<li><a id="click1">请选择省</a></li>
+												<li class="comLi"><a id="click2">请选择市</a></li>
+												<li class="comLi"><a id="click3">请选择区县</a></li>
+												<li class="comLi"><a id="click4">请选择门店地址</a></li>
+											</ul>
+										</div>
+										<div class="mc">
+											<ul class="areaList clear" id="city1"></ul>
+											<ul class="areaList clear" style="display: none" id="city2"></ul>
+											<ul class="areaList clear" style="display: none" id="city3"></ul>
+											<ul class="areaList clear" style="display: none" id="city4"></ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="store-prompt"></div>
+						</div>
+					</div>
+
+					<div id="addSub" class="left_sixth">
+						<div class="ttk number" style="padding-right: 1px">购买数量：</div>
+						<div class="left_sixth_a float_left">
+							<input type="text" id="num" onchange="check()" value="1" />
+						</div>
+						<div class="left_sixth_b float_left">
+							<div id="add" class="div_top" onclick="addNum()">
+								<img src="images/good1.png" alt="" width="100%" />
+							</div>
+							<div id="sub" class="div_bom" onclick="subNum()">
+								<img src="images/good2.png" alt="" width="100%" />
+							</div>
+						</div>
+						<div class="left_sixth_c float_left">
+						</div>
+						<div class="clr"></div>
+					</div>
+					<div class="left_seventh">
+						<span>
+							<input id="addTrolley" class="seventh_iput2 blod" type="button" onclick="addTrolley()" value="加入购物车" />
+						</span>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<!--这是中间部分-->
+			<div class="all_middle">
+				<!--下半部分右边部分-->
+				<div class="right float_left border" id="addhtml">
+					<div class="right_div1">
+						<div class="diva color3 float_left">
+							<p>商品详情</p>
+						</div>
+						<div class="clr"></div>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	
+	<script type="text/javascript">
+		var commodityNo = util.getParam("commodityNo");
+		$(function() {
+			$("#num").val(1);
+			$("#storePrice").hide();
+			$("#priceRange").show();
+			findShopCarCount();
+			init();
+			addBrowse();
+		});
+		
+		// 限制购买数量，最小为1， 最大为50
+		function check() {
+			var num = $.trim($("#num").val());
+	
+			if (isNaN(num) || num <= 0) {
+				$("#num").val(1)
+			}
+			if (num > 50) {
+				$("#num").val(50)
+			}
+		};
+		
+		// 限制最大值 
+		function addNum() {
+			storeNo = $(".storeSelector>.title").attr("data");
+			if (storeNo == null) {
+				asyncbox.tips("请选择取货门店", asyncbox.Level.error);
+				return;
+			} else {
+				//var maxNum = $.trim($("#invoice").text());
+				var num = $.trim($("#num").val());
+				if (parseFloat(num) + parseFloat(1) > parseFloat(50)) {
+					$("#num").val(parseFloat(50));
+				} else {
+					$("#num").val(parseFloat(num) + parseFloat(1));
+				}
+			}
+		};
+		
+		// 限制最小值 
+		function subNum() {
+			storeNo = $(".storeSelector>.title").attr("data");
+			if (storeNo == null) {
+				asyncbox.tips("请选择取货门店", asyncbox.Level.error);
+				return;
+			} else {
+				var num = $.trim($("#num").val());
+				if (num < 2) {
+					$("#num").val(1);
+				} else {
+					$("#num").val(num - 1);
+				}
+			}
+		};
+
+		// 加入购物车
+		function addTrolley() {
+			var num = $("#num").val();
+			if (!validateUtil.validateEmpty(num)) {
+				asyncbox.tips("请选择数量", asyncbox.Level.error);
+				return;
+			}
+			storeNo = $(".storeSelector>.title").attr("data");
+	
+			if (storeNo == null) {
+				asyncbox.tips("请选择取货门店", asyncbox.Level.error);
+				return;
+			}
+			var data = {
+				storeNo : storeNo,
+				commodityNo : commodityNo,
+				amont : num,
+			};
+			$.postAjax("/commodity/saveCommomdityToTrolley.do", data,
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					}
+					findShopCarCount();
+					asyncbox.tips("加入购物车成功！", asyncbox.Level.success);
+				}
+			);
+		};
+	
+		// 收藏商品
+		function collect() {
+			var storeNo = $(".storeSelector>.title").attr("data");
+			if (storeNo == null) {
+				return asyncbox.tips("请选择取货门店！", asyncbox.Level.error);
+			}
+			var data = {
+				commodityNo : commodityNo,
+				storeNo : storeNo
+			};
+
+			var count = parseInt($("#collectionCount").text());
+			if($("#collectionPic").attr("src") == "images/good10.png"){  // 该商品已经收藏过
+				$.postAjax("/collection/deleteCollection.do", data, 
+					function(json){
+						$("#collectionPic").attr("src", "images/good20.png");
+						count--;
+						$("#collectionCount").text(count);
+						asyncbox.tips(json.message, asyncbox.Level.success);
+					}
+				);
+			} else{
+				$.postAjax("/collection/addCollection.do", data,
+					function(json) {
+						$("#collectionPic").attr("src", "images/good10.png");
+						count++;
+						$("#collectionCount").text(count);
+						asyncbox.tips(json.message, asyncbox.Level.success);
+					}
+				);
+			}
+		}
+	
+		// 初始化
+		function init() {
+			// 根据commodityNo获取该商品类别路径信息
+			$.postAjax("/category/getCategoryPathForCommodity.do", {commodityNo : commodityNo}, 
+				function(json) {
+					if (json.code) {
+						asyncbox.tips("找不到该商品！", asyncbox.Level.error);
+						return;
+					}
+					var data = json.data || {};
+					$("#parentsOne").text(data.firstName);
+					$("#parentsTwo").text(data.secondName);
+					$("#parentsThree").text(data.thirdName);
+					$("#parentsThree").attr("data", data.thirdId);
+				}
+			);
+
+			// 获取商品基本信息
+			$.postAjax("/commodity/getCommodityInfo.do", 
+				{commodityNo : commodityNo},
+				function(json) {
+					if (json.code) {
+						asyncbox.tips("找不到该商品！", asyncbox.Level.error);
+						return;
+					}
+					var data = json.data || [];
+					$("#introduce").text(data.introduce);
+					$("#goodsName").text(data.name);
+					$("#thegenusName").text(data.name);
+					$("#minPrice").text(parseFloat(data.minPrice).toFixed(2));
+					$("#maxPrice").text(parseFloat(data.maxPrice).toFixed(2));
+					$("#picture").attr("src", data.fullPictureUrl);
+					$("#thumbnail").empty();
+					
+					var pictures = data.pictures;
+					for ( var index in pictures) {
+						$("#thumbnail").append('<div class="middle_div2 float_left"><img src="?" alt=""  width="100%" height="50"/></div>'
+							.format(data.pictures[index].fullPictureUrl));
+					}
+					$("#addhtml").empty();
+					$("#addhtml").append(data.fullDetailed);
+				});
+
+			// 获取商品是否已经被收藏的信息
+			$.postAjax("/collection/findCount.do", 
+				{ commodityNo:commodityNo },
+				function(json){
+					$("#collectionCount").text(json.data);
+				}
+			);
+		};
+		
+		// 再次加载
+		function changeStore(storeNo) { 
+			var param = {
+				storeNo : storeNo,
+				commodityNo : commodityNo
+			};
+			$.postAjax("/commodity/getStorePrice.do", param,
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						$(".store-prompt").text("无货");
+						$(".store-prompt").css("color", "#ccc");
+						$("#num").val(0);
+						$("#add").removeAttr("onclick");
+						$("#sub").removeAttr("onclick");
+						$("#addTrolley").attr("disabled", true);
+						$("#addTrolley").css({
+							"background" : "#ccc",
+							"color" : "#999",
+							"cursor" : "default"
+						});
+						$("#buyNow").attr("disabled", true);
+						$("#buyNow").css({
+							"background" : "#ccc",
+							"color" : "#999",
+							"cursor" : "default"
+						});
+						return;
+					}
+					var data = json.data || [];
+					var divs = "<div class='left_fourth marg'>";
+					divs += "<span class='float_left marg1 color1' >?</span>";
+					divs += "<div class='size select' id='?'></div>";
+					divs += "<div class='clr'></div></div>";
+					$("#commodityPrice").text(data.commodity_price);
+					$("#realPrice").text(data.real_price);
+					$("#priceRange").hide();
+					$("#storePrice").show();
+
+					// 检查商品收藏状态
+					checkCollection(storeNo);
+					
+					var count = data.commodity_amont;
+					checkStock(count);
+				});
+		};
+
+		function checkCollection(){
+			var param = {
+				commodityNo:commodityNo,
+				storeNo:storeNo
+			};
+			$.postAjax("/collection/findExist.do",
+				param,
+				function(json){
+					if (json.code) {	// 尚未登录，此时不显示收藏或取消收藏的图标
+					} else{				// 用户已经登录
+						$("#collectionOperation").show();
+						var img = null;
+						if (json.data) {			// 商品已经收藏过
+							img = "images/good10.png";
+						} else {
+							img = "images/good20.png";
+						}
+						$("#collectionPic").attr("src", img);
+					}
+				}
+			);
+		}
+	
+		// 判断有货无货
+		function checkStock(coun) {
+			var count = Number(coun);
+			if (count < 1) {
+				$(".store-prompt").text("无货");
+				$(".store-prompt").css("color", "#ccc");
+				$("#num").val(0);
+				$("#add").removeAttr("onclick");
+				$("#sub").removeAttr("onclick");
+				$("#addTrolley").attr("disabled", true);
+				$("#addTrolley").css({
+					"background" : "#ccc",
+					"color" : "#999",
+					"cursor" : "default"
+				});
+				$("#buyNow").attr("disabled", true);
+				$("#buyNow").css({
+					"background" : "#ccc",
+					"color" : "#999",
+					"cursor" : "default"
+				});
+			} else {
+				$(".store-prompt").text("有货");
+				$(".store-prompt").css("color", "#000")
+				$("#num").val(1);
+				$("#add").attr("onclick", "addNum()");
+				$("#sub").attr("onclick", "subNum()");
+				$("#addTrolley").attr("disabled", false);
+				$("#addTrolley").css({
+					"background" : "",
+					"color" : "",
+					"cursor" : ""
+				});
+				$("#buyNow").attr("disabled", false);
+				$("#buyNow").css({
+					"background" : "",
+					"color" : "",
+					"cursor" : ""
+				});
+			}
+	
+		}
+	
+		// 切换图片
+		$("#thumbnail img").live("hover", function() {
+			var src = $(this).attr("src");
+			$("#picture").attr("src", src);
+		});
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopCart>span[class='tips']").text(count);
+			});
+		}
+	
+		function findThreeCatagory(obj) {
+			var categoryId = $(obj).children("span").attr("data");
+			window.location = "commoditylist.html?categoryId=" + categoryId;
+		}
+		$(function() {
+			$(".mt .tabs li:first").addClass("active");
+			$(".mt .tabs li:gt(0)").addClass("active1")
+			$(".storeSelector").mouseenter(
+				function() {
+					$.postAjax("/store/getLocation.do", {type : 1}, 
+						function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							var data = json.data || [];
+							$("#city1").empty();
+							for ( var index in data) {
+								$("#city1").append("<li><a data='?'>?</a></li>".format(data[index].id, data[index].city));
+							}
+						}
+					);
+					$("#hiddenContent").css("display", "block");
+				}
+			);
+			
+			$(".storeSelector").mouseleave(function() {
+				$("#hiddenContent").css("display", "none");
+			});
+			$("#tabs li a").click(
+				function() {
+					var nowEvent = event.srcElement;
+					var nodesEvent = $("#tabs li a");
+					var nodesLi = nowEvent.parentNode;
+					var mcNodesUi = $(".mc ul");
+					for ( var i = 0; i < nodesEvent.length; i++) {
+						if (nowEvent == nodesEvent[i]) {
+							$(nodesLi).addClass("active");
+							$(mcNodesUi[i]).css("display", "block");
+							$(nodesEvent[i].parentNode).removeClass("active1");
+						} else {
+							$(nodesEvent[i].parentNode).removeClass("active");
+							$(nodesEvent[i].parentNode).addClass("active1");
+							$(mcNodesUi[i]).css("display", "none");
+						}
+					}
+
+					var id = $(this).attr("id");
+					var data;
+					var lastId;
+					id = id.substring(id.length - 1, id.length);
+					divid = "city" + id;
+					$("#" + divid).empty();
+					//获取对应的cityid 来查找发请求
+					if (id == 1) {
+						data = {
+							type : id
+						}
+					} else {
+						lastId = $("#click" + (parseInt(id) - parseInt(1))).attr("data");
+						data = {
+							type : id,
+							id : lastId
+						}
+					}
+
+					$.postAjax("/store/getLocation.do", data, function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						$("#" + divid).empty();
+						var data = json.data || [];
+						if (id == 4) {
+							for ( var index in data) {
+								$("#city" + 4).append("<li><a data='?'>?</a></li>".format(data[index].storeNo, data[index].storeName));
+							}
+						} else {
+							for ( var index in data) {
+								$("#" + divid).append("<li><a data='?'>?</a></li>".format(data[index].id, data[index].city));
+							}
+						}
+					});
+				}
+			);
+		});
+	
+		$(".mc>.areaList>li>a").live("click", function() {
+			//数字1.2.3.4
+			var id = $(this).parents(".areaList").attr("id");
+			id = id.substring(id.length - 1, id.length);
+			id = parseInt(id);
+			var nextid = parseInt(id) + parseInt(1);
+			var lastid = parseInt(id) - parseInt(1);
+			//获取名字
+			var cityName = $(this).text();
+			var data = $(this).attr("data");
+			//添加名字
+			$("#click" + id).text(cityName);
+			$("#click" + id).attr("data", data);
+			if (id == 4) {
+				$(".storeSelector>.title").attr("data", data);
+			}
+			//改变样式
+			$(this).parents(".mc").children().each(function() {
+				//隐藏
+				$(this).css("display", "none");
+			});
+			var chan = parseInt(id) + parseInt(1);
+			if (chan == 5) {
+				$("#city" + 4).css("display", "block");
+			} else {
+				$("#city" + chan).css("display", "block");
+			}
+
+			var parm = {
+				type : chan,
+				id : data
+			}
+			if (chan == 5) {
+				var older = $("#addressTitle").outerWidth()
+				$(".storeSelector>.title").text($("#click1").text()
+					+ $("#click2").text()
+					+ $("#click3").text()
+					+ $("#click4").text());
+				$(".storeSelector>.title").data();
+				$("#hiddenContent").css("display", "none");
+				storeNo = $(".storeSelector>.title").attr("data");
+				//长度
+				var thenew = 296 - ($("#addressTitle").outerWidth() - older) + "px";
+				$("#line2").css("width", thenew);
+				changeStore(storeNo);
+				return;
+			}
+			$.postAjax("/store/getLocation.do", parm, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var data = json.data || [];
+				$("#city" + chan).empty();
+				if (chan == 4) {
+					for ( var index in data) {
+						$("#city" + 4).append("<li><a data='?'>?</a></li>"
+							.format(data[index].storeNo, data[index].storeName));
+					}
+				} else {
+					for ( var index in data) {
+						$("#city" + chan).append("<li><a data='?'>?</a></li>"
+							.format(data[index].id, data[index].city));
+					}
+				}
+			});
+		});
+	
+		$("#city1 > li >a").live("click", function() {
+			$("#click1").parent().removeClass("active");
+			$("#click1").parent().addClass("active1");
+			$("#click2").parent().removeClass("active1");
+			$("#click2").parent().addClass("active");
+		});
+		$("#city2 > li >a").live("click", function() {
+			$("#click2").parent().removeClass("active");
+			$("#click2").parent().addClass("active1");
+			$("#click3").parent().removeClass("active1");
+			$("#click3").parent().addClass("active");
+		});
+		$("#city3 > li >a").live("click", function() {
+			$("#click3").parent().removeClass("active");
+			$("#click3").parent().addClass("active1");
+			$("#click4").parent().removeClass("active1");
+			$("#click4").parent().addClass("active");
+		});
+
+		function addBrowse(){
+			$.postAjax("/browse/addBrowse.do", {commodityNo:commodityNo}, function(){});
+		}
+	</script>
+</body>
+</html>

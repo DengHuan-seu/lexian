@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>订单详情</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/order.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+</head>
+<style>
+    .font_type{font-size: 0.9em;color: rgb(127, 127, 127);}
+    #goodsInfo{width: 63%}
+    #goodsInfo div{}
+    .label{display: inline-block;width: 5.16em;}
+    #orderInfo>div{padding: 0.35em 0}
+    #goodsPrice{color: rgb(241, 83, 83);}
+    #couponName{color: #F0983D}
+</style>
+<body>
+	<div class="header">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>订单详情</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	</div>
+	<div class="all item t-hr">
+	    <div class="div-btn" style="text-align:center">
+		    <span class="span-btn bg-col" style="width: 80%" id="operator"></span>
+		</div>
+	    <div id="orderInfo" class="b-hr font_type" style="padding: 1em 0.7em">
+	    	<div>
+	    		<span>订单状态：</span>
+	    		<span id="states"></span>
+	    	</div>
+	    	<div>
+	    		<span>门店地址：</span>
+	        	<span id="storeName"></span>
+	    	</div>
+	        <div>
+	            <span class="label">订单编号：</span>
+	            <span id="orderNo"></span>
+	        </div>
+	        <div>
+	            <span class="label">创建时间：</span>
+	            <span id="orderTime"></span>
+	        </div>
+	         <div>
+	            <span class="label">订单总额：</span>
+	            <span id="totalAmount"></span>
+	        </div>
+	    </div>
+	    <div id="goodsList">
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript">
+	    var orderNo = window.location.search.split('orderNo=')[1];
+	    $(function(){
+	    	forwardLogin('orderdetails.html?orderNo=' + orderNo);
+	    	
+	        $.post(baseUrl + 'order/findOrderInfo.do',
+	                {orderNo:orderNo},
+	                function(json){
+	                    if(json.code==0){
+	                        var order = json.data;
+	                        $('#states').text(order.statesText);
+	                        $('#storeName').text(order.storeName);
+	                        $('#orderNo').text(order.orderNo);
+	                        $('#orderTime').text(order.createTime);
+	                        $('#totalAmount').text(parseFloat(order.totalAmount).toFixed(2)+'元');
+	                        setOperator(order.states);
+	                        
+	                        var  str = '<div style="padding: 1em" class="b-hr">';
+	                        str += '<div class="float-l" style="margin-right:1.2em;width: 6em">';
+	                        str += '<img id="goodsImg" src="?" width="100%">';
+	                        str += '</div>';
+	                        str += '<div id="goodsInfo" class="float-l">';
+	                        str += ' <div id="goodsDesc">?</div>';
+	                        str += '<div id="goodsType" class="font_type">数量：?</div>';
+	                        str += '<div><span class="font_type">单价：￥?</span><span id="goodsNum"></span></div>';
+	                        str += '<div><span class="font_type">总价：￥?</span><span id="goodsNum"></span></div>';
+	                        str += '</div>';
+	                        str += '<div class="clear-float"></div></div>';
+	                        
+	                        order.orderItems.forEach(function(item){
+	                        	$('#goodsList').append(
+	    	                    	str.format(
+	    	    	                	item.fullPictureUrl,
+	    	    	                	item.commodityName,
+	    	    	                	item.amount,
+	    	    	                	parseFloat(item.listPrice).toFixed(2),
+	    	    	                	parseFloat(item.totalPrice).toFixed(2)
+	    	    	                )
+	    	    	            );
+		                    });
+	                    }else{
+	                        showBox(json.message);
+	                    }
+	                },'json'
+	        )
+	    });
+	    
+	    function setOperator(orderStates){
+		    var operator = $("#operator");
+		    var url;
+		    switch(orderStates){
+		    case 1:
+			    operator.text("去支付");
+			   	operator.click(function(){
+				   	window.location.href = "payment.html?orderNo=" + orderNo;
+				}) 
+			    break;
+		    case 2:
+		    case 3:
+			    operator.text("签收订单");
+			    operator.click(function(){
+			    	selectBox("确实要签收订单吗？","btnConfirm");
+				})
+			    break;
+			default:
+				operator.parent().css("display", "none");
+				break;
+		   	}
+		}
+
+	    function confirmReceipt(choice){
+		    if(choice){
+		    	$.post("../order/completeOrder.do", {orderNo:orderNo}, function(result){
+				    window.location.reload();
+				});
+			}
+		}
+	</script>
+</body>
+</html>

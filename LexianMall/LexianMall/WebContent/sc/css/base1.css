@@ -1,0 +1,142 @@
+.header ul li,
+.header ul .lin span,
+.contentout ul li,
+.box2 .span1,
+.box2 .span2,
+.box2 .span3 {
+    display: inline-block;
+}
+
+.box2 .span1,
+.box2 .span2,
+.box2 .span3 {
+    float: left;
+}
+.search_marg {
+    margin-top: 50px;
+}
+.reg_log{margin-left: 10%;}
+.header ul li,
+.contentout ul li,
+.box2 .span3 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.search {
+    position: relative;
+}
+
+.search h2 {
+    position: absolute;
+    top: 34px;
+    left: 200px;
+    color: #000000;
+}
+
+.header ul {
+    min-width: 880px;
+    border-bottom: 1px solid #DBDBDC;
+    color: #676565;
+}
+
+.header ul li {
+    width: 19%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+    position: relative;
+}
+
+.header ul .li1 {
+    color: #000000;
+}
+
+.header ul .li1 .span2 {
+    background: #29ABE2;
+}
+
+.header ul .lin span {
+    border: 1px solid #ECECEC;
+    height: 20px;
+    line-height: 20px;
+    color: #000;
+    font-weight: normal;
+}
+
+.header ul .lin {
+    text-align: right;
+}
+
+.contentout {
+    border-top: 1px solid #C8C9CA;
+    margin-top: 100px;
+}
+
+.contentout ul {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.contentout ul li {
+    height: 60px;
+    line-height: 60px;
+    width: 100px;
+    color: #888888;
+    font-size: 20px;
+}
+
+.contentsyartwrap .box2 {
+    width: 400px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.contentsyartwrap .box2 .span1 {
+    width: 19%;
+}
+
+.box2 .span2 {
+    width: 37%;
+    border: 1px solid #C8C9CA;
+    height: 30px;
+    outline: none;
+    text-indent: 1em;
+}
+
+.box2 .span3 {
+    width: 37%;
+    border: 1px solid #C8C9CA;
+    height: 30px;
+    margin-left: 5.5px;
+    line-height: 30px;
+    background: #EBEBEB;
+    color: #A2A2A2;
+}
+
+.header .li1 {
+    background: url(../images/z-pic1.png) no-repeat 14% center;
+    border-bottom: 2px solid #2CA6E0;
+    text-indent: 30px;
+}
+
+.header .li2 {
+    background: url(../images/pic11-2.png) no-repeat 14% center;
+    text-indent: 35px;
+}
+
+.header .li3 {
+    background: url(../images/pic11-3.png) no-repeat 14% center;
+    text-indent: 35px;
+}
+
+.header .li4 {
+    text-indent: 10px;
+}
+.header .zb1{background: url(../images/yes.png) no-repeat 28% center; }
+.header .zb2{background: url(../images/pic11-4.png) no-repeat 28% center; }
+.za-spacial{
+    margin-top: 7px;
+}

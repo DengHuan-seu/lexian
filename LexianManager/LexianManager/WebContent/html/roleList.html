@@ -1,0 +1,94 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看角色信息</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: -2px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'roleName',iconCls:'icon-ok'">角色名称
+						</div>
+					</div>
+				</div>
+				<a id="btn" href="roleAdd.html" target="manager"
+					class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable"></table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		var array = [ [//每个列具体内容
+				{
+					field : 'roleName',
+					title : '角色名称',
+					width : util.getWidth('#content', 0.1)
+				}, {
+					field : 'description',
+					title : '描述',
+					width : util.getWidth('#content', 0.3)
+				}, {
+					field : 'createTime',
+					title : '创建时间',
+					width : util.getWidth('#content', 0.2)
+				}, {
+					field : 'updateTime',
+					title : '修改时间',
+					width : util.getWidth('#content', 0.2)
+				}, {
+					field : 'rec',
+					width : util.getWidth('#content', 0.15),
+					title : '操作',
+					formatter : function(value, rec, index) {
+						var change = util.paramFollowUrl("/roleEdit.html", rec,
+										new Array("roleId", "roleName", "description"));
+						var accredit = util.paramFollowUrl("/rolePrivileges.html", rec,
+								new Array("roleName", "roleId"));
+						var addMenus = util.paramFollowUrl("/roleMenus.html", rec,
+								new Array("roleId", "roleName"));
+						return '<span><a href="' + change + '"  target="manager">修改</a><a href=' + accredit + ' > 授权</a><a href=' 
+								+ addMenus + '> 添加菜单</a> </span>';
+					}
+				} ] ];
+		$(function() {
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, name) {
+					var data = {};
+					data[name] = value;
+					util.fillTable("/management/findRoles.do", data, array);
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+			init();
+		});
+	
+		function init() {
+			util.fillTable("/management/findRoles.do", {}, array);
+		};
+	</script>
+</body>
+</html>

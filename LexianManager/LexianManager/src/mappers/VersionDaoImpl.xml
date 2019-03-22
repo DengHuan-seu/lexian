@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.version.dao.impl.VersionDaoImpl">
+		<!-- 添加版本 -->
+	<insert id="addVersion">
+		insert into appmanager (versionNumber,appUrl,updatetime,appname,log)
+		value(#{versionNumber},#{appUrl},#{updateTime},#{appName},#{log})
+	</insert>
+		<!-- 删除版本-->
+	<delete id="deleteVersion">
+		delete from  appmanager where id=#{versionId}
+	</delete>
+	<!--获取版本信息-->
+	<select id="getNewVersion" resultType="Version">
+		select versionNumber,appUrl,updatetime,appname,log from appmanager
+		order by id desc limit 1
+	</select>
+	
+	<select id="getVersionRecord" resultType="Version">
+		select id,versionNumber,appUrl,updatetime,appname,log from appmanager where 1=1 
+		<if test="versionNumber!=null">
+		and versionNumber like concat("%",#{versionNumber},"%")
+		</if>
+		order by id desc
+	</select>
+	
+	<select id="getVersionMessage" resultType="Version">
+		select versionNumber,appUrl,updatetime,appname,log from appmanager where id=#{versionId}
+	</select>
+</mapper>

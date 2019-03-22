@@ -1,0 +1,39 @@
+ul li {
+	list-style-type: none
+}
+
+a {
+	text-decoration: none;
+	color: #F8F8F8
+}
+
+#topbottom {
+	background-color: #333333;
+	color: #ffffff;
+	border: none;
+}
+
+#left>div {
+	background-color: #606E83
+}
+
+.classification {
+	background-color: #FFFFFF;
+}
+
+#center {
+	background-color: #f1f1f1;
+}
+
+#centerin {
+	/*border: 1px #3E4042 solid;*/
+	height: 99.5%;
+}
+
+iframe {
+	height: 100%;
+	width: 100%;
+	border: none;
+	scrolling: no;
+	background: #F1F1F1;
+}

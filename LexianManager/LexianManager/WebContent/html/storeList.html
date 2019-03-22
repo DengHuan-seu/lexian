@@ -1,0 +1,138 @@
+
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css"
+		href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		table {
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>门店管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>门店信息</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-top: 3px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'storeName',iconCls:'icon-ok'">门店名称</div>
+						<div data-options="name:'store_no',iconCls:'icon-ok'">门店编号</div>
+					</div>
+				</div>
+				<a id="btn" href="storeAdd.html" target="manager"
+					class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+				<div class="clr"></div>
+			</div>
+			<div class="content" id="content">
+				<table id="roleInfoTable"></table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			init();
+		});
+		function init() {
+			var array = [ [//每个列具体内容
+					{
+						field : 'store_no',
+						title : '门店编号',
+						width : '12%'
+					}, {
+						field : 'storeName',
+						title : '门店名称',
+						width : '18%'
+					}, {
+						field : 'storeAddress',
+						title : '门店地址',
+						width : '20%'
+					}, {
+						field : 'rec',
+						title : '状态',
+						width : '15%',
+						formatter : function(value, rec, index) {
+							if (rec.status == 1) {
+								return '<span>已启用</span>';
+							}
+							return '<span>已禁用</span>';
+						}
+					}, {
+						field : 'Operation',
+						title : '操作',
+						width : '10%',
+						formatter : function(value, Operation, index) {
+							var change = util.paramFollowUrl(
+									"/storeEdit.html", Operation, new Array(
+											"id", "store_no", "storeName",
+											"storeAddress","introduce",
+											"starttime", "closetime",
+											"maxlatitude", "minlatitude",
+											"maxlongitude", "minlongitude",
+											"provinceId", "citysId", "countyId"));
+							var sid = Operation.id;
+							var status = Operation.status;
+							if (status == 1) {
+								return '<span><a href='+change+'  target="manager">修改</a>&nbsp;</span><span><a href=javascript:forbiddenStore('
+										+ sid
+										+ ') style="color:red">禁用</a></span>';
+							} else {
+								return '<span><a href='+change+'  target="manager">修改</a>&nbsp;</span><span><a href=javascript:enabledStore('
+										+ sid
+										+ ') style="color:33cc99">启用</a></span>';
+							}
+						}
+					} ] ];
+			$("#search").searchbox({
+				width : 200,
+				searcher : function(value, name) {
+					var data = {};
+					if (value) {
+						data[name] = value;
+					}
+					util.fillTable("/store/findStores.do", data, array);
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+
+			util.fillTable("/store/findStores.do", {}, array);
+		}
+		// 禁用门店
+		function forbiddenStore(id) {
+			var data = {
+				id : id,
+				status : 2
+			}
+			util.differentRequest("/store/updateStoreStatus.do", data, "禁用成功");
+			init();
+		};
+		// 启用门店
+		function enabledStore(id) {
+			var data = {
+				id : id,
+				status : 1
+			}
+			util.differentRequest("/store/updateStoreStatus.do", data, "启用成功");
+			init();
+		}
+	</script>
+</body>
+</html>

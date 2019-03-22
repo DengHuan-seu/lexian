@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.privilege.dao.impl.PrivilegeDaoImpl">
+	<select id="login" resultType="LoginVo">
+		SELECT m.id AS userId ,m.name AS userName,m.password AS PASSWORD,m.info,m.status 
+		FROM manager m
+		where m.name=#{userName} and m.passWord=#{passWord}
+	</select>
+	
+	<!-- 得到用户所有权限的url -->
+	<select id="getUrl" resultType="String">
+		select url from privilege inner
+		join
+		(select
+		privilege_id as
+		privilegeId from
+		role_privilege as
+		roleprivilege
+		inner
+		join
+		(select role_id as
+		roleId from
+		role_manager as
+		rolemanager where
+		manager_id=#{userId}) as rid
+		on(rid.roleId=roleprivilege.role_id)) as
+		pid
+		on
+		(pid.privilegeId=privilege.id)
+	</select>
+	
+	<select  id="getMenus" resultType="menuPo">
+	 SELECT id,NAME,url,backurl AS backUrl,parentId,(SELECT NAME FROM menu WHERE id= parentId) AS parentName FROM menu  WHERE
+        EXISTS(
+       SELECT menu_id  FROM role_menu  WHERE  EXISTS (SELECT role_id FROM role_manager  WHERE  manager_id = #{userId} AND role_manager.`role_id` = role_menu.role_id)
+       AND role_menu.`menu_id` = menu.`id`
+     )
+	</select>
+	
+	<insert id="addUserLog">
+		insert into log (manager_id,ip,url,createtime)
+		values(#{managerId},#{ip},#{url},#{createTime})
+	</insert>
+	
+	<select id="findAllRole" resultType="String">
+		SELECT role_id FROM `role_manager` WHERE manager_id =#{managerId}
+	</select>
+
+	<select id="readUserLog" resultType="Record">
+		select ulog.url,privilege.description,ulog.id as logId,ulog.manager_id
+		as
+		managerId ,ulog.createtime as createTime,ulog.ip,manager.name as
+		managerName from privilege
+		inner
+		join (manager,
+		(select log.id
+		,manager_id ,ip,
+		createtime ,url from log
+		<include refid="followReadUserLog"></include>
+		) as ulog) on (privilege.url=ulog.url and manager.id=ulog.manager_id)
+	</select>
+	
+	<select id="getLogs" resultType="LogPo">
+		SELECT l.id,l.manager_id managerId,l.ip,l.url,pl.description
+		content,l.createtime,m.name managerName
+		FROM LOG l LEFT JOIN manager m ON( l.manager_id=m.id)
+		LEFT JOIN privilege pl ON(pl.url=l.url)
+		where 1=1
+		<if test="managerName!=null">
+			and m.name like concat("%",#{managerName},"%")
+		</if>
+		<if test="ip!=null">
+			and l.ip like concat("%",#{ip},"%")
+		</if>
+		order by l.createtime desc
+	</select>
+
+	<sql id= "followReadUserLog">
+		<if test="managerName!=null and managerName!=' ' ">
+			inner join
+			(select id from manager WHERE name like concat("%",#{managerName},"%")) as
+			mid on(mid.id=log.manager_id)
+		</if>
+		where 1=1
+		<if test="startTime!=null  and  endTime==null">
+			and createtime <![CDATA[ >=]]>
+			#{startTime}
+		</if>
+		<if test="endTime!=null and  startTime==null">
+			and createtime <![CDATA[ <=]]>
+			#{endTime}
+		</if>
+		<if test="startTime!=null and  endTime!=null">
+			and createtime between #{startTime} and #{endTime}
+		</if>
+	</sql>
+</mapper>

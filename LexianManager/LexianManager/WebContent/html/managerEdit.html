@@ -1,0 +1,90 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		input[type=text],input[type=password] {
+			text-indent: 1em;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看管理员信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>修改管理员信息</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="role-name">
+				<span>管理员帐号：</span> <input type="text" readonly id="managerName" style="width: 220px" />
+			</div>
+			<div class="role-name" style="margin-top: 10px">
+				<span>&nbsp;管理描述：</span> <input type="text" id="description" style="width: 220px" />
+			</div>
+			<div class="role-save">
+				<a href="javascript:void(0)" id="save" style="cursor: pointer;">保存</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var urlmanagerName = decodeURI(util.getParam("managerName"));
+			var urldescription = decodeURI(util.getParam("description"));
+			$("#managerName").val(urlmanagerName);
+			$("#description").val(urldescription);
+			$("#save").click(function() {
+						var managerId = util.getParam("managerId");
+						var managerName = $.trim($("#managerName").val());
+						var description = $.trim($("#description").val());
+						if (!validateUtil.validateEmpty(description)
+						 || !validateUtil.validateEmpty(managerId)) {
+							asyncbox.tips("描述不能为空", asyncbox.Level.error);
+							return;
+						}
+						if (!validateUtil.validateMaxLength(description, 200)) {
+							asyncbox.tips("描述过长", asyncbox.Level.error);
+							return;
+						}
+						var data = {
+							managerId : managerId,
+							description : description
+						};
+						$.postAjax("/management/updateManager.do", data, function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							asyncbox.tips("保存成功", asyncbox.Level.success);
+							window.location.href = "managerList.html";
+							return;
+	
+						}, function() {
+							asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+							return;
+						});
+					});
+	
+		});
+		function prevPage() {
+			window.location.href = "managerList.html";
+		}
+	</script>
+</body>
+</html>

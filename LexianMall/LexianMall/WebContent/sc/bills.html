@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-账单</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/bills.css" />
+	<link rel="stylesheet" type="text/css" href="css/charge.css" />
+	<link rel="stylesheet" type="text/css" href="css/page.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		.czTitle {
+			position: relative;
+			text-align: center;
+		}
+		
+		.czTitle1 a {
+			color: #fff;
+			letter-spacing: 3px;
+		}
+		
+		#czlist {
+			position: absolute;
+			top: 28px;
+			left: 0px;
+			width: 100px;
+			background: #fff;
+			border: 1px solid #e9e5e3;
+			/*  display:none */
+		}
+		
+		#czlist ul {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+		}
+		
+		#czlist ul li {
+			display: block;
+			height: 25px;
+			line-height: 25px;
+		}
+		
+		#czlist ul li a {
+			color: #676565;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--主体内容部分-->
+		<div class="main">
+			<ul class="content_z_left">
+				<li><a class="com_z">我的订单</a></li>
+				<li><a href="unpaidorders.html">待付款订单</a></li>
+				<li><a href="paidorders.html">待取货订单</a></li>
+				<li><a class="com_z">账户设置</a></li>
+				<li><a href="usersetting.html">个人信息</a></li>
+				<li><a href="changepassword.html">修改密码</a></li>
+				<li><a href="collections.html">我的收藏</a></li>
+				<li><a class="com_z">我的钱包</a></li>
+				<li><a href="charge.html">充值</a></li>
+				<li><a href="transfer.html">转账</a></li>
+				<li><a href="bills.html">账单</a></li>
+			</ul>
+			<div class="content_z_right clear">
+				<div class="header_top">
+					<h2 class="header_top font">账单</h2>
+					<p class="header_top right">
+						账户可用余额为：<span id="canUseMoney">0.00</span>元
+					</p>
+				</div>
+				<div class="clr"></div>
+				<div class="header_content">
+					<div class="header_content_center">
+						<table cellspacing="0" id="table"></table>
+					</div>
+				</div>
+				<div id="tcdPage"></div>
+				<div class="tcdPageCode"></div>
+			</div>
+			<div class="clr"></div>
+			<div class="one-3 one3_bord">
+				<ul>
+					<li><br /></li>
+					<li><p>
+							<span>使用中会遇到的问题</span>
+						</p>
+						<br />
+					</li>
+					<li class="li1"><p>钱包收益什么时候会显示</p></li>
+					<li class="li2"><p>
+							答：当天15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。那么15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li3"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认.15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li4"><p>什么是钱包</p></li>
+					<li class="li5"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li6"><p>钱包有没有风险</p></li>
+					<li class="li7"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计再次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+				</ul>
+				<br />
+				<br />
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript" src="js/site/jquery.page.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			init(0, null, 6, 1);
+	
+			$(".czTitle1").mouseover(function() {
+				$("#czlist").css("display", "block");
+			});
+			
+			$(".czTitle1").mouseout(function() {
+				$("#czlist").css("display", "none");
+			});
+		});
+	
+		// 分页查找记录
+		function init(type, str, pageSize, pageNo) {
+			$("#table").empty();
+			$.postAjax("/wallet/findWalletRecords.do", {},
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					}
+					$(".tcdPageCode").remove();
+					$("#recordP").remove();
+					$("#tcdPage").append("<div class='tcdPageCode'></div>");
+					var data = json.data || [];
+					if (data.length) {
+						append(data);
+						var Pages = Math.ceil(json.total / 6);
+						if (Pages == 0) {
+							Pages = 1;
+						}
+						$(".tcdPageCode").createPage(
+							{
+								pageCount : Pages,
+								current : 1,
+								backFn : function(p) {
+									var data1 = {
+										pageSize : pageSize,
+										pageNo : p,
+										status : type
+									}
+									$.postAjax("/wallet/findWalletRecords.do", data1,
+										function(json) {
+											if (json.code) {
+												asyncbox.tips(json.message, asyncbox.Level.error);
+												return;
+											}
+											$("#table").empty();
+											var data = json.data || [];
+											if (data.length) {
+												append(data);
+											}
+										}
+									);
+								}
+							}
+						);
+					} else {
+						$(".content_z_right").append(
+							"<p id='recordP' align='center' style='margin-top:30px;font-size:20px;font-weight:bold'><a href='index.html'>暂无此类型记录~~</a></p>");
+					}
+				}
+			);
+	
+			// 账户余额 
+			$.postAjax("/wallet/findWallet.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				
+				$("#canUseMoney").text(parseFloat(json.data.balance).toFixed(2));
+			}, function() {
+			});
+		}
+	
+		function del(obj) {
+			asyncbox.confirm('是否删除该条记录？', '确认框', function(action) {
+				if (action == 'ok') {
+					$.postAjax("/wallet/deleteRecord.do", {
+						id : obj
+					}, function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips(json.message, asyncbox.Level.success);
+						var type = $("#choose").attr("data");
+						var str = $("#choose").html();
+						var pageSize = 6;
+						var pageNo = 1;
+						init(type, str, pageSize, pageNo);
+					}, function() {
+					});
+				}
+			});
+		}
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	
+		$("#czlist>ul>li>a").click(function() {
+			var type = $.trim($(this).attr("data"));
+			var str = $.trim($(this).html());
+			$("#choose").attr("data", type);
+			$("#choose").html(str);
+			$("#czlist").css("display", "none");
+			init(type, str, 6, 1);
+		});
+	
+		function append(data) {
+			$("#table").append("<tr><td>交易号</td><td>交易金额<span>(元)</span></td><td>交易类型</td><td>交易状态</td><td>交易时间</td></tr>");
+			for (var index in data) {
+				var r = data[index];
+				$("#table").append(
+								"<tr><td style='line-height: 20px !important;'>?</td><td>?</td><td><span>?</span></td><td>?</td><td>?</td></tr>"
+										.format(r.orderNo, r.amount, r.typeText, r.resultTypeText, r.createTime));
+			}
+		}
+	</script>
+</body>
+
+</html>

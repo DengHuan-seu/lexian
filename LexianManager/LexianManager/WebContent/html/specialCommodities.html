@@ -1,0 +1,204 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商城活动商品</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>商品管理</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+			<div class="nav-right floatRight">
+				<a id="btn" onclick="addGoods()" target="manager" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+			</div>
+		</div>
+		<div class="content" id="content" style="margin-top: 0px">
+			<table id="roleInfoTable"></table>
+		</div>
+	</div>
+	<div id="addGoods" style="display: none">
+		<div class="promo1">
+			<span>一级分类：</span>
+			<input id="firstType" value="" style="width: 200px" />
+		</div>
+		<div class="promo1">
+			<span>二级分类：</span>
+			<input id="secondType" value="" style="width: 200px" />
+		</div>
+		<div class="promo1">
+			<span>三级分类：</span>
+			<input id="thirdType" value="" style="width: 200px" />
+		</div>
+		<div class="promo1">
+			<span>商品名称：</span>
+			<input id="commodity" value="" style="width: 200px" />
+		</div>
+		<div class="promo1">
+			<span>商品编号：</span>
+			<input id="commodityNo" value="" style="width: 200px" readonly="readonly" />
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		var specialId = decodeURIComponent(util.getParam("specialId"));
+		//初始化
+        $(function() {
+            init();
+        });
+		
+		//初始化
+		function init() {
+			var array = [[//每个列具体内容
+	              {
+	                  field : 'specialCommodityId',
+	                  title : '活动商品ID',
+	                  width : '20%'
+	              },{
+	                  field : 'commodity_no',
+	                  title : '商品编号',
+	                  width : '20%'
+	              },  {
+	                  field : 'commodity_name',
+	                  title : '商品名称',
+	                  width : '20%'
+	              }, {
+	                  field : 'fullPictureurl',
+	                  title : '图片',
+	                  width : '20%',
+	                  formatter:function(value,rec,row){
+	                	  return "<img style=\"height: 50px;width: 50px;\" src=\"" + rec.fullPictureurl+"\"/>";
+	                  }
+	              }, {
+	              	field : 'Operation',
+	  				title : '操作',
+	  				width : "20%",
+	  				formatter : function(value, Operation, index) {
+	  					var specialCommodityId = Operation.specialCommodityId;
+	  					return '<span><a onclick = "deleteGoods(this)" data="' + specialCommodityId + '"  target="manager">删除</a></span>';
+	  				}
+	              }
+	              ]];
+			
+			util.fillTable("/special/findSpecialCommodities.do", {specialId : specialId}, array);
+		}
+    	
+    	//添加
+    	function addGoods() {
+    		asyncbox.open({
+    			id : "addGoods",
+    			title : "添加商品",
+    			width : 350,
+    			height : 250,
+    			padding : 30,
+    			btnsbar : $.btn.OKCANCEL,
+    			loadData : function() {
+    				findType(1);
+    			},
+    			callback : function(action, opener) {
+    				if (action == 'ok') {
+    					var commodityNo = $("#commodityNo").val();
+    					if(!commodityNo){
+    						return asyncbox.tips("必须选择商品",asyncbox.Level.error);
+    					}
+    					var data = {
+    							specialId : specialId,
+    							commodityNo : commodityNo
+    						}
+    					$.postAjax("/special/addSpecialCommodity.do", data, function(json) {
+    						if (json.code) {
+    							asyncbox.tips(json.message, asyncbox.Level.error);
+    							return asyncbox.tips(json.message,asyncbox.Level.error);
+    						}
+    						init();
+    						asyncbox.tips("操作成功", asyncbox.Level.success);
+    						
+    					}, function() {
+    					});
+    				}
+    			}
+    		});
+    	}
+		
+    	//删除
+        function deleteGoods(obj) {
+        	asyncbox.confirm('确认删除 ?','确认框 ',function(action){
+        		//confirm 返回三个 action 值，分别是 'ok'、'cancel' 和 'close'。
+        		if(action == 'ok') {
+        			var specialCommodityId = $(obj).attr("data");
+        			$.postAjax("/special/deleteSpecialCommodity.do", {specialCommodityId : specialCommodityId}, function(json) {
+        				if(json.code) {
+        					return asyncbox.tips(json.message,asyncbox.Level.error);
+        				}
+		            	asyncbox.tips(json.message,asyncbox.Level.success);
+		            	init();
+		            },function(){});
+        		}
+        	});
+        }
+    	
+    	function findType(type) {
+    		var url ="/category/findCategories.do?type=";
+    		var idselect = "";
+    		if(type == 1) {
+    			idselect = "firstType";
+    			url += type;
+    		} else if(type == 2) {
+    			var parentId = $("#firstType").combobox('getValue');
+    			url += type+"&parentId="+parentId
+    			idselect = "secondType";
+    		} else if(type == 3) {
+    			var parentId = $("#secondType").combobox('getValue');
+    			url += type+"&parentId="+parentId
+    			idselect = "thirdType";
+    		} else if(type == 4) {
+    			var categoryId = $("#thirdType").combobox('getValue');
+    			findCommodities(categoryId);
+    			return;
+    		}
+    		$.postAjax(url, {}, function(result){
+    			$("#"+idselect).combobox({
+    				data : result.rows,
+    				mode : "local",
+    				valueField : "id",
+    				textField : "categoryName",
+    				prompt : "请选择分类",
+    				multiple : false,
+    				onSelect : function() {
+    					findType(type+1);
+    				}
+    			});
+        	});
+    	}
+    	
+    	function findCommodities(categoryId) {
+    		$("#commodity").combobox({
+				url : "/LexianManager/category/findCategoryCommodities.do?categoryId=" + categoryId,
+				mode : "local",
+				valueField : "commodity_no",
+				textField : "commodity_name",
+				prompt : "请选择商品",
+				multiple : false,	
+				onSelect : function() {
+					var commodityNo = $("#commodity").combobox("getValue");
+					$("#commodityNo").val(commodityNo);
+				}
+			});
+    	}
+	</script>
+</body>
+</html>

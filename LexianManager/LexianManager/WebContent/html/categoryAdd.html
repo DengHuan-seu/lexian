@@ -1,0 +1,138 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+</head>
+<body>
+	<div class="main_section">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商品管理
+				</span> <span><img src="../img/rright.jpg" alt="" /></span> <span>分类管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>添加商品分类</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<form action="">
+				<div>
+					&nbsp;&nbsp;级别：
+					<select id="aa" class="easyui-combobox" name="dept" style="width: 200px;">
+						<option value="1">一级分类</option>
+						<option value="2">二级分类</option>
+						<option value="3">三级分类</option>
+					</select>
+				</div>
+				<div style="margin-top: 10px; display: none;">
+					上级分类：<input id="bb" style="width: 198px" class="easyui-combobox" />
+				</div>
+				<div style="margin-top: 10px">
+					类别名称：<input type="text" id="categoryName" style="width: 198px" />
+				</div>
+				<div class="button">
+					<input id="save" type="button" value="保存" style="width: 203px" style="cursor: pointer;" />
+				</div>
+			</form>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#aa').combobox({
+				onSelect : function(item) {
+					if (Number(item.value) == Number(1)) {
+						$("#bb").parent("div").css("display", "none");
+					} else {
+						$("#bb").parent("div").css("display", "block");
+						var url = "/category/findCategories.do?type="
+							+ (Number(item.value) - Number(1));
+						$.postAjax(url, {}, function(result){
+							$("#bb").combobox({
+								data : result.rows,
+								mode : "local",
+								valueField : "id",
+								textField : "categoryName",
+								multiple : false,
+								onLoadSuccess : function() {
+									var data = $('#bb').combobox('getData');
+									$("#bb").combobox('setValue', data[0].id);
+								},
+								onSelect : function() {
+									CategoryId = $("#bb").combobox("getValue");//总类id
+								},
+								filter : function(q, row) {
+									var opts = $(this).combobox('options');
+									return row.categoryName.indexOf(q) == 0;
+								}
+							});
+						});
+					}
+				}
+			});
+	
+			$("#save").click(function() {
+				var categoryName = $.trim($("#categoryName").val());
+				var type = $("#aa").combobox("getValue");
+				var parentId = $("#bb").combobox('getValue');
+				
+				if (!validateUtil.validateEmpty(categoryName)) {
+					asyncbox.tips("商品名称不能为空！", asyncbox.Level.error);
+					return;
+				}
+				if (Number(type) != 1) {
+					if (!validateUtil.validateEmpty(parentId)) {
+						asyncbox.tips("商品上级分类不能为空！", asyncbox.Level.error);
+						return;
+					}
+				}
+				
+				var data = {};
+				switch (Number(type)) {
+				case 1:
+					data = {
+						categoryName : categoryName,
+						type : 1
+					};
+					break;
+				case 2:
+					data = {
+						categoryName : categoryName,
+						type : 2,
+						parentId : parentId
+					};
+					break;
+				case 3:
+					data = {
+						categoryName : categoryName,
+						type : 3,
+						parentId : parentId
+					};
+				}
+				$.postAjax("/category/addCategory.do", data, 
+					function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						window.location.href = "categoryList.html";
+					}
+				);
+			});
+		});
+	</script>
+</body>
+</html>

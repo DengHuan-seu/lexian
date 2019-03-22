@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.wallet.dao.impl.WalletDaoImpl">
+	<select id="findWallet" resultType="WalletPo">
+	    SELECT id, user_id, balance, password FROM wallet
+	    WHERE user_id=#{user_id}
+	</select>
+	<select id="findWalletRecords" resultType="WalletRecordPo">
+	    SELECT id, wallet_id, order_no, amount, type, resulttype, description, createtime 
+		FROM walletrecord WHERE wallet_id = (SELECT id FROM wallet WHERE user_id=#{user_id})
+		ORDER BY createtime DESC
+	</select>
+	<update id="updateWallet">
+	    UPDATE Wallet SET balance=#{balance} 
+	    WHERE id=#{id} AND user_id=#{user_id} AND password=#{password}
+	</update>
+	<update id="updateWalletPassword">
+	    UPDATE wallet SET password=#{password}
+	    WHERE user_id=#{user_id}
+	</update>
+	<insert id="addWalletRecord">
+	    INSERT INTO WalletRecord(wallet_id, order_no, amount, type, resulttype, description, createtime)
+		VALUES(#{wallet_id}, #{order_no}, #{amount}, #{type}, #{resulttype}, #{description}, now())
+	</insert>
+	<select id="isValidPassword" resultType="Boolean">
+	    SELECT EXISTS(SELECT * FROM Wallet WHERE password=#{password} AND user_id=#{user_id})
+	</select>
+	<select id="addWallet">
+	    INSERT INTO Wallet(user_id, balance, password)
+	    VALUES(#{user_id}, #{balance}, #{password})
+	</select>
+</mapper>

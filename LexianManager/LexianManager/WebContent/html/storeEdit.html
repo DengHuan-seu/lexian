@@ -1,0 +1,301 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.role-name {
+			margin-top: 10px;
+		}
+		
+		.role-name input {
+			width: 224px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>门店信息管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>修改门店信息</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div style="width: 50%; float: left; text-align: center">
+				<div class="role-name">
+					<span>门店编号：</span> <input type="text" id="store_no" />
+				</div>
+				<div class="role-name">
+					<span>门店名称：</span> <input type="text" id="storeName" />
+				</div>
+				<div class="role-name">
+					<span>门店地址：</span> <input type="text" id="storeAddress" />
+				</div>
+				<div class="role-name">
+					<span>门店介绍：</span> <input type="text" id="introduce" />
+				</div>
+				<div class="role-name">
+					<span>开始营业时间：</span> <input type="text" id="starttime" />
+				</div>
+				<div class="role-name">
+					<span>结束营业时间：</span> <input type="text" id="closetime" />
+				</div>
+			</div>
+
+			<div style="width: 50%; float: right; text-align: center">
+				<div class="role-name">
+					<span>最大纬度：</span> <input type="text" id="maxlatitude" />
+				</div>
+				<div class="role-name">
+					<span>最小纬度：</span> <input type="text" id="minlatitude" />
+				</div>
+				<div class="role-name">
+					<span>最大经度：</span> <input type="text" id="maxlongitude" />
+				</div>
+				<div class="role-name">
+					<span>最小经度：</span> <input type="text" id="minlongitude" />
+				</div>
+				<div class="role-name">
+					<span>&nbsp;省&nbsp;份：</span> <input class="easyui-combobox" id="provinceId" />
+				</div>
+				<div class="role-name">
+					<span>&nbsp;城&nbsp;市：</span> <input class="easyui-combobox" id="citysId" />
+				</div>
+				<div class="role-name">
+					<span>&nbsp;区&nbsp;域：</span> <input class="easyui-combobox" id="countyId" />
+				</div>
+			</div>
+			<div style="clear: both"></div>
+			<div style="text-align: center">
+				<div class="role-save">
+					<a href="javascript:void(0)" id="save" style="margin-left: 86px;">保存</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		var id = util.getParam("id");
+		$(function() {
+			var store_no = decodeURI(util.getParam("store_no"));
+			var storeName = decodeURI(util.getParam("storeName"));
+			var storeAddress = decodeURI(util.getParam("storeAddress"));
+			var introduce = decodeURI(util.getParam("introduce"));
+			var starttime = decodeURI(util.getParam("starttime"));
+			var closetime = decodeURI(util.getParam("closetime"));
+			var maxlatitude = decodeURI(util.getParam("maxlatitude"));
+			var minlatitude = decodeURI(util.getParam("minlatitude"));
+			var maxlongitude = decodeURI(util.getParam("maxlongitude"));
+			var minlongitude = decodeURI(util.getParam("minlongitude"));
+			var provinceId = decodeURI(util.getParam("provinceId"));
+			var citysId = decodeURI(util.getParam("citysId"));
+			var countyId = decodeURI(util.getParam("countyId"));
+
+			if (starttime == "") {
+				starttime = "08:00:00";
+			}
+			if (closetime == "") {
+				closetime = "22:00:00";
+			}
+			$('#maxlatitude').numberbox({
+				min : 0,
+				max : 360,
+				precision : 4,
+				value : maxlatitude,
+				onChange : function(newValue, oldValue) {
+					maxlatitude = newValue;
+				}
+			});
+			$('#minlatitude').numberbox({
+				min : 0,
+				max : 360,
+				precision : 4,
+				value : minlatitude,
+				onChange : function(newValue, oldValue) {
+					minlatitude = newValue;
+				}
+			});
+			$('#maxlongitude').numberbox({
+				min : 0,
+				max : 360,
+				precision : 4,
+				value : maxlongitude,
+				onChange : function(newValue, oldValue) {
+					maxlongitude = newValue;
+				}
+			});
+			$('#minlongitude').numberbox({
+				min : 0,
+				max : 360,
+				precision : 4,
+				value : minlongitude,
+				onChange : function(newValue, oldValue) {
+					minlongitude = newValue;
+				}
+			});
+			$('#starttime').timespinner({
+				required : true,
+				showSeconds : true,
+				value : starttime,
+				max : "23:59:59",
+				min : "00:00:00"
+			});
+			$('#closetime').timespinner({
+				max : "23:59:59",
+				required : true,
+				showSeconds : true,
+				value : closetime,
+				min : "00:00:00"
+			});
+			$("#provinceId").combobox({
+				url : "/LexianManager/store/findArea.do?clazz=1",
+				mode : "local",
+				valueField : "id",
+				textField : "city",
+				multiple : false,
+				onLoadSuccess : function() {
+					$("#provinceId").combobox("setValue", provinceId);
+					$("#citysId").combobox({
+						url : "/LexianManager/store/findArea.do?clazz=2&parentId=" + provinceId,
+						mode : "local",
+						valueField : "id",
+						textField : "city",
+						clear : "none",
+						multiple : false,
+						onLoadSuccess : function() {
+							if(!citysId){
+								return;
+							}
+							$("#citysId").combobox("setValue", citysId);
+							$("#countyId").combobox({
+								url : "/LexianManager/store/findArea.do?clazz=3&parentId=" + citysId,
+								mode : "local",
+								valueField : "id",
+								textField : "city",
+								clear : "none",
+								multiple : false,
+								onLoadSuccess : function() {
+									if(!countyId){
+										return;
+									}
+									$("#countyId").combobox("setValue", countyId);
+								}
+							});
+						}
+					});
+				},
+				onSelect : function(rec) {
+					provinceId = rec.provinceId;
+					citysId = null;
+					countyId = null;
+					$("#citysId").combobox("loadData", []);
+					$("#citysId").combobox("clear");
+					$("#countyId").combobox("loadData", []);
+					$("#countyId").combobox("clear");
+					$("#citysId").combobox({
+						url : "/LexianManager/store/findArea.do?clazz=2&parentId=" + rec.id,
+						mode : "local",
+						valueField : "id",
+						textField : "city",
+						clear : "none",
+						multiple : false,
+						onLoadSuccess : function() {
+							//$("#citysId").combobox("setValue", provinceId);
+						},
+						onSelect : function(cou) {
+							citysId = cou.id;
+							$("#countyId").combobox({
+								url : "/LexianManager/store/findArea.do?clazz=3&parentId=" + cou.id,
+								mode : "local",
+								valueField : "id",
+								textField : "city",
+								clear : "none",
+								multiple : false,
+								onLoadSuccess : function() {
+									//$("#countyId").combobox("setValue", provinceId);
+								}
+							});
+						}
+					});
+				}
+			});
+			
+			
+			$("#store_no").val(store_no);
+			$("#storeName").val(storeName);
+			$("#storeAddress").val(storeAddress);
+			$("#introduce").val(introduce);
+			$("#maxlatitude").val(maxlatitude);
+			$("#minlatitude").val(minlatitude);
+			$("#maxlongitude").val(maxlongitude);
+			$("#minlongitude").val(minlongitude);
+			$("#provinceId").val(provinceId);
+			$("#citysId").val(citysId);
+			$("#countyId").val(countyId);
+			$("#starttime").val(starttime);
+			$("#closetime").val(closetime);
+		});
+
+		$("#save").click(
+				function() {
+					var store_no = $.trim($("#store_no").val());
+					var storeName = $.trim($("#storeName").val());
+					var storeAddress = $.trim($("#storeAddress").val());
+					var introduce = $.trim($("#introduce").val());
+					var starttime = $("#starttime").next().children("input:hidden").attr("value");
+					var closetime = $("#closetime").next().children("input:hidden").attr("value");
+					var maxlatitude = $.trim($("#maxlatitude").val());
+					var minlatitude = $.trim($("#minlatitude").val());
+					var maxlongitude = $.trim($("#maxlongitude").val());
+					var minlongitude = $.trim($("#minlongitude").val());
+					var provinceId = $("#provinceId").next().children("input:hidden").attr("value");
+					var citysId = $("#citysId").next().children("input:hidden").attr("value");
+					var countyId = $("#countyId").next().children("input:hidden").attr("value");
+
+					if (!validateUtil.validateEmpty(store_no)
+							|| !validateUtil.validateEmpty(storeName)) {
+						asyncbox.tips("门店编号，门店名称不能为空", asyncbox.Level.error);
+					}
+					var data = {
+						id : id,
+						storeName : storeName,
+						store_no : store_no,
+						storeAddress : storeAddress,
+						introduce : introduce,
+						starttime : starttime,
+						closetime : closetime,
+						status : status,
+						maxlatitude : maxlatitude,
+						minlatitude : minlatitude,
+						maxlongitude : maxlongitude,
+						minlongitude : minlongitude,
+						provinceId : provinceId,
+						citysId : citysId,
+						countyId : countyId
+					};
+					$.postAjax("/store/updateStore.do", data, function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips("保存成功", asyncbox.Level.success);
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+					});
+				});
+	</script>
+</body>
+</html>

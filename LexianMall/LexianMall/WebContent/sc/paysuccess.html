@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-支付成功</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/paysuccess.css" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.tfg {
+			position: absolute;
+			right: 0px;
+			top: 80px;
+			font-size: 15px;
+			font-weight: bold;
+		}
+		
+		.tfg li {
+			padding-left: 100px;
+			display: inline-block
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--主体内容部分-->
+		<div class="main">
+			<div class="content">
+				<div class="content-top" style="position: relative">
+					<div class="title floatLeft">
+						<h3>支付成功</h3>
+					</div>
+					<div class="title-img floatRight">
+						<img src="images/succeed1.png" alt="" />
+					</div>
+					<ul class="tfg">
+						<li>提交订单</li>
+						<li>订单支付</li>
+						<li>支付成功</li>
+					</ul>
+					<div class="clr"></div>
+				</div>
+				<div class="order-info border-all">
+					<div class="left border-ri">
+						<div class="pay">
+							<div class="pay-top">
+								<p class="p1">
+									<h2>支付成功！我们会尽快为您发货！</h2>
+								</p>
+							</div>
+							<div class="pay-num">
+								<p class="p2">订单号：</p>
+								<p class="p3">在线支付：元</p>
+							</div>
+							<div class="pay-other">
+								<a href="index.html">继续逛逛</a> <a href="javascript:orderInfo()">查看订单详情</a>
+							</div>
+							<div class="pay-info">
+								<span>重要提示</span>:乐鲜生活平台及销售商不会以[
+								<span class="pay-info_span">订单异常、系统升级</span>]为由，要求您点任何链接进行退款。
+							</div>
+						</div>
+					</div>
+					<div class="right">
+						<img src="images/zpic6.png" alt="" style="margin-top: 40px;" />
+					</div>
+					<div class="clr"></div>
+				</div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript" src="js/site/jquery.page.js"></script>
+	<script type="text/javascript">
+		var orderNo = util.getParam("orderNo");
+		var couponId = null;
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			init();
+		});
+	
+		function init() {
+			$(".pay-num>p[class='p2']").text("订单编号：" + orderNo);
+			$(".pay-num>p[class='p2']").text("订单编号：" + orderNo);
+			$.postAjax("/order/findOrderSimple.do", {
+				orderNo : orderNo
+				}, function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					}
+					var total = parseFloat(json.data.totalAmount);
+					$(".pay-num>p[class='p3']").text("在线支付：" + total + "元");
+				}, function() {
+				});
+		}
+		function orderInfo() {
+			window.location = "orderinfo.html?orderNo=" + orderNo;
+		};
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>我的钱包</title>
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/wallet.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <style type="text/css">
+        .span-menu ul li{float: left;cursor: pointer;}
+    </style>
+</head>
+<body>
+	<div class="header b-hr">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>我的钱包</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center">
+	    <div class="account-list">
+	        <div class="item pad-lr-10px pad-tb-6">
+	            <p class="title-name pad-tb-6">钱包余额</p>
+	            <p class="account_b pad-tb-6"><span id="show_input" class="span-btn-new" style="float:right;">&nbsp;&nbsp;充值&nbsp;&nbsp;</span><span class="balance">￥***.**</span><span></span></p>
+	        </div>
+	    </div>
+	    <div id="input_recharge" class="item pad-lr-10px" style="display:none;"> 
+	        <div class="div-input b-hr">
+	            <span class="span-label">金额</span>
+	            <input id="money" class="input-type" placeholder="请输入充值金额" autofocus/>
+	        </div>
+	        <div class="div-input">
+	            <span class="span-label">验证码</span>
+	            <input id="code" type="text" class="input-type input-type-new" maxlength="6" placeholder="请输入验证码" style="width:11em;">
+	            <span id="getCode" class="float-r span-btn-new" style="margin-top:0.5em;">获取验证码</span>
+	            <div class="clear-float"></div>
+	        </div>
+	        <div>
+	            <p class="err-msg"></p>
+	        </div>
+	        <div class="div-btn pad-tb-5">
+	            <a class="btn-a">充值</a>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript">
+	    var payment = 'alipay_wap';
+	    var type = '8';
+	    
+	    $(function(){
+	    	forwardLogin('wallet.html');
+	    	
+	        $('#input_recharge').hide();
+			
+	        //查询账余额
+	        $.post(baseUrl+'wallet/findWallet.do',
+	                function(json){
+	                    if(json.code==0){
+	                        $('.balance').text('￥'+json.data.balance.toFixed(2));
+	                    }
+	                }, 'json'
+	        );
+	        $('.span-menu ul li').click(function(){
+	            if(!$(this).hasClass('span-menu-active')){
+	                $(this).siblings().removeClass('span-menu-active').end().addClass('span-menu-active');
+	                $('.'+$(this).siblings().attr('url')).hide();
+	                $('.'+$(this).attr('url')).show();
+	            }
+	        });
+	    });
+	    
+	    $('#getCode').click(getCode);
+	    //获取验证码，但是服务后台此处并没有验证该码
+	    function getCode(){
+	        var codeBtn = $('#getCode');
+	        $.post(baseUrl+'validation/getValidateCode.do',
+	                {type:4,platformCode:3},
+	                function(json){
+	                    if(json.code==0){
+	                        codeBtn.addClass('btn-disable');
+	                        codeBtn.unbind('click');
+	                        countDown(60);
+	                    }else{
+	                        $('.err-msg').text(json.message);
+	                    }
+	                }, 'json'
+	        );
+	    }
+	    function countDown(x){
+	        var codeBtn = $('#getCode');
+	        if(x<=0){
+	            codeBtn.text('重新获取');
+	            codeBtn.removeClass('btn-disable');
+	            codeBtn.click(getCode);
+	            return;
+	        }
+	        x--;
+	        codeBtn.text('重新获取('+x+')');
+	        setTimeout('countDown('+x+')',1000);
+	    }
+	    $('#show_input').click(function(){
+	        $('#input_recharge').toggle();
+	    });
+	    $('.bank-card').click(function(){
+	        if($(this).find('span').text()!='暂不支持'){
+	            $('#payment_list').find('.right').remove();
+	            $(this).prepend('<span class="right float-r"><img src="images/icon-right.png" width="19"/></span>');
+	            payment = $(this).attr('payment');
+	            type = $(this).attr('type');
+	        }
+	    });
+	    $('.btn-a').click(function(){
+	        var m = $('#money').val();
+	        var code = $('#code').val();
+	        if(m==null||m==''){
+	            showBox('请输入充值金额');
+	            return;
+	        }
+	        if(code==null||code==''){
+	            showBox('请输入验证码');
+	            return;
+	        }
+	        loadingShow();
+	        $.post(baseUrl+'wallet/chargeWallet.do',
+                {type:1,channel:payment,amount:m,platformCode:3,validateCode:code},
+                function(json){
+                    loadingHide();
+                    if(json.code==0){
+                    	showBox("充值成功！", 'wallet.html');
+                    }else{
+                        showBox(json.message);
+                    }
+                },'json'
+	        );
+	    });
+	</script>
+</body>
+</html>

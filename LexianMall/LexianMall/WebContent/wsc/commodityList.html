@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html style="height:100%">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>移动商城</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/header-search.css">
+    <link rel="stylesheet" type="text/css" href="css/commoditylist.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+    <style type="text/css">
+        body{position: relative}
+        #screenList{display: none}
+        #screenList>.screenLeft{position: absolute;top: 0;bottom: 0;left: 0;right:0;background: rgba(0,0,0,0.5);z-index: 1100}
+        #screenList>.screenRight{position: absolute;top: 0;bottom: 0;right: 0;width:15rem;background: #f4f5f7;z-index: 1200}
+        .screenRight>.screenHeader{background: #ffffff}
+        .screenRight>.screenHeader>div{display: inline-block;float: left;width: 33.333333%;height:2.8rem;line-height: 2.8rem}
+        .screenRight *{vertical-align: middle}
+        .screenMiddle{background: #ffffff}
+        .sRLeft{text-align: left;}
+        .sRLeft>img{margin-left:1rem;cursor: pointer}
+        .sRMiddle{text-align: center}
+        .sRRight{text-align: right;}
+        .sRRight>a{margin-right:1rem;color: #9a9a9a;}
+        .select{padding: 0 0.5rem;height: 2.5rem;line-height: 2.5rem;cursor: pointer}
+        .select>div{display: inline-block;}
+        .select>div>.selectName{font-size: 15px;color: #252525;}
+        .select>div>.selectType{font-size: 13px;color: #848689;padding-right:0.3rem}
+        .selectAList{display:none;}
+        .selectAPrice{display:none;}
+        .selectP{padding: 0 2rem;height: 2.5rem;line-height: 2.5rem;}
+        .selectP>input{width: 3.5rem}
+        .selectA, {cursor: pointer;padding: 0 2rem;height: 2.5rem;line-height: 2.5rem;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+        .selectAed{color:#f15353;}
+        .selectA>span{}
+        .screenBottom{margin-top: 3rem;text-align: center;}
+        .screenBottom>a{display:inline-block;font-size: 15px;color: #6a6a6a;height:1.6rem;line-height:1.6rem;width:5rem;text-align: center;border: 1px solid #c3c4c6;border-radius: 2px;background: #fff;}
+        .b-right{margin-left: -1px}
+        .center> .menu{height: 2.35rem;line-height: 2.35rem}
+        .center> .menu *{vertical-align: middle}
+        .center> .menu>span{display: inline-block;width: 33.333333%;text-align: center;float: left;cursor: pointer;color:#686868;font-size:0.5rem;}
+        .center> .menu>span>img{margin-left:0.2rem;margin-top:-0.1rem}
+        .goods-c{vertical-align: middle}
+    </style>
+</head>
+<body style="height:100%;background:#fff">
+	<div id="screenList">
+	    <div class="screenLeft"></div>
+	    <div class="screenRight">
+	        <div class="b-hr screenHeader">
+	            <div class="sRLeft"><img id="exitSelect" src="images/icon-larrow.png"></div>
+	            <div class="sRMiddle"><span>筛选</span></div>
+	            <div class="sRRight"><a id="selectButton" href="javascript:void(0)">确定</a></div>
+	            <p style="clear: both"></p>
+	        </div>
+	        <div class="screenMiddle">
+	            <div class="selectList">
+	                <div class="select b-hr" selectType="0">
+	                    <div><span class="selectName">价格</span></div>
+	                    <div style="float: right">
+	                        <span class="selectType">默认</span>
+	                        <img src="images/icon-rarrow.png" width="10">
+	                    </div>
+	                </div>
+	                <div style="clear: both"></div>
+	            </div>
+	            <div class="selectAPrice">
+	                <div class="selectP b-hr" val="?">
+	                    <input class="selectPMin" type="number">
+	                    <span>-</span>
+	                    <input class="selectPMax" type="number">
+	                </div>
+	            </div>
+	            <div class="selectAList">
+	
+	            </div>
+	            <div class="selectSList">
+	
+	            </div>
+	        </div>
+	        <div class="screenBottom">
+	            <a id="cleanSelect" class="" href="javascript:void(0)">清除选项</a>
+	        </div>
+	    </div>
+	</div>
+	<div style="position:relative;min-height:100%">
+	    <div class="header b-hr">
+	        <div class="headerLeft">
+	            <img id="backArrow" src="images/icon-larrow.png">
+	        </div>
+	        <div class="headerMiddle">
+	            <input type="text">
+	        </div>
+	        <div class="headerRight">
+	            <a id="searchButton" href="javascript:void(0)">搜索</a>
+	        </div>
+	    </div>
+	    <div class="center">
+	        <div class="menu b-hr">
+	            <span class="b-right" fun="priceList" type="0"><span>价格</span><img src="images/icon_triangle0.png" width="8"></span>
+	            <span class="b-right" fun="salesList" type="0"><span>销量</span><img src="images/icon_triangle0.png" width="8"></span>
+	            <span fun="screen" type="0"><span>筛选</span></span>
+	        </div>
+	        <div>
+	            <div class="goods-list">
+	            </div>
+	            <div class="load b-hr">
+	                <span id="loadText" type="1">点击加载更多</span>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript">
+	    var pageNo = 1;
+	    var r = window.location.search.split('categoryId=')[1];
+	    var storeNo = cache.getItem('storeNo');
+	    var param = {};
+	    param.categoryId = r;
+	    var getGoodsUrl = 'commodity/searchCategoryCommodities.do';
+	    var selectType;
+	    var constantId = [];
+	    $(function(){
+	        getGoods();
+	        $('#screenList>.screenLeft').click(function(){
+	            $('#screenList').hide();
+	        });
+	        $('#searchButton').click(function(){
+	            var name = $('.headerMiddle>input').val();
+	            if(name!=null&&name!=''){
+	                pageNo = 1;
+	                getGoodsUrl = 'commodity/searchKeywordCommodities.do';
+	                $('.goods-list').empty();
+	                $('.selectA').remove();
+	                delete param.categoryId;
+	                cleanSelect();
+	                $.extend(param,{keyword:$('.headerMiddle>input').val()});
+	                getGoods();
+	            }
+	        });
+	        $('#exitSelect').click(function(){
+	            var selectAPrice = $(".selectAPrice");
+	            var selectAList =  $(".selectAList");
+	            if(selectAPrice.is(":visible")||selectAList.is(":visible")){
+	                selectAPrice.hide();
+	                selectAList.hide();
+	                $(".selectList,#cleanSelect").show();
+	            }else{
+	                $('#screenList').hide();
+	            }
+	        });
+	        $('#selectButton').click(function(){
+	            var selectAList = $(".selectAList");
+	            var selectAPrice = $(".selectAPrice");
+	            if(selectAList.is(":visible")){
+	                selectAList.hide();
+	                var select0 = selectAList.find('.selectAed');
+	                var select1 = $('.select:eq('+selectType+')').find('.selectType');
+	                select1.text(select0.text()||'默认');
+	                param.brandId=select0.attr('brandId');
+	            }else if(selectAPrice.is(":visible")){
+	                selectAPrice.hide();
+	                var a = parseInt(selectAPrice.find('.selectPMin').val());
+	                var b = parseInt(selectAPrice.find('.selectPMax').val());
+	                if(b>=a&&a>=0&&b>=0){
+	                    var select = $('.select:eq(0)').find('.selectType');
+	                    select.text(a+'-'+b);
+	                    param.minPrice = a;
+	                    param.maxPrice = b;
+	                    //param.priceId=a+'_'+b;
+	                }
+	            }else{
+	                pageNo = 1;
+	                $('#screenList').hide();
+	                $('.goods-list').empty();
+	                getGoods();
+	            }
+	            $(".selectList,#cleanSelect").show();
+	        });
+	        $('.select').click(function(){
+	            $('.selectList,#cleanSelect').hide();
+	            selectType = $(this).attr('selectType');
+	            if(selectType==0){
+	                $('.selectAPrice').show();
+	            }
+	        });
+	        $('.menu>span').click(function(){
+	            var type = $(this).attr('type');
+	            if(!($(this).attr('fun')=='screen')){
+	                $(this).siblings().attr('type',0).find('img').attr('src','images/icon_triangle0.png');
+	                if(type==0){
+	                    $(this).find('img').attr('src','images/icon_triangle1.png');
+	                    $(this).attr('type',1);
+	                }else if(type==1){
+	                    $(this).find('img').attr('src','images/icon_triangle2.png');
+	                    $(this).attr('type',2);
+	                }else{
+	                    $(this).find('img').attr('src','images/icon_triangle0.png');
+	                    $(this).attr('type',0);
+	                }
+	                type = $(this).attr('type');
+	                if(type!=0) {
+	                    if($(this).attr('fun')=='priceList') {
+	                        param.orderByPrice = true;
+	                        param.orderBySales = false;
+	                        param.isDesc = false;
+	                    }else{
+	                        param.orderBySales = true;
+	                        param.orderByPrice = false;
+	                        param.IsDesc = false;
+	                    }
+	                    if(type == 2){
+	                        param.isDesc = true;
+	                    }
+	                }
+	                pageNo = 1;
+	                $('.goods-list').empty();
+	                getGoods();
+	            } else {
+	            	$('#screenList').show();
+		        }
+	        });
+	        $('#loadText').click(function(){
+	            if($(this).attr('type')==1){
+	                $(this).text('加载中..');
+	                pageNo+=1;
+	                getGoods();
+	            }
+	        });
+	        $('.selectA').live('click',function(){
+	            $(this).addClass('selectAed');
+	            $(this).siblings().removeClass('selectAed');
+	        });
+	        $('#cleanSelect').click(function(){
+	            cleanSelect();
+	        });
+	    });
+	    function cleanSelect(){
+	        $('.selectList>div>div>.selectType').each(function(){
+	            $(this).text('默认');
+	            $('.selectP>input').val('');
+	            $('.selectAed').removeClass('selectAed');
+	            delete param.priceId;
+	        })
+	    }
+	    function getGoods(){
+	        $.post(
+                baseUrl+getGoodsUrl,
+                $.extend({pageNo:pageNo,pageSize:8}, param),
+                function(json){
+                    loadingHide();
+                    if(json.code==0){
+                        var data = json.data;
+                        for(var i=0;i<data.length;i++){
+                            $('.goods-list').append('<div id=? class="goods b-hr"><div class="goods-img float-l"><img src="?" width="100%"></div><div class="goods-c"><p class="name">?</p><p class="price">￥?</p></div><div class="clear-float"></div></div>'.format(
+                                    data[i].commodityNo, data[i].fullPictureurl,
+                                    data[i].commodityName, data[i].commodityPrice));
+                        }
+                        if(data.length==0){
+                            $('#loadText').attr('type',0);
+                            $('#loadText').text('没有更多数据了');
+                        }else{
+                            $('#loadText').attr('type',1);
+                            $('#loadText').text('点击加载更多');
+                        }
+                    }
+                },'json'
+	        );
+	    }
+	    $(".goods").live('click',function(){
+	        location.href='commodity.html?commodityNo='+$(this).attr('id');
+	    });
+	</script>
+</body>
+</html>

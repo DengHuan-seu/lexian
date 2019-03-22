@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>订单详情-乐鲜生活</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/orderinfo.css" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main">
+			<div class="order-detail">
+				<div class="title item " style="margin: 13px 0 0 0">
+					<span class="label" style="font-size: 20px">订单详情</span>
+				</div>
+				<div class="order-num item">
+					<span class="label">订单号：</span><span class="num em" id="orderNo"></span><span
+						class="label">状态:</span>&nbsp;<span class="state em" id="status"></span>
+				</div>
+				
+				<div class="order-content">
+					<div class="content-top">
+						<div class="item">
+							<span class="label">订单信息</span>
+							<span class="label" style="margin-left: 150px">下单时间：</span>
+							<span id="time"></span>
+						</div>
+					</div>
+					<div class="content-info">
+						<div class="receiver-info">
+							<div class="item">
+								支付方式：<span id="paymentType"></span>
+							</div>
+							<br />
+							<div class="item">
+								取货门店：<span id="storeName"></span>
+							</div>
+							<br />
+							<div class="content-info">
+								<table class="order-goods" cellspacing="0">
+									<thead>
+										<tr class="goods-top">
+											<th style="width:30%">商品图片</th>
+											<th>商品名称</th>
+											<th>商品数量</th>
+											<th>商品价格(元)</th>
+											<th>商品总价(元)</th>
+										</tr>
+									</thead>
+									<tbody id="oderInfo">
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript">
+		var orderNo = util.getParams().orderNo;
+		$("#orderNo").text(orderNo);
+		$(function() {
+			goodsInfo();
+			findShopCarCount();
+		});
+		function goodsInfo() {
+			$.postAjax("/order/findOrderInfo.do",
+				{
+					orderNo : orderNo
+				},
+				function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message,
+								asyncbox.Level.error);
+						return;
+					}
+					var order = json.data || [];
+	
+					var divs = '<tr class="goods-detail"><td><img src="?" width="20%" alt="" /></td>';
+					divs += '<td>?</td>';
+					divs += '<td>?</td>';
+					divs += '<td>?</td>';
+					divs += '<td>?</td></tr>';
+
+					$("#status").text(order.statesText);
+					$("#time").text(order.createTime);
+					$("#paymentType").text(order.paymentType + "(" + order.paymentSubtype + ")");
+					$("#storeName").text(order.storeName);
+					$("#oderInfo").empty();
+	
+					order.orderItems.forEach(function(item){
+						$("#oderInfo")
+						.append(divs.format(
+							item.fullPictureUrl,
+							item.commodityName,
+							item.amount,
+							parseFloat(item.listPrice).toFixed(2),
+							parseFloat(item.totalPrice).toFixed(2))
+						);
+					}); 
+				});
+		}
+		
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

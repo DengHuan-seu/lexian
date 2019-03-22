@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-提交订单</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/submitorders.css" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		.goods_introduce table {
+			width: 100%;
+			text-align: center;
+			vertical-align: middle;
+			border: 1px solid #e9e5e3;
+		}
+		
+		.goods_introduce th {
+			background: #EFEFEF;
+			height: 60px;
+		}
+		
+		.goods_introduce .comWidth {
+			width: 30%
+		}
+		
+		.goods_introduce td {
+			padding: 15px 0;
+		}
+		
+		.goods_introduce p {
+			line-height: 25px;
+		}
+		
+		.hgt {
+			font-size: 18px;
+			color: #ff4200;
+			font-weight: bold;
+		}
+		
+		#pirce_1 {
+			font-size: 25px;
+			font-weight: bold;
+			color: #ff4200;
+		}
+		
+		.tfg {
+			position: absolute;
+			right: 0px;
+			top: 70px;
+			font-size: 15px;
+			font-weight: bold;
+		}
+		
+		.tfg li {
+			padding-left: 110px;
+			display: inline-block
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		
+		<div class="header distance_top">
+			<!--头部开始部分-->
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">提交订单</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="flow" style="width: 1210px; margin: 0 auto; position: relative">
+				<img src="images/fuk.png" width="35%" alt="流程" />
+				<ul class="tfg">
+					<li>提交订单</li>
+					<li>订单支付</li>
+					<li>支付成功</li>
+				</ul>
+			</div>
+			<h2 class="h2_z" style="padding-bottom: 10px; width: 1210px; margin: 0 auto;">
+				取货门店：<span id="storeName"></span>
+			</h2>
+			<div class="clr"></div>
+			<div class="headwrap select" id="address" style="display: none"></div>
+		</div>
+		<div class="main">
+			<div class="zcontent">
+				<div class="div1">
+					<p>支付方式</p>
+					<div id="payment" class="select">
+						<span class="1 span1 selected">在线支付</span>
+					</div>
+				</div>
+				<div class="div2">
+					<p>配送方式</p>
+					<div id="deliverytype" class="select">
+						<span class="1 span2 selected">上门自提</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="content">
+				<!--内容部分-->
+				<h2>确认订单信息</h2>
+				<div class="goods_introduce">
+					<table cellspacing="0" id="commoditys">
+						<thead>
+							<tr>
+								<th>店铺：乐鲜生活精品男装</th>
+								<th>介绍与尺寸</th>
+								<th>单价(元)</th>
+								<th>数量</th>
+								<th>优惠(元)</th>
+								<th>小计(元)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><img src="?" width="20%" /></td>
+								<td><p>?</p>
+									<p>?</p>
+									<p>?</p></td>
+								<td>?</td>
+								<td>?</td>
+								<td>?</td>
+								<td>?</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				<div id="detalis" class="detalis"></div>
+				<div class="rightbottom">
+					<div class="integral"></div>
+					<div class="relpay"></div>
+					<div class="clr"></div>
+					<div class="div"></div>
+					<div class="div">
+						<p>
+							实付款：<span class="red1" id="pirce_1"></span><span class="hgt">&nbsp;元</span>
+						</p>
+					</div>
+					<div class="submiting">
+						<a class="submit" href="javascript:payment()">提交订单</a>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/String.js"></script>
+	<script type="text/javascript">
+		var trolleyIds;
+		var pirce_1 = parseFloat(0);
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			trolleyIds = util.getParam("id").split(",");
+			findShopCarCount();
+			init();
+		});
+	
+		function init() {
+			$("#commoditys").empty();
+	
+			var div1 = "<thead><tr><th class='comWidth'>商品图片</th><th class='comWidth'>商品名称与规格</th><th>数量</th><th>单价</th><th>小计(元)</th></tr></thead>";
+			div2 = "<tbody><tr><td class='comWidth'><img src='?' width='30%'/></td>";
+			div2 += "<td class='comWidth'><p>?</p></td>";
+			div2 += "<td>?</td><td>?</td><td>?</td></tr></tbody>";
+			$("#commoditys").append(div1);
+			for ( var index in trolleyIds) {
+				var t1 = util.parseJSON(cache.getItem("trolleyId_" + trolleyIds[index]));
+				if (t1) {
+					var commodityNo = t1.commodityNo;
+					var fullCommodityPicture = t1.fullCommodityPicture;
+					var commodityName = t1.commodityName;
+					var commodityIntroduce = t1.commodityIntroduce;
+					var amont = t1.amont;
+					var commodityPrice = t1.commodityPrice;
+					var totalPrice = t1.totalPrice;
+					var storeName = t1.storeName;
+					pirce_1 += parseFloat(totalPrice);
+					$("#commoditys").append(div2.format(
+							fullCommodityPicture, 
+							commodityName,
+							amont,
+							commodityPrice,
+							parseFloat(totalPrice).toFixed(2)));
+					$('#storeName').text(storeName);
+				}
+			}
+			$("#pirce_1").text(parseFloat(pirce_1).toFixed(2));
+		};
+	
+		function payment() {
+			var paymentType = $("#payment > span").text();
+			var deliveryType = $("#deliverytype > span").text();
+			var t2 = util.parseJSON(cache.getItem("trolleyId_" + trolleyIds[0]));
+			var data = {
+				paymentType : paymentType,
+				deliveryType : deliveryType,
+				trolleyIds : util.getParam("id"),
+				totalAmount : t2.totalPrice,
+				storeNo : t2.store
+			};
+			$.postAjax("/order/addOrder.do", data, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				asyncbox.tips(json.message, asyncbox.Level.success);
+				for ( var index in trolleyIds) {
+					cache.removeItem("trolleyId_" + trolleyIds[index]);
+				}
+				window.location = "payorder.html?orderNo=" + json.data;
+			});
+		};
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

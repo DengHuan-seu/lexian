@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.store.dao.impl.StoreDaoImpl">
+	<sql id="whereCondition">
+		where 1=1
+		<if test="id!=null and id>0">
+			and id=#{id}
+		</if>
+		<if test="citiesId!=null and citiesId>0">
+			and citys_id=#{citiesId}
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			and storename like concat("%",#{storeName},"%")
+		</if>
+		<if test="bankCardNo!=null and bankCardNo!=''">
+			and bankcardno=#{bankCardNo}
+		</if>
+		<if test="userName!=null and userName!=''">
+			and username=#{userName}
+		</if>
+		<if test="transPortation!=null and transPortation!=''">
+			and transportation=#{transPortation}
+		</if>
+		<if test="introduce!=null and introduce!=''">
+			and introduce=#{introduce}
+		</if>
+		<if test="telephone!=null and telephone!=''">
+			and storename=#{storeName}
+		</if>
+		<if test="phone!=null and phone!=''">
+			and phone=#{phone}
+		</if>
+		<if test="shopHours!=null">
+			and shophours=#{shopHours}
+		</if>
+		<if test="startTime!=null">
+			and starttime=#{startTime}
+		</if>
+		<if test="closeTime!=null">
+			and closetime=#{closeTime}
+		</if>
+		<if test="status!=null">
+			and status=#{status}
+		</if>
+		<if test="storeNo!=null">
+			and store_no=#{storeNo}
+		</if>
+		<if test="latitude!=null ">
+			and #{latitude}<![CDATA[>=]]>minlatitude
+			and #{latitude} <![CDATA[<=]]>maxlatitude
+		</if>
+		<if test="longitude!=null ">
+			and #{longitude}<![CDATA[>=]]>minlongitude
+			and #{longitude} <![CDATA[<=]]>maxlongitude
+		</if>
+	</sql>
+
+	<!-- 
+	<select id="findStore" resultType="StoreVo">
+		select citys.city,sto.storeNo,
+		sto.id,sto.storename as
+		storeName,storeaddress as
+		storeAddress,bankname as
+		bankName,
+		,sto.bankcardno as
+		bankCardno,sto.username as
+		userName,sto.transportation as
+		transPortation,sto.introduce,sto.telephone
+		,sto.phone,sto.shophours as
+		shopHours,sto.starttime as startTime,sto.closetime as
+		closeTime,sto.status,sto.maxlongitude as
+		maxLongitude,
+		sto.maxlatitude as maxLatitude,
+		minlongitude as
+		minLongitude,minlatitude AS minLatitude
+		from citys join (select
+		store.id,citys_id,storename,storeaddress,bankname,
+		,bankcardno,username,transportation,introduce,telephone
+		,phone,shophours,starttime,closetime,status,maxlongitude as
+		maxLongitude,
+		maxlatitude as maxLatitude ,
+		minlongitude as
+		minLongitude,minlatitude AS minLatitude,store_no as storeNo
+		from store
+		<include refid="whereCondition"></include>
+		) sto ON (sto.cityId=citys.id)
+	</select>
+	 -->
+
+	<select id="getLocation" resultType="StoreLocationVo">
+		<if test="type!=4">
+			select citys.id ,citys.city from citys where clazz = #{type} and
+			exists (select id
+			from store where
+			<if test="type==1">
+				province_id =citys.id
+			</if>
+			<if test="type==2">
+				citys_id =citys.id
+			</if>
+			<if test="type==3">
+				county_id =citys.id
+			</if>
+			)
+		</if>
+		<if test="type==2">
+			and parent_id=#{id}
+		</if>
+		<if test="type==3">
+			and parent_id =#{id}
+		</if>
+		<if test="type==4">
+			select storename AS storeName,
+			maxlongitude maxLongitude,maxlatitude maxLatitude,
+			minlongitude minLongitude,minlatitude minLatitude,
+			longitude,latitude,
+			store_no AS storeNo  from
+			store where
+			county_id=#{id}
+		</if>
+	</select>
+	
+	<select id="getStoreInfoByStoreNo" resultType="StoreVo">
+		SELECT citys_id cityId,storename storeName,maxlongitude maxLongitude,
+		maxlatitude maxLatitude,minlongitude minLongitude,minlatitude minLatitude,store_no storeNo,
+		longitude,latitude
+		FROM store 
+		where store_no = #{storeNo}
+	</select>
+	
+	<select id="findArea" resultType="AreaPo">
+		select id,city,postcode
+		from citys
+		where 1=1
+		<if test="clazz!=null">
+			and clazz=#{clazz}
+		</if>
+		<if test="parentId!=null">
+			and parent_id=#{parentId}
+		</if>
+		<if test="cityName!=null">
+			and city=#{cityName}
+		</if>
+	</select>
+</mapper>

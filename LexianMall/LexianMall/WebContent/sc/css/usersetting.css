@@ -1,0 +1,193 @@
+.label,
+form .text {
+    height: 18px;
+    line-height: 18px;
+}
+
+.form .item,
+.item .itxt1,
+.item .itxt2 {
+    height: 30px;
+    line-height: 30px;
+}
+
+li,
+input,
+.item .userTypes .selected,
+.right-mod .fl a {
+    display: inline-block;
+}
+
+.fl,
+.label,
+.userset-lcol,
+.user-pic,
+.info-m,
+.user-info,
+.mainleft,
+.mainright{
+    float: left;
+}
+
+.right-mod,
+.right-top,
+.right-mod,
+.user-info,
+.user-info {
+    padding: 10px;
+}
+
+.form .item:after {
+    content: ".";
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.form .item {
+    display: block;
+    margin-top: 20px;
+}
+
+.label {
+    padding: 6px 0;
+    width: 100px;
+    text-align: right;
+    font-size: 15px;
+}
+
+form .text {
+    width: 127px;
+    padding: 5px 23px 5px 5px;
+}
+
+.right-mod {
+    background-color: #fff;
+    margin: 10px auto;
+}
+.mainsection{
+    margin: 10px auto;
+}
+.fore1 li {
+    padding-left: 10px;
+}
+
+.fore1 li a.curr,.img-change .curr {
+    color: #FF4200;
+}
+/* .img-change{
+    margin-left: 10px;
+} */
+.item .userTypes li {
+    position: relative;
+    border: 1px solid #E9E5E3;
+    width: 13%;
+    text-align: center;
+}
+
+.item .userTypes .selected {
+    border: 2px solid #139CD8;
+}
+
+.item .userTypes .selected s {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: url(../images/selt.png) no-repeat;
+}
+
+.item .itxt1 {
+    width: 200px;
+}
+
+.item .itxt2 {
+    width: 200px;
+}
+
+.user-set {
+    background-color: #fff;
+    padding: 0 5px 0 15px;
+}
+
+.userset-lcol {
+    width: 58%;
+}
+
+.user-info {
+    overflow: hidden;
+    width: 11%;
+    margin-bottom: 10px;
+    color: #666;
+    line-height: 20px;
+}
+
+.user-img img {
+    width: 100px;
+    border-radius: 5px;
+}
+
+.img-change a{
+
+}
+
+.userTypes li {
+    cursor: pointer;
+}
+
+.right-mod .fl a {
+    height: 34px;
+    line-height: 34px;
+    width: 204px;
+    text-align: center;
+    background: #FF4200;
+    color: #fff;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.mainleft{
+    width: 15%;
+    background-color: #F6F6F6;
+}
+.content_z_left{
+    padding-bottom: 50px;
+}
+.mainright{
+    width:  78%;
+}
+
+.mainleft ul{
+    margin-left: 10px;
+}
+
+.mainleft ul .li11{
+    min-width: 75px;
+    font-size: 15px;
+    height: 40px;
+    line-height: 40px;
+    color: #139CD8;
+    width: 55%;
+    background: url(../images/jiantou.png) no-repeat right center;
+}
+.content_z_left li{
+    display: block;
+}
+.content_z_left .li11 a,.person a{
+    color: #139CD8;
+}
+.column_z ul .curr{
+    background-color: #6FB1C5;
+}
+.mainleft ul li{
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+}
+
+.maincontent{
+    margin: 10px auto;
+}

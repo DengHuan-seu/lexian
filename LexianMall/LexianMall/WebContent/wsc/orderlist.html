@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>订单</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/order.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+</head>
+<body>
+	<div class="header">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>订单列表</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center">
+	    <div id="order_empty" class="empty">
+	        <p><img src="images/cart-empty-icon.png" width="100px"></p>
+	        <p id="empty_text">订单为空~，快去选购吧</p>
+	        <p><span class="span_btn_min">购物</span></p>
+	    </div>
+	    <div id="div_order">
+	        <div id="order_list"></div>
+	       <div class="load b-hr tb-hr">
+	            <span id="loadText">点击加载更多</span>
+	        </div>
+	    </div>
+	    <div id="password" class="item pad-lr-10px">
+	        <div style="padding-top: 10px;padding-bottom: 10px">
+	            <p class="title">
+	                <span class="ts">确认密码</span>
+	            </p>
+	            <input class="input_pswd" type="password" placeholder="请输入您的登录密码" autofocus>
+	            <p class="err-msg"></p>
+	        </div>
+	        <div class="div-btn" style="padding-bottom: 23px;">
+	            <a id="btn_pay" class="btn-a">确定</a>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript">
+	    var states = window.location.search.split('states=')[1];
+	    var pageNo = 1;
+	    var orderNo = '';
+	    $(function(){			
+	        $('#password').hide();
+	        $('#order_empty').hide();
+	        forwardLogin('orderlist.html');
+	        loadingShow();
+	        getOrders();
+	    });
+	    function getOrders(){
+		    var param = {pageNo:pageNo, pageSize:10};
+		    if(states){
+			    param.states = states;
+			}
+	        $.post(baseUrl+'order/findOrders.do',
+                param,
+                function(json){
+                    loadingHide();
+                    if(json.code==0){
+                        if($.isEmptyObject(json.data)){
+                            $('.load').unbind('click');
+                            $('#loadText').text('没有更多数据了');
+                        }else{
+	                        json.data.forEach(function(order){
+	                        	$('#order_list').append('<div id="order_?" class="order item tb-hr"></div>'.format(order.orderNo));
+	                        	$('#order_' + order.orderNo).append(
+			                        	('<div class="order-a"><div class="goods b-hr pad-tb-6">' +
+			                        	'<div><p>订单编号：?</p><p>创建日期：?</p><span class="goods-price">￥?</span>' +
+			                        	'<span class="float-r"><img src="images/icon-rarrow.png" width="8"></span>' +
+			                        	'<p><span class="order-time">?</span><span class="float-r">?</span></p>' +
+			                        	'</div><div class="clear-float"></div></div></div>').
+			                        	format(
+					                        order.orderNo, 
+					                        order.createTime,
+					                        order.totalAmount, 
+					                        order.storeName, 
+					                        order.statesText
+					                    )
+					            );
+		                    });
+                            $('#loadText').text('点击加载更多');
+                    	    $('.order').click(function(){
+                    	    	var orderNo = $(this).attr("id").split("_")[1];
+                    		    location.href = 'orderdetails.html?orderNo=' + orderNo;
+                    		});
+                        }
+                        if($('.order').length==0){
+                            $('.load').hide();
+                            $('#order_empty').show();
+                            if(states==1){
+                                $('#empty_text').text('没有待付款的订单~');
+                            }else if(states==2){
+                                $('#empty_text').text('待收的货物为空~');
+                            }
+                        }
+                    }
+                },'json'
+	        )
+	    }
+	    $('.span_btn_min').click(function(){
+	        location.href='index.html';
+	    });
+	    $('.load').click(function(){
+	        $('#loadText').text('加载中...');
+	        pageNo += 1;
+	        getOrders();
+	    });
+	</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>乐鲜生活-个人信息</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/usersetting.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color"><a href="index.html" class="icon_z_1">首页</a></li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--主体内容部分-->
+		<div class="main">
+			<ul class="content_z_left">
+				<li><a class="com_z">我的订单</a></li>
+				<li><a href="unpaidorders.html">待付款订单</a></li>
+				<li><a href="paidorders.html">待取货订单</a></li>
+				<li><a class="com_z">账户设置</a></li>
+				<li><a href="usersetting.html">个人信息</a></li>
+				<li><a href="changepassword.html">修改密码</a></li>
+				<li><a href="collections.html">我的收藏</a></li>
+				<li><a class="com_z">我的钱包</a></li>
+				<li><a href="charge.html">充值</a></li>
+				<li><a href="transfer.html">转账</a></li>
+				<li><a href="bills.html">账单</a></li>
+			</ul>
+			<div class="mainright">
+				<!--内容右侧部分-->
+				<div class="right-mod">
+					<div class="right-top">
+						<ul class="fore1">
+							<li class="fore1_1 "><a class="curr"><h2>基本信息</h2></a></li>
+						</ul>
+					</div>
+					<div class="right-content">
+						<div class="user-set userset-lcol">
+							<div class="form">
+								<div class="item">
+									<span class="label">姓名：</span>
+									<input type="text" class="itxt1" value="" id="name"/> &nbsp;
+									<span style="color: #ff4200; font-size: 1em;">*必填</span>
+								</div>
+								<div class="item">
+									<span class="label">性别：</span>
+									<div id="fl">
+										<input type="radio" name="sex" class="sex-radio" value="男"/>男
+										<input type="radio" name="sex" class="sex-radio" value="女"/>女
+										<input type="radio" name="sex" class="sex-radio" value="保密" checked="checked"/>保密
+										<div class="clr"></div>
+									</div>
+								</div>
+								<div class="item">
+									<span class="label">邮箱：</span>
+									<input type="text" class="itxt2" id="email" value="" />&nbsp;&nbsp;
+									<span style="color: #ff4200; font-size: 1em;">*必填</span>
+								</div>
+								<div class="item">
+									<span class="label">联系方式：</span>
+									<input type="text" class="itxt2" id="phone" value="" readonly="readonly"/>
+									<span style="color: #ff4200; font-size: 1em; padding-left: 3px">*必填</span>
+								</div>
+								<div class="item">
+									<span class="label">&nbsp;</span>
+									<div class="fl">
+										<a class="sumbit" id="sumbit">保存</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="user-info ">
+							<div class="user-img">
+								<img id="portrait" alt="" src="" style="height: 100px" />
+								<div class="img-change"
+									style="margin-top: 15px; text-align: center">
+									<a class="curr" href="showimg.html"><h3>更换头像</h3></a>
+								</div>
+							</div>
+							<div class="info-m">
+								<div class="clr"></div>
+							</div>
+						</div>
+					</div>
+					<div class="clr"></div>
+				</div>
+			</div>
+			<div class="clr"></div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			init();
+		});
+	
+		function init() {
+			$.postAjax("/user/getUserInfo.do", {}, function(json) {
+				if (json.code) {
+					return;
+				}
+				var theUserInfo = json.data || {};
+				$("input:radio[value=" + theUserInfo.sex + "]").attr('checked', 'true');
+				$("#name").val(theUserInfo.username);
+				$("#email").val(theUserInfo.mail);
+				$("#phone").val(theUserInfo.phone);
+				$("li[value=" + theUserInfo.role + "]").attr('class', 'selected');
+				$("#portrait").attr("src", theUserInfo.fullPortrait);
+			}, function() {
+			});
+		}
+	
+		$("#sumbit").click(function() {
+			var username = $.trim($("#name").val());
+			var sex = $('input:radio:checked').val();
+			var phone = $.trim($("#phone").val());
+			var mail = $.trim($("#email").val());
+			if (!validateUtil.validateEmpty(sex)) {
+				asyncbox.tips("性别不能为空！", asyncbox.Level.error);
+				return;
+			}
+			if (!validateUtil.validateEmpty(mail)) {
+				asyncbox.tips("邮箱不能为空！", asyncbox.Level.error);
+				return;
+			}
+			if (!validateUtil.validateEmpty(username)) {
+				asyncbox.tips("姓名不能为空！", asyncbox.Level.error);
+				return;
+			}
+			if (!validateUtil.validateMaxLength(username, 15)) {
+				asyncbox.tips("姓名长度过长！", asyncbox.Level.error);
+				return;
+			}
+			var data = {
+				sex : sex,
+				mail : mail,
+				phone : phone,
+				username : username
+			};
+			$.postAjax("/user/uploadUser.do", data, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				asyncbox.tips("保存成功", asyncbox.Level.success);
+				init();
+			}, function() {
+				asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+			});
+		});
+	
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			}, function() {
+			});
+		}
+	</script>
+</body>
+</html>

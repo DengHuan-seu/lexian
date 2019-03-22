@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>我的收藏</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-footer.css">
+    <link rel="stylesheet" type="text/css" href="css/collections.css">
+</head>
+<body>
+	<div class="header b-hr">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>我的收藏</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center">
+	    <div class="span-menu b-hr">
+	        <ul>
+	            <li class="float-l"><span class="span-menu-active" id="btn-col-goods">收藏商品(<span id="sc_num">0</span>)</span></li>
+	        </ul>
+	        <div class="clear-float"></div>
+	    </div>
+	    <div>
+	        <div class="goods-list">
+	            <div id="goods_empty" class="empty">
+	                <p><img src="images/cart-empty-icon.png" width="100px"></p>
+	                <p>收藏商品为空，快去选购吧</p>
+	                <p><span class="span_btn_min">购物</span></p>
+	            </div>
+	            <div class="clear-float"></div>
+	        </div>
+	        <div class="load b-hr tb-hr">
+	            <span id="loadText">点击加载更多</span>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+	<script type="text/javascript">
+	    var pageNo = 1;
+	    $(function(){
+	    	forwardLogin('collections.html');
+	    	
+	        loadingShow();
+	        $(".shop-list").hide();
+	        $('.empty').hide();
+	        //获取收藏商品
+	        getCollections();
+	    });
+	    function getCollections(){
+	        $.post(
+                baseUrl + 'collection/findCollection.do',
+                { pageNo : pageNo },
+                function(json){
+                    loadingHide();
+                    if(json.data.length>=0){
+                        var data = json.data;
+                        $('#sc_num').text(parseInt($('#sc_num').text())+data.length);
+                        for(var i=0;i<data.length;i++){
+                            $('.goods-list').append('<div id="goods_?" class="goods b-hr" storeNo=?><div class="goods-img float-l"><img src=? width="100%"/></div><div class="goods-c"><p class="goods-name">?</p><span class="goods-price"></span><span class="qx-span-btn float-r qx_sc">取消收藏</span></div><div class="clear-float"></div></div>'
+                                    .format(data[i].commodityNo,data[i].storeNo,data[i].fullPictureUrl,data[i].commodityName));
+                        }
+                        $('#loadText').text('点击继续加载');
+                        if(data.length==0){
+                            $('#loadText').text('没有更多数据了');
+                        }
+                    }
+                    if($('.goods').length==0){
+                        $("#goods_empty").show();
+                        $('.load').hide();
+                    }
+                },'json'
+	        );
+	    }
+	    //删除收藏商品
+	    $('.qx-span-btn').live('click',function(){
+	        var r = $(this).parent().parent();
+	        loadingShow();
+	        $.post(baseUrl+'collection/deleteCollection.do',
+	                {commodityNo:r.attr('id').split('goods_')[1],storeNo: r.attr('storeNo')},
+	                function(json){
+	                    loadingHide();
+	                    if(json.code==0) {
+	                        r.remove();
+	                        $('#sc_num').text(parseInt($('#sc_num').text())-1);
+	                        if ($('.goods').length == 0) {
+	                            $("#goods_empty").show();
+	                            $('.load').hide();
+	                        }
+	                    }else{
+	                        alert(json.message);
+	                    }
+	                },'json'
+	        );
+	    });
+	    //查看该商品
+	    $('.goods-img,.goods-name').live('click',function(){
+	        var g = $(this).parents('.goods');
+	        location.href='commodity.html?commodityNo='+g.attr('id').split('goods_')[1];
+	    });
+	    $("#btn-col-goods").click(function(){
+	        $("#btn-col-goods").addClass("span-menu-active");
+	        $("#btn-col-shop").removeClass("span-menu-active");
+	        $(".goods-list").show();
+	        $(".shop-list").hide();
+	    });
+	    $("#btn-col-shop").click(function(){
+	        $("#btn-col-goods").removeClass("span-menu-active");
+	        $("#btn-col-shop").addClass("span-menu-active");
+	        $(".goods-list").hide();
+	        $(".shop-list").show();
+	    });
+	    $('.span_btn_min').click(function(){
+	        location.href='index.html';
+	    });
+	    $('.load').click(function(){
+	        $('#loadText').text('加载中...');
+	        pageNo += 1;
+	        getCollection();
+	    });
+	</script>
+</body>
+</html>

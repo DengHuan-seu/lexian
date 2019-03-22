@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/mvc 
+         http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd"
+	default-autowire="byName">
+	<!-- 配置上传文件 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+	
+	<import resource="applicationContext.xml" />
+	
+	<!--定时任务调度器 -->
+	<!-- 支持spring mvc 注解 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+				<property name="features">
+					<array>
+						<value>QuoteFieldNames</value>
+						<value>WriteNullNumberAsZero</value>
+						<value>WriteDateUseDateFormat</value>
+						<value>WriteNullListAsEmpty</value>
+						<value>WriteNullStringAsEmpty</value>
+						<value>WriteNullBooleanAsFalse</value>
+						<value>SkipTransientField</value>
+						<value>DisableCircularReferenceDetect</value>
+					</array>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 静态资源访问默认的servlet -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 配置spring 拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.chinasofti.lexian.mall.common.util.MvcInterceptor">
+				<property name="loginUrls">
+					<list>
+					    <value>/LexianMall/category/getCategories.do</value>
+						<value>/LexianMall/category/getSubCategories.do</value>
+					    <value>/LexianMall/category/getCategoryPathForCategory.do</value>
+						<value>/LexianMall/category/getCategoryPathForCommodity.do</value>
+						<value>/LexianMall/commodity/searchCategoryCommodities.do</value>
+						
+						<value>/LexianMall/commodity/getCommodityInfo.do</value>
+						<value>/LexianMall/commodity/getCommodityDetail.do</value>
+						<value>/LexianMall/commodity/getStorePrice.do</value>
+						<value>/LexianMall/commodity/searchKeywordCommodities.do</value>
+						
+						<value>/LexianMall/order/findTopCommodities.do</value>
+						<value>/LexianMall/order/orderPay.do</value>
+						
+						<value>/LexianMall/user/remLogin.do</value>
+						<value>/LexianMall/user/register.do</value>
+						<value>/LexianMall/user/resetPassword.do</value>
+						<value>/LexianMall/user/verification.do</value>
+						<value>/LexianMall/user/visitCount.do</value>
+						
+						<value>/LexianMall/store/findStore.do</value>
+						<value>/LexianMall/store/getLocation.do</value>
+						<value>/LexianMall/store/findArea.do</value>
+						<value>/LexianMall/store/getStoreInfoByStoreNo.do</value>
+						
+						<value>/LexianMall/validation/getValidateCode.do</value>
+						<value>/LexianMall/collection/findCount.do</value>
+						<value>/LexianMall/browse/findBrowse.do</value>
+						<value>/LexianMall/browse/addBrowse.do</value>
+						<value>/LexianMall/special/findSpecialCommodityBySpecialId.do</value>
+						
+					</list>
+				</property>
+				<property name="baseRedisDao" ref="baseRedisDao" />
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<context:component-scan base-package="com.chinasofti.lexian.mall" />
+	
+	<!-- 访问web inf的jsp -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html" />
+		<property name="order" value="0" />
+	</bean>
+</beans>

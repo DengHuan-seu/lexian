@@ -1,0 +1,358 @@
+.headwrap .right .p1,
+
+.headwrap .right .p2,
+.headwrap .left .p2,
+.content .p1,
+.content .p3,
+.content .p2 li,
+.rightbottom .relpay p
+ {
+    height: 30px;
+    line-height: 30px;
+}
+.rightbottom .div{
+	
+	line-height:30px;
+}
+.headwrap .left .p1{
+	padding: 5px 0
+}
+.headwrap .left .position,
+.rightbottom .integral,
+.rightbottom .submiting a,
+.content .detalis ul li,
+.zcontent .div1 span,
+.zcontent .div2 span,
+.zcontent .div3_1 span,
+.fist_li_z a {
+    text-align: center;
+}
+
+.headwrap .right,
+.headwrap .left,
+.content .p2 li,
+.rightbottom .submiting a,
+.content .detalis ul li,
+.detalis ul .li1 img,
+.detalis ul .li2,
+.detalis ul .li4 span,
+.detalis ul .li6 span,
+.detalis ul .li7 span,
+.detalis ul .li8 span,
+.detalis ul .li9 span,
+.detalis ul .li2 span,
+.zcontent .div1 span,
+.zcontent .div2 span,
+.zcontent .div3_1 span,
+.headbootom {
+    display: inline-block;
+}
+
+.content .p1,
+.content .p2,
+.rightbottom .integral {
+    float: left;
+}
+
+.content .p2,
+.header .headbootom,
+.content .p3,
+.rightbottom .relpay,
+.rightbottom .div,
+.rightbottom .submiting {
+    text-align: right;
+}
+
+.headwrap {
+    padding: 20px 0;
+}
+
+
+.headwrap .left {
+    border: 3px solid #AAAAAA;
+    width: 35%;
+    margin: 10px;
+    padding-left: 10px;
+}
+
+.headwrap .left .p1 {
+    font-size: 16px;
+    border-bottom: 1px solid #C8C9CA;
+    width: 80%;
+}
+
+.right .p1 span,
+.left .p1 span {
+    font-weight: bold;
+}
+
+.right ul li,
+.left ul li {
+    height: 20px;
+    line-height: 20px;
+}
+
+.right .p2,
+.left .p2 {
+    font-size: 15px;
+    color: #518CB4;
+}
+
+.left {
+    position: relative;
+}
+
+.left .position {
+    width: 50px;
+    height: 18px;
+    background: #ACABAB;
+    color: #fff;
+    line-height: 18px;
+    font-size: 8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.header .headbootom {
+    font-size: 16px;
+}
+
+.content {
+    color: #7C7B7B;
+}
+
+.content .contentwrap {
+    width: 100%;
+    font-size: 14px;
+}
+
+.content .p1 {
+    width: 30%;
+}
+
+.content .p2 {
+    width: 65%;
+}
+
+.content .p3 {
+    width: 20%;
+}
+
+.content .p3,
+.content .rightbottom,
+.rightbottom .relpay {
+    float: right;
+}
+
+.content h2 {
+    height: 50px;
+    line-height: 50px;
+}
+
+
+
+.content .detalis {
+    width: 100%;
+    padding: 2px 0;
+    background: #EEEEEF;
+}
+
+.content .rightbottom {
+    width: 50%;
+}
+
+.rightbottom .integral {
+    width: 50%;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.rightbottom .relpay {
+    width: 50%;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.rightbottom .integral p {
+    height: 20px;
+    line-height: 20px;
+}
+
+.rightbottom .integral p .red {
+    color: #c40000;
+    font-size:15px;
+}
+
+.rightbottom .relpay p .red1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #c40000;
+    font-size:25px;
+}
+
+.rightbottom .submit {
+    border: none;
+
+    height: 45px;
+    width: 226px;
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.rightbottom .submiting {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+.rightbottom .submiting a {
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    background: #ff4200;
+}
+
+.content .detalis ul li {
+    vertical-align: middle;
+}
+
+.li5 span{
+    display: inline-block;
+}
+.contentwrap .p2 li{
+    width: 13.6%;
+}
+
+.detalis ul .li1 img {
+    margin-top: 15px;
+}
+
+.detalis ul .li1 {
+    width: 9.32%;
+}
+
+.detalis ul .li2 {
+    width: 25%;
+    font-size: 15px;
+}
+
+.detalis ul .li3 {
+    width: 24%;
+    font-size: 15px;
+}
+
+.detalis ul .li3 p {
+    margin-top: 6px;
+}
+
+.detalis ul .li4, .detalis ul .li6, .detalis ul .li7 {
+    width: 8%;
+}
+
+.detalis ul .li5 {
+    width: 11.6%;
+}
+
+.detalis ul .li8 span {
+    vertical-align: middle;
+    width: 70px;
+    height: 20px;
+    margin-top: 28px;
+}
+
+.detalis ul .li8 {
+    width: 8.2%;
+}
+
+.detalis ul .li4, .detalis ul .li7 {
+    font-size: 15px;
+}
+
+.detalis ul .li7 {
+    color: #ff0000;
+
+}
+
+.detalis ul .li9 span {
+    width: 90px;
+    height: 25px;
+    border: 1px solid #ccc;
+    background: #fff;
+    vertical-align: middle;
+    margin-top: 28px;
+}
+
+.detalis ul .li2 span {
+    margin-top: 10px;
+}
+
+.zcontent {
+    background: #F5F1EE;
+    padding-bottom: 30px;
+}
+
+.zcontent .div1,
+.zcontent .div2,
+.zcontent .div3,
+.invoice_z{
+    margin: 0 auto;
+}
+.invoice_z div{height: 40px;line-height: 40px;}
+
+.invoice_z a{padding-left: 20px;color: #FF4200;}
+.zcontent .div1 {
+    width: 95%;
+    
+}
+
+.zcontent .div2, .zcontent .div3,.invoice_z{
+    width: 95%;
+}
+
+.zcontent .div1 p, .zcontent .div2 p, .zcontent .div3 p,.invoice_z p{
+    font-size: 14px;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    padding-top: 10px;
+}
+
+.zcontent .div1 span, .zcontent .div2 span, .zcontent .div3_1 span {
+    
+    margin-left: 10px;
+}
+
+.zcontent .div1 span, .zcontent .div2 span {
+    width: 250px;
+    height:30px;
+    line-height:30px;
+}
+
+.zcontent .div3 span {
+    width: 250px;
+    height:30px;
+    line-height:30px;
+}
+
+.zcontent .span2 {
+    height: 20px;
+    line-height: 20px;
+    border: 1px solid #AAAAAA;
+}
+
+.zcontent .span1 {
+    border: 1px solid #AAAAAA;
+    height: 18px;
+    line-height: 18px;
+}
+.manage_address {
+    font-size: 14px;
+    border-bottom: 1px solid #E9E5E3;
+    text-align: right;
+}
+.flow{text-align: right;}
+.zcontent .div2{position: relative}
+.zcontent .card_no{display: inline-block;position: absolute;left: 450px;top: 53px;}
+.zcontent .card_no span{display: inline;}

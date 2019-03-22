@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.user.dao.impl.UserDaoImpl">
+	<sql id="whereCondition">
+		where 1=1
+		<if test="id!=null">
+			and id = #{id}
+		</if>
+		<if test="sex!=null">
+			and sex = #{sex}
+		</if>
+		<if test="username!=null">
+			and username = #{username}
+		</if>
+		<if test="phone!=null">
+			and phone = #{phone}
+		</if>
+		<if test="mail!=null">
+			and mail = #{mail}
+		</if>
+		<if test="portrait!=null">
+			and portrait = #{portrait}
+		</if>
+		<if test="passwd!=null">
+			and passwd = #{passwd}
+		</if>
+		<if test="status!=null">
+			and status= #{status}
+		</if>
+		<if test="lastlogintime!=null">
+			and lastlogintime = #{lastlogintime}
+		</if>
+	</sql>
+
+	<select id="getUsers" parameterType="User" resultType="User">
+		select
+		id,sex,username,phone,mail,portrait,passwd,status,lastlogintime
+		from user
+	</select>
+
+
+	<select id="getUser" parameterType="User" resultType="User">
+		select
+		id,sex,username,phone,mail,portrait,passwd,status,lastlogintime
+		from user
+		<include refid="whereCondition" />
+	</select>
+	<insert id="saveUser" parameterType="User">
+		insert into user
+		(id,sex,username,phone,mail,portrait,passwd,status,lastlogintime)
+		values(#{id},#{sex},#{username},#{phone},#{mail},#{portrait},#{passwd},#{status},#{lastlogintime})
+	</insert>
+	
+	<update id="updateUser">
+		update user
+		set
+		<trim suffixOverrides=",">
+			<if test="sex!=null">
+				sex=#{sex},
+			</if>
+			<if test="username!=null">
+				username=#{username},
+			</if>
+			<if test="phone!=null">
+				phone=#{phone},
+			</if>
+			<if test="passwd!=null">
+				passwd=#{passwd},
+			</if>
+			<if test="status!=null">
+				status=#{status},
+			</if>
+			<if test="mail!=null">
+				mail=#{mail},
+			</if>
+			<if test="portrait!=null">
+				portrait=#{portrait},
+			</if>
+			<if test="lastlogintime!=null">
+				lastlogintime=#{lastlogintime},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+</mapper>

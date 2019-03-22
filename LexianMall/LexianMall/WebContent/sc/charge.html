@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="bookmark" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link rel="stylesheet" type="text/css" href="css/charge.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		.kkf {
+			padding: 5px 35px;
+		}
+		
+		.kkf1 {
+			background: url(icons/zfb.png) no-repeat 5% center;
+		}
+		
+		.kkf2 {
+			background: url(icons/yhk.png) no-repeat 5% center;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header"></div>
+		<div class="header distance_top">
+			<div class="column_z">
+				<ul>
+					<li class="fist_li_z">个人中心</li>
+					<li class="com_li com_li_color">
+						<a href="index.html" class="icon_z_1">首页</a>
+					</li>
+				</ul>
+				<div class="clr"></div>
+				<div class="shopping_car">
+					<a href="cart.html"> 我的购物车</a> <span class="tips2">0</span>
+					<div class="shopping_car_list">
+						<p class="first_paragraph"></p>
+						<p class="second_paragraph">购物车中还没有商品，赶快选购吧！</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main">
+			<ul class="content_z_left">
+				<li><a class="com_z">我的订单</a></li>
+				<li><a href="unpaidorders.html">待付款订单</a></li>
+				<li><a href="paidorders.html">待取货订单</a></li>
+				<li><a class="com_z">账户设置</a></li>
+				<li><a href="usersetting.html">个人信息</a></li>
+				<li><a href="changepassword.html">修改密码</a></li>
+				<li><a href="collections.html">我的收藏</a></li>
+				<li><a class="com_z">我的钱包</a></li>
+				<li><a href="charge.html">充值</a></li>
+				<li><a href="transfer.html">转账</a></li>
+				<li><a href="bills.html">账单</a></li>
+			</ul>
+			<div class="content_z_right">
+				<div class="one-2">
+					<div class="one-2-a one-2-a_marg">
+						<h3 class="cz_col" style="margin-top: 0px; padding-top: 3%;">充值</h3>
+						<form action="#" method="get">
+							<!-- <div class="ua"><label class="h31">银行卡号：</label><input type="text" id="bankNumber" placeholder="请输入银行卡号"></div> -->
+							<div class="ua">
+								<label>&nbsp;&nbsp;&nbsp;&nbsp;充值金额：</label>
+								<input type="text" id="amount" placeholder="请输入金额" />
+							</div>
+							<!-- 
+							<div class="ua">
+								<label>手机验证码：</label>
+								<input type="text" id="validation" placeholder="请输入验证码">
+								<a class="sumbit uamarg" id="validateCode">获取验证码</a>
+							</div> 
+							-->
+							<div class="ua clear" style="height: 32px">
+								<label style="float: left; line-height: 32px; margin-left: 1px">手机验证码：</label>
+								<input type="text" id="validation" placeholder="请输入验证码" style="width: 180px; float: left" />
+								<input class="sumbit uamarg" id="validateCode" value="获取验证码" />
+							</div>
+							<br />
+							<div class="content_font" style="margin: 10px 0 10px 63px">
+								<span>支付方式：</span>
+								<input type="radio" name="theType" value="1" id='alipay' checked="checked" />
+								<label for="alipay" class="kkf kkf1"></label> &nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" name="theType" value="2" id="visa" />
+								<label for="visa" class="kkf kkf2"></label>
+							</div>
+							<div class="ua_input">
+								<input class="ua_bu" type="button" value="确定" id="submit" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="clr"></div>
+			<div class="one-3 one3_bord">
+				<ul>
+					<li><br /></li>
+					<li><p>
+							<span>使用中会遇到的问题</span>
+						</p>
+						<br />
+					</li>
+					<li class="li1"><p>钱包收益什么时候会显示</p></li>
+					<li class="li2"><p>
+							答：当天15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。那么15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li3"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认.15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li4"><p>什么是钱包</p></li>
+					<li class="li5"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+					<li class="li6"><p>钱包有没有风险</p></li>
+					<li class="li7"><p>
+							举例：周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认。周一15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已经确定的份额，预计在次日之二点发放。15:00后转入的资金会顺延1个工作日确认</p>
+						<br />
+					</li>
+				</ul>
+				<br /> <br />
+			</div>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<script type="text/javascript" src="js/site/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/site/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="js/site/validate.js"></script>
+	<script type="text/javascript" src="js/site/common.js"></script>
+	<script type="text/javascript" src="js/site/constants.js"></script>
+	<script type="text/javascript" src="js/site/pingpp_pay.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (!util.isLogin()) {
+				window.location = "login.html";
+			}
+			findShopCarCount();
+			var countdown = 60;
+			function settime(obj) {
+				if (countdown == 0) {
+					$(obj).attr("disabled", false);
+					$(obj).attr("value", "发送验证码");
+					$(obj).css("cursor", "");
+					countdown = 60;
+				} else {
+					$(obj).attr("disabled", true);
+					$(obj).css("cursor", "default");
+					$(obj).attr("value", countdown + "s");
+					countdown--;
+					setTimeout(function() {
+						settime(obj);
+					}, 1000);
+				}
+			}
+
+			// 充值 
+			$("#validateCode").click(
+				function() {
+					var data = {
+						type : 4,
+						platformCode : 2
+					};
+					$.postAjax("/validation/getValidateCode.do",data, 
+						function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							var obj = $("#validateCode");
+							settime(obj);
+						}
+					);
+				}
+			);
+			// 提交 
+			$("#submit").click(function() {
+				var validateCode = $.trim($("#validation").val());
+				var money = $.trim($("#amount").val());
+				if (!money) {
+					asyncbox.tips("请输入金额！", asyncbox.Level.error);
+					return;
+				}
+				if (!validateUtil.validateCode(validateCode, 6)) {
+					asyncbox.tips("请输入6位有效验证码！", asyncbox.Level.error);
+					return;
+				}
+
+				var values = $("input:radio:checked").attr("value");
+				var channel = '';
+				if (values == 1) {
+					channel = 'alipay_pc_direct';
+				}
+				if (values == 2) {
+					channel = 'upacp_pc';
+				}
+				var data = {
+					amount : money
+				};
+				$.postAjax("/wallet/chargeWallet.do", data, function(json) {
+					if (json.code) {
+						asyncbox.tips(json.message, asyncbox.Level.error);
+						return;
+					} else{
+						asyncbox.tips(json.message, asyncbox.Level.success);
+						$("#validation").val("");
+						$("#amount").val("");
+						
+					}
+				});
+			});
+		});
+
+		function findShopCarCount() {
+			$.postAjax("/commodity/getTrolleyCount.do", {}, function(json) {
+				if (json.code) {
+					asyncbox.tips(json.message, asyncbox.Level.error);
+					return;
+				}
+				var count = eval("(" + json.data + ")")
+				$(".shopping_car>span[class='tips2']").text(count);
+			});
+		}
+	</script>
+</body>
+</html>

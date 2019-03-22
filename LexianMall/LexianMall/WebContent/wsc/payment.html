@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>支付</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/payment.css">
+</head>
+<body>
+	<div class="header">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>支付</span>
+	    <div id="menu_btn" class="search-menu-icon">
+	        <img src="images/icon-menu.png" width="28" height="28"/>
+	    </div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center">
+	    <div id="order" class="item">
+	        <p class="title b-hr pad-lr-10px">
+	            <span class="ts">请支付</span>
+	            <span class="money"></span>
+	        </p>
+	        <div class="select pad-lr-10px">
+	            <div id="payment_list">
+	                <div class="bank-card">
+	                	<img src="images/icon-card.png" align="top"/>
+	                    <b>余额支付</b>
+	                    <span class="right float-r">
+	                    	<img src="images/icon-right.png" width="19"/>
+	                    </span>
+	                </div>
+	                <!-- 目前只支持余额支付
+	                <div type="8" payment="alipay_wap" class="bank-card">
+	                    <img src="images/icon_alipay.png" width="80">
+	                </div>
+	                 -->
+	            </div>
+	        </div>
+	        <div class="pad-lr-10px div-btn">
+	            <a id="btn_ok" class="btn-a">确定</a>
+	        </div>
+	    </div>
+	    <div id="password" class="item pad-lr-10px">
+	        <div class="select">
+	            <p class="title">
+	                <span class="ts">确认密码</span>
+	            </p>
+	            <input class="input_pswd" type="password" placeholder="请输入您的登录密码" autofocus>
+	            <p class="err-msg"></p>
+	        </div>
+	        <div class="div-btn">
+	            <a id="btn_pay" class="btn-a">确定支付</a>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script src="js/payment/pingpp.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	    $('#password').hide();
+	    $('.header-fh').unbind('click');
+	    loadingShow();
+	    var orderNo = window.location.search.split('?orderNo=')[1];
+	    var payment = null;
+	    
+	    $(function(){
+	    	forwardLogin('payment.html?orderNo=' + orderNo);
+	    	
+	        if(orderNo!=null){
+	            $.post(baseUrl+'order/findOrderInfo.do',
+	                    {orderNo:orderNo},
+	                    function (json) {
+	                        loadingHide();
+	                        if(json.code==0){
+	                        	$('.money').text(json.data.totalAmount.toFixed(2)+'元');
+	                        }else if(json.code==3){
+	                            location.href = 'login.html?backUrl=payment.html'+location.search;
+	                        }else{
+	                            showBox(json.message);
+	                        }
+	                    },'json'
+	            )
+	        }else{
+	            showBox('没有订单','back')
+	        }
+	    });
+	    $('#btn_ok').click(function(){
+	    	$('#order').hide();
+            $('#password').show();
+	    });
+	    
+	    //订单支付
+	    $('#btn_pay').click(function(){
+	        pay();
+	    });
+	    
+	    function pay(){
+	        loadingShow();
+	        var password = $('.input_pswd').val().trim();
+	        if(password==null||password==''){
+                $('.err-msg').text('请输入密码');
+                loadingHide();
+                return;
+            }
+	        $.post(baseUrl+'order/updateOrderPay.do',
+	                {orderNo:orderNo,password:password},
+	                function (json){
+	                    loadingHide();
+	                    if(json.code==0){
+	                    	location.href='paysuccess.html';
+	                    }else{
+	                        $('.err-msg').text(json.message);
+	                    }
+	                },'json'
+	        )
+	    }
+	    $('.header-fh').click(function(){
+	        if($('#password').is(':visible')){
+	            $('#password').hide();
+	            $('#order').show();
+	        }else{
+	            history.back();
+	        }
+	    });
+	</script>
+</body>
+</html>

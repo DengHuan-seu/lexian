@@ -1,0 +1,12 @@
+.center{background-color: #fff;}
+.menu{background-color: #f3f4f6}
+.li-default{display: block;font-size: 13px;color: #252525;height: 49px;line-height: 49px;width: 89px;text-align: center;border-bottom: 1px solid #e0e0e0;border-right: 1px solid #e0e0e0;cursor:pointer;}
+.active{background-color: #fff;color: #00acec;border-right: 1px solid #fff;}
+.class{width: 72.5%;padding: 10px 3px}
+.ad{margin-bottom: 10px;}
+.class-c{}
+.c-item{padding-bottom: 20px;}
+.title{color: #888;font-weight: bold}
+.class-c ul{margin-bottom: 20px;}
+.class-c ul li{width: 33%;text-align: center;font-size: 12px;}
+.c-img{padding: 10px;}

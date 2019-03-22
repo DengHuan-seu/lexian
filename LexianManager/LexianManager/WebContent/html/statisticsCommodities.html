@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<style type="text/css">
+		.botton-h>a {
+			display: inline-block;
+			width: 120px;
+			height: 30px;
+			line-height: 30px;
+			border: 1px solid #cccccc;
+			border-radius: 5px;
+			text-align: center;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		
+		.active-h {
+			background: #F0983D;
+			color: #ffffff;
+		}
+		
+		.content-h {
+			border: 1px solid #e9e5e3;
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div class="botton-h" style="width: 450px; margin: 0 auto; margin-top: 30px;">
+			<a id="sales" class="active-h">商品销售排行</a>
+			<a id="visitor">商品访客排行</a>
+		</div>
+		<div class="content-h">
+			<div>
+				门店名称：<input id="storeNo" class="easyui-combobox" />
+				开始时间：<input id="startTime" class="easyui-datetimebox" />
+				结束时间：<input id="endTime" class="easyui-datetimebox" />
+				<input id="search"></input>
+				<div id="mm" style="width: 120px">
+					<div data-options="name:'commodityNo',iconCls:'icon-ok'">商品编号</div>
+					<div id="hide" data-options="name:'commodityName',iconCls:'icon-ok'">商品介绍</div>
+				</div>
+				<a href="javascript:clear()" style="dipaly: block; background: #ff0000; color: #ffffff; text-decoration: none; padding: 5px; padding-left: 10px; padding-right: 10px; border-radius: 3px;">重置</a>
+			</div>
+			<table id="roleInfoTable"></table>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		var type = null;
+		$(function() {
+			$(".botton-h >a").each(function(index) {
+				$(this).click(function() {
+					$(this).css({
+						"background" : "#F0983D",
+						"color" : "#ffffff"
+					}).siblings().css({
+						"background" : "#ffffff",
+						"color" : "#000000"
+					});
+				});
+			});
+			change(1);
+			type = 1;
+			if (type == 1) {
+				$("#hide").hide();
+			}
+			$("#sales").click(function() {
+				$("#hide").show();
+				clear();
+				change(1);
+				type = 1;
+			});
+			$("#visitor").click(function() {
+				$("#hide").show();
+				clear();
+				change(2);
+				type = 2;
+			});
+			var startTime = null;
+			var endTime = null;
+			$("#startTime").datetimebox({
+				onSelect : function(date) {
+					startTime = date;
+				}
+			});
+			$("#endTime").datetimebox({
+				onSelect : function(date) {
+					endTime = date;
+				}
+			});
+			$("#storeNo").combobox({
+				url : '/LexianManager/store/findStores.do',
+				valueField : 'store_no',
+				textField : 'storeName',
+			});
+			$('#search').searchbox({
+				width : 220,
+				searcher : function(value, name) {
+					var storeNo = $("#storeNo").combobox("getValue");
+					var startTime = $("#startTime").datetimebox("getValue");
+					var endTime = $("#endTime").datetimebox("getValue");
+					var data = {};
+					if (startTime != "" && endTime != "" && endTime < startTime) {
+						asyncbox.tips("结束日期不能小于开始日期", asyncbox.Level.error);
+						return;
+					}
+					if (startTime != "") {
+						data.startTime = startTime;
+					}
+					if (endTime != "") {
+						data.endTime = endTime;
+					}
+					if (storeNo != "") {
+						data.storeNo = storeNo;
+					}
+					if (value != "") {
+						data[name] = value;
+					}
+					$("#roleInfoTable").datagrid("load", data);
+				},
+				menu : '#mm',
+				prompt : '请输入搜索内容'
+			});
+		});
+		function change(type) {
+			var array = null;
+			var url = null;
+			url1 = "/LexianManager/statistics/findSaleTop.do";
+			url2 = "/LexianManager/statistics/findBrowseTop.do";
+			var array1 = [ [ {
+				field : 'commodity_no',
+				title : '商品编号',
+				width : '30%'
+			}, {
+				field : 'commodity_name',
+				title : '商品介绍',
+				width : '30%'
+			}, {
+				field : 'volume',
+				title : '销售量',
+				width : '15%'
+			}, {
+				field : 'amount',
+				title : '销售额',
+				width : '15%'
+			} ] ];
+			var array2 = [ [ {
+				field : 'commodity_no',
+				title : '商品编号',
+				width : '30%'
+			}, {
+				field : 'commodity_name',
+				title : '商品介绍',
+				width : '30%'
+			}, {
+				field : 'volume',
+				title : '浏览量',
+				width : '30%'
+			} ] ];
+			if (type == 1) {
+				array = array1;
+				url = url1;
+			}
+			if (type == 2) {
+				array = array2;
+				url = url2;
+			}
+			$("#roleInfoTable").datagrid({
+				singleSelect : true,
+				url : url, //加载的URL
+				method : 'get',
+				collapsible : true,
+				rownumbers : true,
+				pagination : true, //显示分页
+				pageSize : 22, //分页大小
+				pageList : [ 22, 27 ], //每页的个数
+				fit : false, //自动补全
+				fitColumns : true,
+				columns : array,
+				rownumbers : true,
+				checked : true,
+				selectOnCheck : true,
+				checkOnSelect : true
+			})
+			
+		}
+		function clear() {
+			$("#startTime").datetimebox("clear");
+			$("#endTime").datetimebox("clear");
+			$("#storeNo").combobox("clear");
+			$("#search").searchbox("clear");
+			$("#roleInfoTable").datagrid("load", {});
+		}
+	</script>
+</body>
+</html>

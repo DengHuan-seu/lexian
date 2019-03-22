@@ -1,0 +1,43 @@
+.center{margin-top: 10px;color: #252525;font-size: 15px;}
+.item{position: relative;box-shadow: 0 0 0 rgba(0,0,0,0.1);}
+.order{padding: 8px 5px;}
+.order-img{width: 4.5em;margin-right: 18px;}
+.goods-price{color: #c00000;font-size: 13px;}
+.order-b{text-align: center}
+.order-time{color: #7b7b7b;}
+.new-btn{width: 100px;height: 30px;line-height: 30px;margin: 0 5px;}
+.no-btn{border: 1px solid #F0983D;background-color: #fff;color: #F0983D}
+.div-btn-new{background-color: #fff;background-color: #00acec}
+.div-btn-new span{display: inline-block;height: 48px;line-height: 45px;color: #fff;}
+.total{font-size: 16px;color: #ca332b;font-weight: bold;padding: 0 15px;}
+.tjdd-btn{background-color: #F0983D;text-align: center;width: 35%;display: inline-block;color: #fff;}
+.mar-tb-6{margin-top: 6px;margin-bottom: 6px}
+/*order.html-css*/
+.add-header{font-size: 1em;margin-bottom: 10px;}
+.phone{margin-left: 39px;}
+.date-type{font-size: .875em;}
+.invoice-name{font-size: .8125em;color: #686868;}
+.add-info{font-size: .8125em;color: #686868;}
+.arrow{position: absolute;right: 10px;top:36%;}
+.goods-img{width: 69px;margin-right: 10px;}
+.div-btn{height: 50px;line-height: 50px;}
+/*order-address.html-css*/
+.address{padding: 15px 10px;position: relative}
+.address-c{width:80%;}
+.address-edit{position: absolute;right: 10px;top:35%}
+.btn-span{margin: 0 0.4em;display: inline-block;border:1px solid #b8b4b2;color: #b8b4b2;padding: 2px 3px;font-size: 13px;border-radius:3px;}
+.span-active{color: #f25454;border: 1px solid #f25454;}
+/*comment.html-css*/
+.icon-star{display: inline-block;width: 22px; height: 17px;background: url(../image/icon-star.png) -33px 0 no-repeat;background-size: 52px 17px;text-indent: -9999px;vertical-align: -2px;}
+.on{background-position: 0 0;background-size: 52px 17px;}
+/*order-tracking-css*/
+.font-red{color: #f25454}
+.b-left{border-left: 1px solid #e0e0e0}
+.pad-lr-18px{padding:0 18px;}
+.info-list{font-size: 14px;color: #6e6e6e;}
+.dian_div{height: 4em;line-height: 2.3em;margin-right:1em;}
+.dian{display:inline-block;width: 9px;height: 9px;border-radius: 5px;background-color: #ccc;}
+.d-on{background-color: #f25454}
+.input-old{width: 100%;height: 26px;text-indent: 10px;}
+.tb-hr{border-bottom: 1px solid #e0e0e0;border-top: 1px solid #e0e0e0;}
+.goods{border-bottom: 1px dashed #dbdade;}

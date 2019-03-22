@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商品管理
+				</span> <span><img src="../img/rright.jpg" alt="" /></span> <span>分类管理</span>
+			</div>
+			<div class="nav-right floatRight" style="margin-right: 10px; margin-top: -2px">
+				<div id="search">
+					<div id="choice">
+						<div data-options="name:'categoryName',iconCls:'icon-ok'">分类名称</div>
+					</div>
+				</div>
+				<a id="btn" href="categoryAdd.html" target="manager"
+					class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+				<div class="clr"></div>
+			</div>
+			<div class="content" style="margin-top: -10px">
+				<div class="content" id="content1">
+					<table id="roleInfoTable1"></table>
+				</div>
+				<div class="content" id="content2" style="margin-top: 10px">
+					<table id="roleInfoTable2"></table>
+				</div>
+				<div class="content" id="content3" style="margin-top: 10px">
+					<table id="roleInfoTable3"></table>
+				</div>
+				<div class="clr"></div>
+			</div>
+		</div>
+	</div>
+	<div id="addTemplate" style="display: none">
+		<div class="nav-right floatRight" style="margin-top: 20px; margin-right: 65px">
+			模板名称: <input id="template" name="dept" value="" />
+		</div>
+		<div id="jj" class="nav-right floatRight" style="margin-top: 10px; margin-left: 10px; margin-right: 102px"></div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			init();
+		})
+		function init() {
+			init1();
+			init2();
+			init3();
+			$("#search").searchbox({
+				width : 220,
+				searcher : function(value, name) {
+					var data1 = {
+						type : 1
+					};
+					var data2 = {
+						type : 2
+					};
+					var data3 = {
+						type : 3
+					};
+					if (value) {
+						data1[name] = value;
+						data2[name] = value;
+						data3[name] = value;
+					}
+					util.fillTable("/category/findCategories.do", data1, array1, "roleInfoTable1");
+					util.fillTable("/category/findCategories.do", data2, array2, "roleInfoTable2");
+					util.fillTable("/category/findCategories.do", data3, array3, "roleInfoTable3");
+	
+				},
+				menu : "#choice",
+				prompt : "请输入搜索内容"
+			});
+	
+		};
+		var array1 = [ [	// 一级分类
+			{
+				field : 'categoryName',
+				title : '一级分类名称',
+				width : "30%"
+			}, {
+				field : 'type',
+				title : '分级',
+				width : "18%"
+			}, {
+				field : 'id',
+				title : '一级分类ID',
+				width : "17%"
+			}, {
+				field : 'Operation',
+				title : '操作',
+				width : "34%",
+				formatter : function(value, Operation, index) {
+					var category = util.stringify(Operation);
+					var change = util.paramFollowUrl("/categoryEdit.html", Operation, new Array("id", "categoryName"));
+					var id = Operation.id;
+					return "<span><a href="+change+"  target='manager'>修改</a>  <a href=javascript:deleteCategory("
+							+ id + ")>删除</a> </span>";
+				}
+			}
+		] ];
+	
+		var array2 = [ [	// 二级分类
+			{
+				field : 'categoryName',
+				title : '二级分类名称',
+				width : "30%"
+			}, {
+				field : 'type',
+				title : '分级',
+				width : "18%"
+			}, {
+				field : 'parentName',
+				title : '一级分类名称',
+				width : "17%"
+			}, {
+				field : 'Operation',
+				title : '操作',
+				width : "34%",
+				formatter : function(value, Operation, index) {
+					var category = util.stringify(Operation);
+					var change = util.paramFollowUrl("/categoryEdit.html",
+							Operation, new Array("id", "categoryName", "parentId"));
+					var id = Operation.id;
+					return "<span><a href="+change+"  target='manager'>修改</a>  <a href=javascript:deleteCategory("
+							+ id + ")>删除</a> </span>";
+				}
+			}
+		] ];
+	
+		var array3 = [ [	// 三级分类
+			{
+				field : 'categoryName',
+				title : '三级分类名称',
+				width : "30%"
+			}, {
+				field : 'type',
+				title : '分级',
+				width : "18%"
+			}, {
+				field : 'parentName',
+				title : '二级分类名称',
+				width : "17%"
+			}, {
+				field : 'Operation',
+				title : '操作',
+				width : "34%",
+				formatter : function(value, Operation, index) {
+					var category = util.stringify(Operation);
+					var change = util.paramFollowUrl("/categoryEdit.html", Operation, new Array("id", "categoryName", "parentId", "fullPicture"));
+					var id = Operation.id;
+					return "<span><a href="+change+"  target='manager'>修改</a>  <a href=javascript:deleteCategory("
+							+ id + ")>删除</a>";
+				}
+			}
+		] ];
+	
+		function init1() {
+			var data = {
+				type : 1
+			}
+			util.fillTable("/category/findCategories.do", data, array1, "roleInfoTable1");
+		};
+	
+		function init2() {
+			var type = {
+				type : 2
+			};
+			util.fillTable("/category/findCategories.do", type, array2, "roleInfoTable2");
+		};
+	
+		function init3() {
+			var type = {
+				type : 3
+			};
+			util.fillTable("/category/findCategories.do", type, array3, "roleInfoTable3");
+		};
+	
+		function deleteCategory(id) {
+			asyncbox.confirm('确认删除？', '确认框', function(action) {
+				if (action == 'ok') {
+					var data = {
+						categoryId : id
+					};
+					$.postAjax("/category/deleteCategory.do", data, function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						init1();
+						init2();
+						init3();
+	
+						setTimeout(function() {
+							asyncbox.tips("删除成功", asyncbox.Level.success);
+						}, 1000);
+					});
+				}
+			});
+		}
+	</script>
+</body>
+</html>

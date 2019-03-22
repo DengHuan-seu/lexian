@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.commodity.dao.impl.CommodityDaoImpl">
+	<!--获取商品基本信息列表 -->
+	<select id="getCommodityList" resultType="CommodityPo">
+		SELECT id, commodity_no, name, introduce, detailed, pictureurl, 
+		createtime, updatetime, states FROM commodity WHERE 1=1 
+		<if test="commodityNo!=null">
+			and commodity_no =#{commodityNo} 
+		</if>
+		<if test="name!=null">
+		    and name like concat("%",#{name},"%")
+		</if>
+		<if test="categoryId!=0">
+		    and category_id = #{categoryId}
+		</if>
+	</select>
+	
+	<!-- 获取相同的CommodityNo编号 -->
+	<select id="hasExistedCommodityNo" resultType="Boolean">
+	    SELECT EXISTS(SELECT commodity_no FROM commodity 
+	    WHERE commodity_no=#{commodityNo})
+	</select>
+	
+	<!-- 添加商品基本信息 -->
+	<insert id="addCommodity">
+	    INSERT INTO commodity(commodity_no, name, introduce, category_id, createtime, updatetime, states)
+	    VALUES(#{commodity_no}, #{name}, #{introduce}, #{category_id}, now(),now(),1)
+	</insert>
+	
+	<!-- 获取指定编号商品的基本信息 -->
+	<select id="getCommodityInfo" resultType="CommodityPo">
+	    SELECT A.id, commodity_no, name, A.category_id, B.categoryname,
+	    introduce, detailed, pictureurl, 
+		createtime, updatetime, states 
+		FROM commodity A INNER JOIN category B
+		ON A.category_id=B.id
+		WHERE commodity_no = #{commodityNo}
+	</select>
+	
+	<!-- 获取指定编号商品的图片信息 -->
+	<select id="getCommodityPictures" resultType="CommodityPicturePo">
+	    SELECT id, commodity_no, picture_url FROM commodity_picture
+	    WHERE commodity_no = #{commodityNo}
+	</select>
+	
+	<!-- 根据第三级类别ID获取第二级、第一级类别信息 -->
+	<select id="getCommodityCategories" resultType="CommodityCategoryPo">
+	    SELECT FirstID, FirstName, SecondID, SecondName, ThirdID, ThirdName
+	    FROM categoryview WHERE ThirdID=#{categoryId}
+	</select>
+	
+	<!-- 获取指定商品的规格信息 -->
+	<select id="getCommoditySpecs" resultType="CommoditySpecPo">
+	    SELECT specid, commodity_no, spec_group, spec_name, states
+	    FROM commodity_spec
+	    WHERE commodity_no=#{commodityNo}
+	    ORDER BY spec_group
+	</select>
+	
+	<!-- 更新商品信息 -->
+	<update id="updateCommodityInfo">
+	    UPDATE commodity SET name=#{name}, category_id=#{categoryId}, 
+	    introduce=#{introduce}, detailed=#{detailed}, updatetime=now(), 
+	    states=#{states} WHERE commodity_no=#{commodityNo}
+	</update>
+	
+	<!-- 更新商品主图片url -->
+	<update id="updateMainPicture">
+	    UPDATE commodity SET pictureurl=#{picture_url}, updatetime=now()
+	    WHERE commodity_no=#{commodity_no}
+	</update>
+	
+	<!-- 添加商品配图url，并且获得新插入的配图的id  -->
+	<insert id="addSubPicture">
+		INSERT INTO commodity_picture(commodity_no, picture_url) 
+	    VALUES(#{commodity_no}, #{picture_url})
+	</insert>
+	
+	<!-- 获取最新的商品配图id -->
+	<select id="getMaxSubPictureId" resultType="int">
+	    SELECT MAX(id) FROM commodity_picture
+	</select>
+	
+	<!-- 删除商品配图 -->
+	<delete id="deleteSubPicture">
+	    DELETE FROM commodity_picture WHERE id=#{id}
+	</delete>
+	
+	<!-- 删除商品规格 -->
+	<delete id="deleteSpec">
+	    DELETE FROM commodity_spec WHERE specid=#{specId}
+	</delete>
+	
+	<!-- 添加商品规格 -->
+	<insert id="addSpec">
+	    INSERT INTO commodity_spec(commodity_no, spec_group, spec_name)
+	    VALUES(#{commodity_no}, #{spec_group}, #{spec_name})
+	</insert>
+	
+	<!-- 获取最新增加的商品规格 -->
+	<select id="getMaxSpecId" resultType="int">
+	    SELECT MAX(specid) FROM commodity_spec
+	</select>
+</mapper>

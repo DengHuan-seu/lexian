@@ -1,0 +1,16 @@
+.center{margin-bottom: 3.8em}
+.cart-title{height: 35px;line-height: 35px;font-size: 13px;padding: 0 15px;}
+.storeName{padding: 0.5em 0;}
+.cart{padding:10px 0;border-top:1px solid #cdcbc0;}
+.cart_goods{padding: 10px 20px;}
+.checkBox{cursor:pointer;float:left;display: block;width: 20px;height: 20px;margin:0 0.6em;background: url(../images/cart_icon.png) no-repeat 0 0;background-size: 50px 100px;}
+.checked{background-position: -25px 0;}
+.goods-img{width:70px;height: 70px;}
+.goods-info{display:inline-block;width:39%;white-space:nowrap;text-overflow:ellipsis;overflow: hidden;color: rgb(85, 85, 85);font-size: 13px;}
+.goods-c{position: relative;}
+.icon-x{cursor:pointer;width: 26px;height: 26px;background: url(../images/icon-x.png) no-repeat;background-position: 10px 10px;display: inline-block;}
+.xiaoji{color: #f15353;font-size: 15px;border-bottom: 1px dashed #dbdade;}
+footer{height: 50px;line-height: 50px;}
+.realPrice{font-size: 16px;color: #ca332b;font-weight: bold;padding: 0 15px;}
+.btn-js{display: inline-block;background-color: #F0983D;color: #fff;width: 35%;text-align: center}
+footer{background-color: #fff;border-top: 1px solid #F0983D}

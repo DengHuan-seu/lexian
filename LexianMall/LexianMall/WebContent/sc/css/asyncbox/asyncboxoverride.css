@@ -1,0 +1,22 @@
+/*asyncbox样式重写*/
+.b_t_l,.b_t_r,
+.b_tipsbar_l,.b_tipsbar_r,
+.b_m_l,.b_m_r,
+.b_btnsbar_l,.b_btnsbar_r,
+.b_t_m,.b_b_m,
+.b_b_l,.b_b_r{background-image: ;background-repeat:no-repeat;}
+table.asyncbox_table{border:2px solid #9F9F9F;}
+.asyncbox_table tr:last-child{height: 0px;}
+.b_t_l,.b_t_r{width: 0px;}
+.b_b_m{height:0px;}
+.b_t_m{background-image: none;background-color: #FF4200;}
+.asyncbox_title_tips>strong{font-size:15px;}
+.asyncbox_title li{height:35px;}
+.asyncbox_confirm{padding-left:48px;}
+.asyncbox_title_icon{margin-left:10px;width: 17px;background: url(images/icon.gif) no-repeat 0 8px;margin-right: 2px;}
+.asyncbox_btn,.asyncbox_btn span{background-image: none;background-color:#FF4200;border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;}
+.asyncbox_btn>span {color:white;font-size:14px;line-height: 16px;padding: 3px 15px;margin-left:0px;}
+.asyncbox_btn:hover,.asyncbox_btn>span:hover{color:white;cursor: pointer;}
+.asyncbox_close:hover{color: white;line-height: 35px;}
+.asyncbox_close{width: 35px;text-align: center;background:url(images/close.png) no-repeat 50% 50%;cursor: pointer;top:0px;right:0px;height:35px;line-height:100px;vertical-align:middle;}
+.asyncbox_table{border-collapse: collapse;}

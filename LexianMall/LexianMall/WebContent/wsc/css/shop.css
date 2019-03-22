@@ -1,0 +1,15 @@
+.center{font-size: 13px;color: #252525;}
+.header-c{padding: 19px 0}
+.shop-info{padding: 10px}
+.shop-logo{margin-right: 10px}
+.collection-num{color: #e0e0e0;}
+.span-btn-sc{display: inline-block;padding: 2px 6px;background-color: red;color: #FFFFFF;border-radius: 2px;}
+.shop-menu{padding:10px 0}
+.shop-menu ul li{width: 33.3%;text-align: center}
+.goods-list{padding: 10px;}
+.goods{width: 50%;float: left;margin-bottom: 8px;}
+.goods-bor{margin:0 2px;border: 1px solid #e0e0e0}
+.goods-img{width:100%}
+.goods-c{padding-bottom:8px; }
+.goods-name{margin-bottom: 5px;}
+.goods-price{color: #f15353;}

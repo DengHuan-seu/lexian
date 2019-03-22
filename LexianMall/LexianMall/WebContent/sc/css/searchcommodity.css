@@ -1,0 +1,175 @@
+.update {
+	padding-top: 12px;
+	padding-left: 10px;
+	float: left
+}
+
+.changeT {
+	float: left
+}
+
+.main .lists .left {
+	width: 10%;
+	float: left;
+	font-size: 14px;
+}
+
+.main .lists .right {
+	width: 88%;
+	float: right;
+	padding-left: 20px;
+	background: #ffffff;
+	min-height: 22px
+}
+
+.main .lists .right>a {
+	display: inline-block;
+	width: 60px;
+	line-height: 30px
+}
+
+.title-x {
+	font-size: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid #e9e5e3;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.lists .priceX a {
+	display: inline-block;
+	margin-right: 60px;
+}
+
+.sortX {
+	margin-top: 20px;
+	padding: 10px 0;
+	background: #F1F1F1;
+	padding-left: 18px;
+}
+
+.sortX a {
+	padding: 5px 10px;
+	background: #ff4200;
+	color: #ffffff;
+}
+
+.sortX input[type=text] {
+	height: 20px;
+	line-height: 20px;
+	text-indent: 1em;
+}
+
+.goodList-n {
+	width: 18%;
+	border: 1px solid #e9e5e3;
+	float: left;
+	margin-left: 19px;
+	margin-top: 20px;
+}
+
+.goodList-n:hover {
+	border: 1px solid #ff4200;
+}
+
+.goodList-n>div {
+	width: 80%;
+	margin: 0 auto;
+	padding: 20px 0;
+}
+
+.goodList-n>div>p {
+	padding: 2px 0;
+}
+
+.priceY {
+	color: #ff4200;
+	font-size: 18px;
+}
+
+.dsp {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.lists {
+	background: #F7F5F5
+}
+
+.lists .right ul {
+	width: 95%;
+}
+
+.lists .right ul li {
+	float: left;
+	width: 11%;
+	border: 1px solid #e9e5e3;
+	text-align: center;
+	height: 39px;
+	padding-top: 5px;
+	margin-top: 3px;
+	margin-left: 2px;
+}
+
+.mian .right {
+	padding-left: 20px
+}
+
+.lists .right ul li a {
+	display: inline-block;
+}
+
+.tt-X,.tt-Y {
+	padding: 4px 30px 4px 6px;
+	border: 1px solid #e9e5e3;
+	position: relative;
+}
+
+.tt-X a,.tt-Y a {
+	padding: 3px 6px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.tt-X:hover,.tt-Y:hover {
+	border: 1px solid #ff4200;
+}
+
+.tt-Y:hover a,.tt-X:hover a {
+	background: #ff4200;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.title-x>div {
+	float: left;
+	margin-right: 10px
+}
+
+.comLists {
+	border-bottom: 1px solid #e9e5e3
+}
+
+.wrap-tu .left,.wrap-tu .right {
+	padding: 10px 0;
+}
+
+.wrap-tu .left {
+	height: 100%;
+	background: #F7F5F5;
+	text-align: center;
+}
+
+#priceCondition input {
+	width: 80px;
+	height: 18px;
+	line-height: 18px;
+	text-indent: 1em
+}
+
+#priceCondition a:hover {
+	opacity: 0.8;
+	filter: alpha(opacity =   80)
+}

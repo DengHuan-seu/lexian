@@ -1,0 +1,158 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商品活动管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>商城活动</span>
+			</div>
+			<div class="nav-right floatRight">
+				<span>
+					<a id="btn" onclick="addPlate()" target="manager" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+				</span>
+			</div>
+		</div>
+		<div class="content" id="content" style="margin-top: 0px">
+			<table id="roleInfoTable"></table>
+		</div>
+	</div>
+	<div id="addItems" style="display: none">
+		<div class="promo">
+			<span>板块名称：</span>
+			<input id="specialName" name="dept" value="" style="width: 200px" />
+		</div>
+
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			init();
+		});
+	
+		//初始化
+		function init() {
+			var array = [[{
+					field : 'specialId',
+					title : '板块编号',
+					width : '35%'
+				}, {
+					field : 'specialName',
+					title : '板块名称',
+					width : '35%'
+				}, {
+					field : 'Operation',
+					title : '操作',
+					width : "28%",
+					formatter : function(value, Operation, index) {
+						var uniformsInfo = util.stringify(Operation);
+						var change = util.paramFollowUrl("/specialCommodities.html", Operation, new Array("specialId"));
+						var specialId = Operation.specialId;
+						return '<span><a href=' + change + '  target="manager">查看活动商品</a>&nbsp;&nbsp;<a data=' + uniformsInfo
+								+ ' target="manager" onclick="updateItem(this)">修改</a>&nbsp;&nbsp;<a onclick = "deleteSpecial(this)" data="'
+								+ specialId + '"  target="manager">删除</a></span>';
+					}
+				}]];
+			util.fillTable("/special/findSpecials.do", {}, array);
+		}
+	
+		//添加板块
+		function addPlate() {
+			asyncbox.open({
+				id : "addItems",
+				title : "添加板块",
+				width : 350,
+				height : 250,
+				padding : 30,
+				btnsbar : $.btn.OKCANCEL,
+				callback : function(action, opener) {
+					if (action == 'ok') {
+						var specialName = $.trim($("#specialName").val());
+						if (!specialName) {
+							return asyncbox.tips("板块名称不能为空", asyncbox.Level.error);
+						}
+						var data = {
+							specialName : specialName
+						}
+						$.postAjax("/special/addSpecial.do", data, function(json) {
+							if (json.code) {
+								asyncbox.tips(json.message, asyncbox.Level.error);
+								return;
+							}
+							init();
+						}, function() {
+							asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+						});
+					}
+				}
+			});
+		}
+	
+		//删除
+		function deleteSpecial(obj){
+			asyncbox.confirm('确认删除 ?','提示 ',function(action){
+			　　　//confirm 返回三个 action 值，分别是 'ok'、'cancel' 和 'close'。
+			　　　if(action == 'ok'){
+			　　　　var specialId = $(obj).attr("data");
+		        	$.postAjax("/special/deleteSpecial.do",{specialId : specialId},function(json){
+		        		if(json.code){
+		        			return asyncbox(json.message,asyncbox.Level.error);
+		        		}
+		        		init();
+		        		asyncbox.tips(json.message,asyncbox.Level.success);
+		        	},function(){});
+			　　　}
+			　});
+			
+		}
+	
+		//修改item
+		function updateItem(obj) {
+			var uniformsInfo = $(obj).attr("data");
+			uniformsInfo = util.parseJSON(uniformsInfo);
+			asyncbox.open({
+				id : "addItems",
+				title : "修改板块名称",
+				width : 400,
+				height : 350,
+				btnsbar : $.btn.OKCANCEL,
+				loadData : function() {
+					$("#specialName").val(uniformsInfo.specialName);
+				},
+				callback : function(action, opener) {
+					uniformsInfo["specialName"] = $("#specialName").val();
+					if (action == 'ok') {
+						$.postAjax("/special/updateSpecial.do", uniformsInfo,
+							function(json) {
+								if (json.code) {
+									asyncbox.tips(json.message, asyncbox.Level.error);
+									return;
+								}
+								/* asyncbox.tips(successStr, asyncbox.Level.success); */
+								init();
+							}, function() {
+								asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+							});
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

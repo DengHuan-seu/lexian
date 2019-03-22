@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 提取Level2用户Job每日6-8点运行，并进行数据上传 -->
+	<bean id="level2UserJob" class="com.gaotime.job.Level2UserJob"
+		singleton="true" autowire="byName" />
+	<!-- Level2用户统计数据 -->
+	<bean id="level2StatJob" class="com.gaotime.job.Level2StatJob"
+		singleton="true" autowire="byName" />
+
+	<bean id="level2UserJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="level2UserJob" />
+		</property>
+		<property name="targetMethod">
+			<value>execute</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="level2UserJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="level2UserJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- 提取Level2用户Job每日9点15分之前运行，同时进行数据上传 -->
+			<value>0 0 8 ? * MON-FRI</value>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="level2UserJobTrigger" />
+				<ref local="level2StatJobTrigger_Day" />
+				<ref local="level2StatJobTrigger_Month" />
+				<ref local="userNumStatJobTrigger" />
+				<ref local="userNumAreaStatJobTrigger" />
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="level2StatJobDetail_Day"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="level2StatJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run_day</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="level2StatJobTrigger_Day" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="level2StatJobDetail_Day" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每日0点以后启动job将前一日数据存到报表中 -->
+			<value>0 1 0 ? * *</value>
+		</property>
+	</bean>
+
+	<bean id="level2StatJobDetail_Month"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="level2StatJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run_month</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="level2StatJobTrigger_Month" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="level2StatJobDetail_Month" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每月月初启动job将上月数据存到报表中 -->
+			<value>0 0 1 1 * ?</value>
+		</property>
+	</bean>
+
+
+
+	<!-- GRS用户统计 -->
+	<bean id="userNumStatJob" class="com.gaotime.job.UserNumStatJob"
+		singleton="true" autowire="byName" />
+
+	<bean id="userNumStatJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="userNumStatJob" />
+		</property>
+		<property name="targetMethod">
+			<value>stat</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="userNumStatJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="userNumStatJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每日23点59分运行 -->
+			<value>0 59 23 ? * *</value>
+		</property>
+	</bean>
+
+	<!-- GRS用户分区统计 -->
+	<bean id="userNumAreaStatJob" class="com.gaotime.job.UserNumAreaStatJob"
+		singleton="true" autowire="byName" />
+
+	<bean id="userNumAreaStatJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="userNumAreaStatJob" />
+		</property>
+		<property name="targetMethod">
+			<value>stat</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="userNumAreaStatJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="userNumAreaStatJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每日23点50分运行 -->
+			<value>0 50 23 ? * *</value>
+		</property>
+	</bean>
+</beans>

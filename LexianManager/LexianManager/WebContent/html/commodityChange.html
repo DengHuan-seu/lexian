@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncboxoverride.css" />
+	<style type="text/css">
+		input {
+			width: 220px;
+			padding: 5px 0;
+		}
+		
+		html,body {
+			height: 100%;
+			overflow-y: scroll;
+		}
+		
+		.deleteButton{
+			width: 30px;
+			heigth: 20px;
+			padding: 0;
+			margin: 0;
+			font-size: 8px;
+			background-color: white;
+		}
+		.pictureTmp{
+			float:left;
+			border:1px solid black; 
+			text-align:center
+		}
+		.specs{
+			list-style: none;
+			margin:0;
+			padding:0;
+		}
+		.specs li{
+			list-style: none;
+			float:left;
+			border:1px solid lightgray;
+			margin-right:5px;
+			padding-left:5px;
+			padding-right:5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>商品管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>商品基本信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>信息修改</span>
+				<span><a href="javascript:history.go(-1);">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div>
+				商品名称：<input type="text" id="commodityName" />
+				&nbsp;&nbsp;
+				激活：<input type="checkbox" id="states" style="width:10px;height:10px" />
+			</div>
+			<hr/>
+			<div>
+				类别信息：
+				<input type="hidden" id="categoryName"/>
+				<input id="firstCategory"/>
+				<input id="secondCategory"/>
+				<input id="thirdCategory"/>
+			</div>
+			<hr/>
+			<div>
+				规格信息：
+				规格组：<input type="text" id="specGroup" />
+				规格名：<input type="text" id="specName" 	/>
+				<input type="button" class="deleteButton" value="+" onclick="addSpec();"/>
+				<ul class="specs" id="specs"></ul>
+				<div style="clear: both"></div>
+			</div>
+			<hr/>
+			<div>
+				商品简介：
+				<br/>
+				<textarea id="introduce" rows="0" cols="80" style="width:75%"></textarea>
+				<br/>
+				商品详情：
+				<textarea name="contentEdit" id="contentEdit" rows="5" cols="80"></textarea>
+			</div>
+			<div style="clear: both"></div>
+			<hr/>
+			<div>
+				商品主图：
+				<img id="pictureUrl" width="300px" align="top"/>
+				<input type="file" id="fileMainPicture" name="fileMainPicture"/>
+				<input type="button" id="uploadMainPicture" value="上传主图"/>
+			</div>
+			<hr/>
+			<div>
+				商品配图：
+				<div id="pictures">
+				</div>
+				<div style="text-align: center">
+					<input id="fileSubPicture" type="file" name="fileSubPicture"/>
+					<input id="uploadSubPicture" type="button" value="上传配图" />
+				</div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		<hr/>
+		<div class="role-save" style="text-align:center">
+			<a href="javascript:void(0)" id="save" style="margin-right: 0px">保存信息</a>
+		</div>
+	</div>
+	<script type="text/template" id="pictureTmp">
+		<div data-id="###pictureId###" class="pictureTmp">
+			<img src="###fullPictureUrl###" height="200px" align="top"/>
+			<br/>
+			<input type="button" class="deleteButton" value="X" title="删除此图片"
+				onclick="deletePicture(###pictureId###, '###pictureUrl###');"/>
+		</div>
+	</script>
+	<script type="text/template" id="specTmp">
+		<li class="specTmp" data-id="###specId###">
+			<span>###specGroup###</span>:
+			<span>###specName###</span>
+			<input type="button" class="deleteButton" value="X" title="删除此规格"
+				onclick="deleteSpec(###specId###);"/>
+		</li>
+	</script>
+	
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+	<script type='text/javascript' src="ckeditor/config.js"></script>
+	<script type="text/javascript">
+		var commodity;
+		var ckeditor;
+
+		function initCommodity(){
+			$("#commodityName").val(commodity.name);
+			$("#categoryName").val(commodity.categoryName);
+			$("#introduce").val(commodity.introduce);
+			if(commodity.fullPictureUrl){
+				$("#pictureUrl").attr("src", commodity.fullPictureUrl);
+			} else{
+				$("#pictureUrl").attr("src", "../img/zanwu.jpg");
+			}
+			if(commodity.states == "1"){
+				$("#states").attr("checked", true);
+			}
+			commodity.pictures.forEach(function(item){
+				var tmp = $("#pictureTmp").html();
+				tmp = tmp.replace(/###fullPictureUrl###/g, item.fullPictureUrl);
+				tmp = tmp.replace(/###pictureId###/g, item.id);
+				tmp = tmp.replace(/###pictureUrl###/g, item.pictureUrl);
+				$(tmp).appendTo($("#pictures"));
+			});
+		
+			ckeditor = CKEDITOR.replace('contentEdit', {
+				filebrowserUploadUrl : "/LexianManager/commodity/uploadFckPicture.do"
+			});
+			ckeditor.setData(commodity.fullDetailed);
+
+			// 商品规格定义 
+			if(commodity.specs){
+				commodity.specs.forEach(function(item){
+					var tmp = $("#specTmp").html();
+					tmp = tmp.replace(/###specId###/g, item.specId);
+					tmp = tmp.replace(/###specGroup###/g, item.specGroup);
+					tmp = tmp.replace(/###specName###/g, item.specName);
+					$(tmp).appendTo($("#specs"));
+				});
+			}
+		}		
+		
+		$(function() {
+			var commodityNo = util.getParam("commodityNo");
+			
+			$.post(
+				"/LexianManager/commodity/getCommodityInfo.do?commodityNo=" + commodityNo, 
+				function(data){
+					var result = JSON.parse(data);
+					commodity = result.rows;
+	
+					initCommodity();
+	
+					var url = "/category/findCategories.do?type=1";
+					$.postAjax(url, {}, function(result){
+						$("#firstCategory").combobox({
+							data : result.rows, 
+							mode : "local",
+							valueField : "id",
+							textField : "categoryName",
+							multiple : false, 
+							onLoadSuccess : function(){
+								if(commodity.topCategoryId){
+									$("#firstCategory").combobox("setValue", commodity.topCategoryId);
+								}
+								var url = "/category/findCategories.do?parentId=" + commodity.topCategoryId;
+								$.postAjax(url, {}, function(result){
+									$("#secondCategory").combobox({
+										data : result.rows,
+										mode : "local",
+										valueField : "id",
+										textField : "categoryName",
+										multiple : false,
+										onLoadSuccess : function(){
+											if(commodity.parentCategoryId){
+												$("#secondCategory").combobox("setValue", commodity.parentCategoryId);
+											}
+											var url =  "/category/findCategories.do?parentId=" + commodity.parentCategoryId;
+											$.postAjax(url, {}, function(result){
+												$("#thirdCategory").combobox({
+													data : result.rows,
+													mode : "local",
+													valueField : "id",
+													textField : "categoryName",
+													multiple : false,
+													onLoadSuccess : function(){
+														if(commodity.categoryId){
+															$("#thirdCategory").combobox("setValue", commodity.categoryId);
+														}
+													},
+													onSelect : function(){
+														commodity.categoryId = $("#thirdCategory").combobox("getValue");
+													}
+												}); // end of #thirdCategory
+											});
+										},
+										onSelect : function(){
+											commodity.categoryId = null;
+											commodity.parentCategoryId = $("#secondCategory").combobox("getValue");
+											var url = "/category/findCategories.do?parentId=" + commodity.parentCategoryId;
+											$.postAjax(url, {}, function(result){
+												$("#thirdCategory").combobox({
+													data : result.rows,
+													mode : "local",
+													valueField : "id",
+													textField : "categoryName",
+													multiple : false
+												});
+											});
+										}
+									}); // end of #secondCategory
+								});
+							},
+							onSelect : function() {
+								commodity.topCategoryId = $("#firstCategory").combobox("getValue");
+								commodity.parentCategoryId = null;
+								commodity.categoryId = null;
+								var url = "/category/findCategories.do?parentId=" + commodity.topCategoryId;
+								$.postAjax(url, {}, function(result){
+									$("#secondCategory").combobox({
+										data : result.rows,
+										mode : "local",
+										valueField : "id",
+										textField : "categoryName",
+										multiple : false
+									});
+								});
+							},
+							filter : function(q, row) {
+								var opts = $(this).combobox('options');
+								return row.categoryName.indexOf(q) == 0;
+							}
+						});	// end of #firstCategory
+					});
+				}
+			); 	// end of post
+	
+			$("#uploadMainPicture").click(function() {
+				var pictureFile = $.trim($("#fileMainPicture").val());
+				if (!validateUtil.validateEmpty(pictureFile)) {
+					asyncbox.tips("上传图片不能为空！", asyncbox.Level.error);
+					return;
+				}
+				var data = {
+					commodityNo : commodity.commodityNo
+				};
+				$.ajaxFileUpload({
+					secureuri : false,
+					url : "/LexianManager/commodity/uploadMainPicture.do",
+					data : data,
+					type : "post",
+					dataType : "json",
+					fileElementId : "fileMainPicture",
+					success : function(data) {
+						if (data.code) {
+							asyncbox.tips(data.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips(data.message, asyncbox.Level.success);
+						init(dataPicture, array);
+					},
+					"error" : function() {
+						asyncbox.tips(data.message, asyncbox.Level.success);
+					}
+				});
+			});
+
+			$("#uploadSubPicture").click(function() {
+				var pictureFile = $.trim($("#fileSubPicture").val());
+				if (!validateUtil.validateEmpty(pictureFile)) {
+					asyncbox.tips("上传图片不能为空！", asyncbox.Level.error);
+					return;
+				}
+				var data = {
+					commodityNo : commodity.commodityNo
+				};
+				$.ajaxFileUpload({
+					secureuri : false,
+					url : "/LexianManager/commodity/uploadSubPicture.do",
+					data : data,
+					type : "post",
+					dataType : "json",
+					fileElementId : "fileSubPicture",
+					success : function(data) {
+						if (data.code) {
+							asyncbox.tips(data.message, asyncbox.Level.error);
+							return;
+						}
+						var result = data.rows;
+						var tmp = $("#pictureTmp").html();
+						tmp = tmp.replace(/###fullPictureUrl###/g, result.fullPictureUrl);
+						tmp = tmp.replace(/###pictureId###/g, result.id);
+						tmp = tmp.replace(/###pictureUrl###/g, result.pictureUrl);
+						$(tmp).appendTo($("#pictures"));
+						
+						asyncbox.tips(data.message, asyncbox.Level.success);
+					},
+					"error" : function() {
+						asyncbox.tips(data.message, asyncbox.Level.success);
+					}
+				});
+			});
+			
+			$("#save").click(function() {
+				var data = {};
+				data.commodityNo = commodity.commodityNo;
+				data.name = $("#commodityName").val();
+				data.introduce = $("#introduce").val();
+				data.detailed = ckeditor.getData();
+				data.categoryId = commodity.categoryId;
+				data.states = $("#states").attr("checked") ? 1 : 0;
+				
+				if (!validateUtil.validateEmpty(data.introduce)) {
+					asyncbox.tips("请输入商品简介", asyncbox.Level.error);
+					return;
+				}
+				if (!data.categoryId) {
+					asyncbox.tips("请选择商品分类", asyncbox.Level.error);
+					return;
+				}
+				$.postAjax("/commodity/updateCommodityInfo.do", data,
+					function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						asyncbox.tips("保存成功", asyncbox.Level.success);
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+				});
+			});
+			
+		});
+		
+		function deletePicture(id, pictureUrl) {
+			asyncbox.confirm('确认删除此配图？', '确认框', function(action) {
+				if (action == 'ok') {
+					var data = {
+						id : id,
+						commodityNo : commodity.commodityNo,
+						pictureUrl : pictureUrl
+					};
+					util.differentRequest("/commodity/deleteSubPicture.do", data, "删除成功!");
+					$("#pictures > div").each(function(index, item){
+						if(item.getAttribute("data-id") == id){
+							$(item).remove();
+							return false;
+						}
+					});
+				}
+			});
+		};
+
+		function deleteSpec(id){
+			asyncbox.confirm('确认删除此规格？', '确认框', function(action) {
+				if (action == 'ok') {
+					var data = {
+						specId : id
+					};
+					util.differentRequest("/commodity/deleteSpec.do", data, "删除成功!");
+					$("#specs > li").each(function(index, item){
+						if(item.getAttribute("data-id") == id){
+							$(item).remove();
+							return false;
+						}
+					});
+				}
+			});
+		}
+
+		function addSpec(){
+			var data = {
+				commodityNo : commodity.commodityNo,
+				specGroup : $("#specGroup").val(),
+				specName : $("#specName").val()
+			};
+			if (!validateUtil.validateEmpty(data.specGroup)) {
+				asyncbox.tips("请输入规格组", asyncbox.Level.error);
+				return;
+			}
+			if (!validateUtil.validateEmpty(data.specName)) {
+				asyncbox.tips("请输入规格名", asyncbox.Level.error);
+				return;
+			}
+			$.postAjax("/commodity/addSpec.do", data,
+					function(json) {
+						if (json.code) {
+							asyncbox.tips(json.message, asyncbox.Level.error);
+							return;
+						}
+						var result = json.rows;
+						var tmp = $("#specTmp").html();
+						tmp = tmp.replace(/###specId###/g, result.specId);
+						tmp = tmp.replace(/###specGroup###/g, result.specGroup);
+						tmp = tmp.replace(/###specName###/g, result.specName);
+						$(tmp).appendTo($("#specs"));
+						
+						asyncbox.tips("添加成功", asyncbox.Level.success);
+					}, function() {
+						asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+				});
+		}
+	</script>
+</body>
+</html>

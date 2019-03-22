@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>门店定位</title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+</head>
+<body>
+	<div class="header b-hr">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>门店定位</span>
+	</div>
+	<div class="center">
+	    <div class="item pad-lr-10px pad-tb-6">
+	        <div class="b-hr">
+	            <p class="font-title">省</p>
+	            <select id="province" class="select_default"><option>-选择省-</option></select>
+	        </div>
+	        <div class="b-hr">
+	            <p class="font-title">市</p>
+	            <select id="city" class="select_default"></select>
+	        </div>
+	        <div class="b-hr">
+	            <p class="font-title">区</p>
+	            <select id="area" class="select_default"></select>
+	        </div>
+	    </div>
+	    <div id="store" class="item pad-lr-10px pad-tb-6" style="margin-bottom: 3.5em;">
+	        <p class="font-title b-hr pad-tb-6">门店列表</p>
+	        <div id="storeList"></div>
+	    </div>
+	    <div class="div-btn" style="position: fixed;left: 0;bottom:0;width: 100%;">
+	        <a class="btn-a" href="javascript:void(0);">确定</a>
+	    </div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript">
+	    var bUrl = location.search.split('bUrl=')[1];
+	    $(function(){
+	        loadingShow();
+	        $.post(baseUrl+'store/getLocation.do',
+	                {type:1},
+	                function(json){
+	                    loadingHide();
+	                    var data = json.data;
+	                    for(var i=0;i<data.length;i++){
+	                        $('#province').append(
+	    	                	'<option value=?>?</option>'.format(
+	    	    	                	data[i].id, data[i].city));
+	                    }
+	                },'json'
+	        )
+	    });
+	    function getCity(x){
+	        var city = $('#city');
+	        city.empty();
+	        $('#area').empty();
+	        $('#storeList').empty();
+	        if(x!='-选择省-'){
+	            loadingShow();
+	            city.append('<option>-选择市-</option>');
+	            $.post(baseUrl+'store/getLocation.do',
+	                    {type:2,Id:x},
+	                    function(json){
+	                        loadingHide();
+	                        var data = json.data;
+	                        for(var i=0;i<data.length;i++){
+	                            city.append('<option value=?>?</option>'.format(
+	    	                    	data[i].id, data[i].city));
+	                        }
+	                    },'json'
+	            )
+	        }
+	    }
+	    function getArea(x){
+	        var area = $('#area');
+	        area.empty();
+	        $('#storeList').empty();
+	        if(x!='-选择市-'){
+	            loadingShow();
+	            area.append('<option>-选择区-</option>');
+	            $.post(baseUrl+'store/getLocation.do',
+	                    {type:3,Id:x},
+	                    function(json){
+	                        loadingHide();
+	                        var data = json.data;
+	                        for(var i=0;i<data.length;i++){
+	                            area.append('<option value=?>?</option>'.format(
+	    	                    	data[i].id, data[i].city));
+	                        }
+	                    },'json'
+	            )
+	        }
+	    }
+	    //手动定位
+	    function getLocation(x){
+	        $('#storeList').empty();
+	        if(x != '-选择区-'){
+	            loadingShow();
+	            $.post(baseUrl+'store/getLocation.do',
+	                    {type:4,Id:x},
+	                    function(json){
+	                        loadingHide();
+	                        var data = json.data;
+	                        for(var i=0;i<data.length;i++){
+	                            $('#storeList').append('<div id=? class="store b-hr">?</div>'.format(data[i].storeNo, data[i].storeName));
+	                        }
+	                        $('.store:first').prepend('<span class="float-r"><img src="images/icon-right.png" width="16"/></span>');
+	                    },'json'
+	            )
+	        }
+	    }
+	    $('.store').live('click',function(){
+	        $('.store').find('.float-r').remove();
+	        $(this).prepend('<span class="float-r"><img src="images/icon-right.png" width="16"/></span>');
+	    });
+	    $('#province').change(function(){
+	        getCity($(this).val());
+	    });
+	    $('#city').change(function(){
+	        getArea($(this).val());
+	    });
+	    $('#area').change(function(){
+	        getLocation($(this).val());
+	    });
+	    $('.btn-a').click(function(){
+	        var s = $('.store').find('.float-r').parent();
+	        if(s.length>0){
+	            cache.setItem('storeNo',s.attr('id'));
+	            cache.setItem('storeName',s.text());
+	            if(bUrl==null||bUrl==''){
+	                location.href = 'index.html';
+	            }else{
+	                location.href = bUrl;
+	            }
+	        }
+	    })
+	</script>
+</body>
+</html>

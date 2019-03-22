@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>商品分类</title>
+	<link rel="stylesheet" type="text/css" href="css/basic.css">
+	<link rel="stylesheet" type="text/css" href="css/basic-header.css">
+	<link rel="stylesheet" type="text/css" href="css/categories.css">
+	<style>
+		.goods{
+			background-color : lightgray;
+			border : 1px solid darkgray;
+			padding : 1px;
+			margin: 2px;
+			font-size: 14px !important
+		}
+	</style>
+</head>
+<body>
+	<div class="header b-hr">
+		<div class="header-icon">
+			<a href="index.html"><img src="images/logo.png" width="34" height="34" /></a>
+		</div>
+		<span id="store_name">乐鲜购物</span>
+		<div id="menu_btn" class="search-menu-icon">
+			<img src="images/icon-menu.png" width="28" height="28" />
+		</div>
+	</div>
+	<div class="search-menu">
+	    <ul>
+	        <li class="float-l" id="index">首页</li>
+	        <li class="float-l" id="categories">商品分类</li>
+	        <li class="float-l" id="cart">购物车</li>
+	        <li id="home">个人中心</li>
+	    </ul>
+	    <div class="clear-float"></div>
+	</div>
+	<div class="center">
+		<div>
+			<div class="menu float-l">
+				<ul id="class_list"></ul>
+			</div>
+			<div class="class float-l">
+			</div>
+			<div class="clear-float"></div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/header-search.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/String.js"></script>
+	<script type="text/javascript">
+		var parentId = window.location.search.split('parentId=')[1];
+		$(function() {
+			if (cache.getItem('storeName') != '' && cache.getItem('storeName') != null) {
+				$('#store_name').text(cache.getItem('storeName'));
+			}
+			loadingShow();
+			if (parentId == null || parentId == '') {
+				$.post(baseUrl + 'category/getCategories.do', {
+					type : 1
+				}, function(json) {
+					loadingHide();
+					if (json.code == 0) {
+						var data = json.data;
+						for ( var i = 0; i < data.length; i++) {
+							$('#class_list').append(
+									'<li class="li-default" id='+data[i].categoryId+'>' + data[i].categoryName + '</li>');
+						}
+						$('#' + data[0].categoryId).addClass("active");
+						$('.goods').remove();
+						$('.class').append('<div class="class-c"></div>');
+						getClass1(data[0].categoryId);
+					}
+				}, 'json');
+			} else {
+				$.post(baseUrl + 'category/getSubCategories.do', {parentId : parentId},
+					function(json) {
+						loadingHide();
+						if (json.code == 0) {
+							var data = json.data;
+							for ( var i = 0; i < data.length; i++) {
+								$('#class_list').append('<li class="li-default" id="check_?">?</li>'.format(
+																data[i].id,
+																data[i].categoryName));
+								$('.class').append('<div id=? class="class-c"><ul class="class2_list"></ul></div>'.format(data[i].id));
+								var list = data[i].categoryList;
+								for ( var j = 0; j < list.length; j++) {
+									$(".class2_list:last")
+											.append('<li id=? class="float-l goods"><p class="c-img"><img src=? width="100%"></p><span>?</span></li>'
+															.format(
+																	list[j].id,
+																	list[j].picture,
+																	list[j].categoryName));
+								}
+								$(".class2_list:last")
+										.append('<div class="clear-float"></div>');
+							}
+							$('#check_' + data[0].id).addClass("active");
+							$('.class-c').hide();
+							$('#' + data[0].id).show();
+						}
+					}, 'json')
+				}
+		});
+		function getClass1(x) {
+			loadingShow();
+			$.post(baseUrl + 'category/getSubCategories.do', 
+				{parentId : x},
+				function(json) {
+					loadingHide();
+					if (json.code == 0) {
+						var data = json.data;
+						for ( var i = 0; i < data.length; i++) {
+							$('.class-c').append('<div class="c-item" id=?><p class="title">?</p><ul class="class2_list"></ul></div>'
+													.format(data[i].categoryId, data[i].categoryName));
+							var list = data[i].subCategories;
+							for ( var j = 0; j < list.length; j++) {
+								$(".class2_list:last")
+										.append('<li id=? class="float-l goods"><span style="cursor:pointer;">?</span></li>'
+														.format(list[j].categoryId,
+																list[j].categoryName));
+							}
+							$(".class2_list:last").append('<div class="clear-float"></div>');
+						}
+					}
+				}, 'json')
+		}
+		$("#class_list li").live('click', function() {
+			$('#class_list .active').removeClass('active');
+			$(this).addClass('active');
+			$('.c-item').remove();
+			var x = $(this).attr('id').split('check_')[1];
+			if (x == null || x == '') {
+				getClass1($(this).attr('id'));
+			} else {
+				$('.class-c').hide();
+				$('#' + x).show();
+			}
+		});
+		$('.goods').live('click', function() {
+			location.href = 'commodityList.html?categoryId=' + $(this).attr('id');
+		});
+	</script>
+</body>
+</html>

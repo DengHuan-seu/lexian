@@ -1,0 +1,7 @@
+.center{margin: 18px 0}
+.content p{color: #686868;font-size: 15px;}
+.content span{color: #252525;font-weight: 700;font-size: 15px;}
+.input-code{margin: 21px 0}
+.input-style{width: 70%;height: 42px;border: 1px solid #d7d7d7;font-size: 16px;border-radius: 3px;text-indent: 15px;}
+.btn-a-style{display: inline-block;width: 26%;height: 42px;border-radius: 3px;border: 1px solid #00acec;background-color: #fff;text-decoration: none;line-height: 39px;text-align: center;font-size: 17px;color: #00acec;}
+.div-btn{margin: 19px 0;}

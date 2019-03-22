@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="orderLoseJobTrigger" />
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 订单20分钟失效 -->
+	<bean id="orderQuartz" class="com.chinasofti.lexian.mall.quartz.uyues.OrderQuartz"
+		autowire="byName"></bean>
+	<bean id="orderLose"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+		lazy-init="false">
+		<property name="targetObject">
+			<ref bean="orderQuartz" />
+		</property>
+		<property name="targetMethod">
+			<value>destroyOrder</value>
+		</property>
+		<!-- 参数concurrent告诉Spring，不要并发运行这个任务 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="orderLoseJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="false">
+		<property name="jobDetail">
+			<ref bean="orderLose" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每隔3分钟运行一次 -->
+			<value>0 0/10 * * * ?</value>
+		</property>
+		<property name="startDelay" value="60000"></property>
+	</bean>
+</beans>

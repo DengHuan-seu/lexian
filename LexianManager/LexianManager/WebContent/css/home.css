@@ -1,0 +1,90 @@
+.classification ul {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+.classification ul li {
+	display: block;
+	height: 25px;
+	line-height: 25px;
+	text-indent: 2em;
+	font-size: 13px;
+	font-weight: bold;
+	border-bottom: 1px solid #404244;
+}
+
+.classification ul li>a {
+	display: block;
+	width: 100%;
+	height: 25px;
+	color: #fff;
+	text-indent: 4em;
+}
+
+.classification ul li:hover,.classification ul li>a:hover {
+	background-color: #333333;
+	color: #f0983d;
+}
+
+.panel-header .panel-title  a {
+	color: #797B7C;
+}
+
+.accordion-header-selected.panel-header .panel-title  a {
+	color: white;
+}
+
+.classification {
+	background: #3E4042;
+}
+
+.clear:after {
+	content: "";
+	display: none;
+	clear: both;
+}
+
+.clear {
+	zoom: 1;
+}
+
+.headwrap {
+	position: relative;
+}
+
+.leftimg {
+	position: absolute;
+	right: 95px;
+	top: 15px;
+}
+
+.infomation1 {
+	position: absolute;
+	left: 20px;
+	top: 720px;
+}
+
+.infomation2 {
+	position: absolute;
+	left: 10px;
+	top: 100px;
+	text-align: center;
+}
+
+.infomation1>div,.infomation2>div {
+	height: 25px;
+	line-height: 25px;
+}
+
+form {
+	width: 329px;
+	height: 165px;
+	margin: auto;
+	text-align: center;
+	margin-top: 45px;
+}
+
+form>div {
+	margin-bottom: 15px;
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html 
+>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<title>乐鲜后台</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css"/>
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt=""/></span>
+				<span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt=""/></span>
+				<span>查看管理员信息</span>
+				<span><img src="../img/rright.jpg" alt=""/></span>
+				<span>添加管理员</span>
+				<span><a href="javascript:prevPage()">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="role-name">
+				<span>管理员帐号：</span>
+				<input type="text" id="managerName"/>
+			</div>
+			<div class="role-name">
+				<span>&nbsp;&nbsp;&nbsp;密码：</span>
+				<input type="password" id="password"/>
+			</div>
+			<div class="role-name">
+				<span>&nbsp;确认密码：</span>
+				<input type="password" id="surepassword"/>
+			</div>
+			<div class="role-name">
+				<span>管理员描述：</span>
+				<input type="text" id="description"/>
+			</div>
+			<div class="role-power" style="margin-top:10px">
+				<span>&nbsp;角色名称：</span>
+				<div class="inline-block power-list " id="box"></div>
+			</div>
+			<div class="role-save" >
+				 <input id="save" type="button" value="保存" style="width:224px;border:none;height:35px;color:#fff;background:#606E83;font-size:20px;font-weight:bold;margin-left:105px;margin-top:20px;"/>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+        $(function() {
+            $.postAjax("/management/findRoles.do", {}, function(json) {
+                if (json.code) {
+                    return asyncbox.tips("数据加载失败", asyncbox.Level.success);
+                }
+                var data = json.rows;
+                for (var i = 0; i < data.length; i++) {
+                    if ((i + 1) % 5 == 0) {
+                        $("#box").append("<span><input type='checkbox' value='?'  />?</span><br />".format(data[i].roleId, data[i].description));
+                    } else {
+                        $("#box").append("<span><input type='checkbox' value='?' />?</span>".format(data[i].roleId, data[i].description));
+                    }
+                }
+               /*  asyncbox.tips("数据加载成功", asyncbox.Level.success); */
+            }, function() {
+                asyncbox.tips("网络连接错误！", asyncbox.Level.error);
+            });
+            $("#save").click(function() {
+                var managerName = $.trim($("#managerName").val());
+                var description = $.trim($("#description").val());
+                var password=$.trim($("#password").val());
+                var surepassword=$.trim($("#surepassword").val());
+                 if (!validateUtil.validateEmpty(password) || !validateUtil.validateEmpty(surepassword)) {
+                    asyncbox.tips("密码不能为空！", asyncbox.Level.error);
+                    return;
+                };
+                if (password!=surepassword) {
+                	 asyncbox.tips("两次密码不一致！", asyncbox.Level.error);
+                	 return;
+                };
+                  if (!validateUtil.validateMaxLength(password, 40)) {
+                    asyncbox.tips("管理员名或描述过长！", asyncbox.Level.error);
+                    return;
+                };
+                if (!validateUtil.validateEmpty(managerName) || !validateUtil.validateEmpty(description)) {
+                    asyncbox.tips("管理员名或描述不能为空！", asyncbox.Level.error);
+                    return;
+                };
+                if (!validateUtil.validateMaxLength(managerName, 50) || !validateUtil.validateMaxLength(description, 200)) {
+                    asyncbox.tips("管理员名或描述过长！", asyncbox.Level.error);
+                    return;
+                };
+                var ids = util.box("请选择需要关联的角色！");
+                var data = {
+                	password:password,
+                    managerName : managerName,
+                    description : description,
+                    roleIds : ids
+                };
+                $("#save").attr("disabled",true);
+        		$.postAjax("/management/addManager.do",data,function(json) {
+        			if (json.code) {
+        				asyncbox.tips(json.message,
+        						asyncbox.Level.error);
+        				$("#save").attr("disabled",false);
+        				return;
+        			}
+        			asyncbox.tips("保存成功", asyncbox.Level.success);
+        			setTimeout(function(){
+        				window.location.href="managerList.html";
+        			}, 3000)
+        			$("#save").attr("disabled",false);	
+        		}, function() {
+        			asyncbox.tips("网络连接错误!", asyncbox.Level.error);
+        		});
+            });
+        });
+        function prevPage(){
+        	window.location.href="managerList.html";
+        }
+	</script>
+	</body>
+</html>

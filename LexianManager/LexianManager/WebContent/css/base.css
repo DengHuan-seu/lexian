@@ -1,0 +1,26 @@
+* {
+	margin: 0;
+	padding: 0;
+	font: 12px/1.5 Tahoma, Helvetica, Arial, '\5B8B\4F53', sans-serif;
+}
+
+a {
+	text-decoration: none
+}
+
+.a-btn {
+	display: inline-block;
+	background: #7E95B3;
+	color: #fff;
+	width: 264px;
+	border-radius: 2px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	font-size: 15px;
+	font-weight: bold
+}
+
+.b-hr {
+	border-bottom: 1px solid #7E95B3
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basic-header.css">
+    <link rel="stylesheet" type="text/css" href="css/login-register.css">
+</head>
+<body>
+	<div class="header">
+	    <div class="header-fh"><img src="images/icon-larrow.png"></div>
+	    <span>登录</span>
+	</div>
+	<div class="center">
+	    <div>
+	        <p class="err-msg"></p>
+	    </div>
+	    <div class="item-input">
+	        <input type="text" class="input-default" id="phone" oninput='javascript:change();' onpropertychange='javascript:change();' placeholder="请输入用户名" autofocus required>
+	    </div>
+	    <div class="item-input">
+	        <input type="password" class="input-default" id="passwd" oninput='javascript:change();' onpropertychange='javascript:change();' placeholder="请输入密码"/>
+	    </div>
+	    <!--<div class="item-input">
+	        <input type="text" class="input-default" placeholder="请输入验证码"/>
+	        <div class="item-yzm">
+	            <img src="images/icon-yzm.jpg" width="100%" height="100%;"/>
+	        </div>
+	    </div>-->
+	    <div class="btn">
+	        <a class="btn-a btn-disable" href="javascript:void(0);">登录</a>
+	    </div>
+	    <div class="reg-pas">
+	        <span class="register"><a href="register.html">免费注册</a></span>
+	        <span class="retrieve-password"><a href="Repassword.html">找回密码</a></span>
+	    </div>
+	    <!--<div class="other-login">
+	        <p>其它登录方式</p>
+	        <div>
+	            <span><img src="images/icon-qq.png"></span>
+	            <span><img src="images/icon-sina.png"></span>
+	        </div>
+	    </div>-->
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript">
+	    var btn = $(".btn-a");
+	    var backUrl = window.location.search.split('backUrl=')[1];
+	    function change(){
+	        if($("#phone").val()!= ''&&$("#passwd").val()!= ''){
+	            btn.removeClass("btn-disable");
+	            btn.attr("href","javascript:Login();");
+	        }else{
+	            btn.addClass("btn-disable");
+	            btn.attr("href","javascript:void(0);");
+	        }
+	    }
+	    function Login(){
+	        btn.addClass("btn-disable");
+	        btn.attr("href","javascript:void(0);");
+	        $.post(baseUrl+"user/remLogin.do",
+	                {phone:$("#phone").val(),passwd:$("#passwd").val()},
+	                function(data){
+	                    if(data.code == 0){
+	                        if(backUrl==null||backUrl==''){
+	                            location.href = 'index.html';
+	                        } else {
+	                            location.href = backUrl;
+	                        }
+	                    } else {
+	                        $(".err-msg").text(data.message);
+	                        btn.removeClass("btn-disable");
+	                        btn.attr("href","javascript:Login();");
+	                    }
+	                },"json"
+	        );
+	    }
+	</script>
+</body>
+</html>

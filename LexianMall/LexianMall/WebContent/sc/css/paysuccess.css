@@ -1,0 +1,66 @@
+.left,.right {
+    float: left;
+}
+
+.order-info .left .p2, .order-info .left .p3 {
+    height: 30px;
+    line-height: 30px;
+}
+
+.order-info{
+    width: 100%;
+    border-top: 2px solid #5995BC;
+}
+
+.header-left .info li {
+    font-weight: bold;
+}
+
+.pay {
+    margin: 40px auto auto 60px;
+}
+.pay-top h2{
+    color: #FF4200;
+}
+.pay-num{
+    margin-top: 20px;
+}
+.pay-other{
+    margin-top: 30px;
+}
+.pay-other a{
+	
+	background:#FF4200;
+	color:#fff;
+	display:inline-block;
+	height:25px;
+	line-height:25px;
+	text-align:center;
+	margin-right:15px;
+	width:110px;
+}
+.pay-other a:hover{
+	
+	color:#fff;
+}
+.pay-info{
+    height: 60px;line-height: 20px;margin-top: 30px;border-top: 1px dotted #C0D1D2;width: 90%;
+}
+.order-info .left{
+    width: 70%;
+}
+.order-info .right{
+    text-align: center;
+    width: 29.5%;
+}
+
+.title{
+    font-size: 20px;
+    height: 124px;
+    line-height: 124px;
+}
+.title-img{
+    width: 400px;
+    padding-top: 8px;
+}
+.pay-info_span{color: #ff4200;}

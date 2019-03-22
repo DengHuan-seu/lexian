@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.commodity.dao.impl.CommodityDaoImpl">
+	<select id="shakeCommodity" resultType="String">
+		select commodity_no commodityNo from
+		commodity_store
+		where store_no=#{storeNo} order by rand() limit 1
+	</select>
+	
+	<delete id="deleteTrolley">
+		delete from trolley where id in 
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="findAlltrolley" resultType="Cart">
+		SELECT A.id AS trolleyId, A.user_id AS userId, A.commodity_no AS commodityNo, 
+		A.store_no AS storeNo, A.amont, A.listprice AS commodityPrice, A.totalprice, 
+		A.createtime, A.updatetime, B.name AS commodityName, B.introduce AS commodityintroduce, 
+		B.pictureurl AS commoditypicture, C.storeName
+		FROM trolley AS A INNER JOIN commodity AS B ON A.commodity_no=B.commodity_no
+		INNER JOIN store AS C ON A.store_no=C.store_no WHERE user_id=#{userId}
+	</select>
+	
+	<!-- 查找指定userid的购物车项 -->
+	<select id="selectTrolley" resultType="Cart">
+		SELECt id AS trolleyId,user_id AS userId, amont 
+		FROM trolley WHERE user_id=#{userId}
+		<if test="commodityNo!=null">
+			AND commodity_no=#{commodityNo}
+		</if>
+		<if test="storeNo!=null">
+			AND store_no=#{storeNo}
+		</if>
+	</select>
+	
+	<!-- 向购物车中添加一项 -->
+	<insert id="saveCommomdityToTrolley">
+		INSERT INTO trolley
+		(user_id,amont,createtime,updatetime,listprice, totalprice,store_no,commodity_no)
+		VALUES(#{userId},#{amont},now(),now(), #{commodityPrice}, #{totalPrice},#{storeNo},#{commodityNo})
+	</insert>
+	
+	<!-- 更新某个购物车项中的数据 -->
+	<update id="updateTrolley">
+	    UPDATE trolley SET amont=#{amont}, totalprice=#{totalPrice}, updatetime=now()
+	    WHERE commodity_no=#{commodityNo} AND store_no=#{storeNo}
+	</update>
+	
+	<!-- 根据购物车查找商品数量 -->
+	<select id="getTrolleyCount" resultType="int">
+		SELECT SUM(amont) FROM
+		trolley WHERE user_id=#{userId}
+	</select>
+	
+	<select id="searchCategoryCommodities" resultType="CategoryCommodityPo">
+	    select A.commodity_no, A.name as commodity_name, A.introduce, A.pictureurl, 
+	    B.commodity_price, C.counts
+		FROM commodity AS A 
+		INNER JOIN minpricecommodityview AS B ON A.commodity_no=B.commodity_no
+		LEFT JOIN maxsalescommodityview AS C ON A.commodity_no=C.commodity_no
+		WHERE A.states=1 AND A.category_id=#{categoryId} 
+		<if test="minPrice>0">
+		    AND B.commodity_price <![CDATA[>=]]> #{minPrice}
+		</if>
+		<if test="maxPrice>0">
+		    AND B.commodity_price <![CDATA[<=]]> #{maxPrice}
+		</if>
+		<if test="orderByPrice==true">
+		    ORDER BY B.commodity_price
+		</if>
+		<if test="orderBySales==true">
+		    ORDER BY C.counts
+		</if>
+		<if test="isDesc==true">
+		    DESC
+		</if>
+	</select>
+	
+	<select id="searchKeywordCommodities" resultType="CategoryCommodityPo">
+	    select A.commodity_no, A.name as commodity_name, A.introduce, A.pictureurl, 
+	    B.commodity_price, C.counts
+		FROM commodity AS A 
+		INNER JOIN minpricecommodityview AS B ON A.commodity_no=B.commodity_no
+		LEFT JOIN maxsalescommodityview AS C ON A.commodity_no=C.commodity_no
+		WHERE A.states=1 AND 
+		(
+			A.name LIKE concat('%',#{keyword},'%') 
+		 	OR A.introduce LIKE concat('%',#{keyword},'%')
+		)
+		<if test="minPrice>0">
+		    AND B.commodity_price <![CDATA[>=]]> #{minPrice}
+		</if>
+		<if test="maxPrice>0">
+		    AND B.commodity_price <![CDATA[<=]]> #{maxPrice}
+		</if>
+		<if test="orderByPrice==true">
+		    ORDER BY B.commodity_price
+		</if>
+		<if test="orderBySales==true">
+		    ORDER BY C.counts
+		</if>
+		<if test="isDesc==true">
+		    DESC
+		</if>
+	</select>
+	
+	<!-- 获取指定编号商品的基本信息 -->
+	<select id="getCommodityInfo" resultType="CommodityPo">
+	    SELECT A.id, commodity_no, name, A.category_id, B.categoryname,
+	    introduce, detailed, pictureurl, 
+		createtime, updatetime, states 
+		FROM commodity A INNER JOIN category B
+		ON A.category_id=B.id
+		WHERE commodity_no = #{commodityNo}
+	</select>
+	
+	<!-- 获取指定编号商品的价格范围 -->
+	<select id="getMinMaxPrice" resultType="CommodityPricePo">
+	    SELECT MIN(commodity_price) AS min_price, MAX(commodity_price) AS max_price 
+	    FROM commodity_store WHERE commodity_no=#{commodityNo}
+	</select>
+	
+	<!-- 获取指定编号商品的图片信息 -->
+	<select id="getCommodityPictures" resultType="CommodityPicturePo">
+	    SELECT id, commodity_no, picture_url FROM commodity_picture
+	    WHERE commodity_no = #{commodityNo}
+	</select>
+	
+	<!-- 根据商品在店铺中的价格信息 -->
+	<select id="getStorePrice" resultType="CommodityPricePo">
+	    SELECT store_no, commodity_no, commodity_price, real_price, commodity_amont 
+	    FROM commodity_store
+	    WHERE type=1 AND store_no=#{store_no} AND commodity_no=#{commodity_no}
+	</select>
+</mapper>

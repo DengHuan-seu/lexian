@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.order.dao.impl.OrderDaoImpl">
+	<select id="findOrders" resultType="OrderPo">
+	    SELECT A.id, A.order_no, A.user_id, A.totalamount, A.store_no, 
+	    A.states, A.paymenttype, A.paymentsubtype, A.deliverytype, A.createtime,
+	    B.storename
+		FROM orders AS A INNER JOIN store AS B ON A.store_no=B.store_no 
+		WHERE 1=1
+		<if test="dateFrom!=null">
+		    AND createtime&gt;=#{dateFrom}
+		</if>
+		<if test="dateTo!=null">
+		    AND createtime&lt;=#{dateTo}
+		</if>
+		<if test="states!=0">
+		    AND states=#{states}
+		</if>
+		<if test="orderNo!=null">
+		    AND order_no=#{orderNo}
+		</if>
+	</select>
+	<select id="findOrderItems" resultType="OrderItemVo">
+	    SELECT A.id, A.order_id AS orderId, A.commodity_no AS commodityNo, A.amount, 
+		A.listprice, A.totalprice, B.name AS commodityName, B.pictureurl
+		FROM orderitem A INNER JOIN commodity B ON A.commodity_no=B.commodity_no
+		WHERE A.order_id=#{orderId}
+	</select>
+	<select id="findOrder" resultType="OrderPo">
+	    SELECT orders.id, order_no, user_id, totalamount, orders.store_no, store.storename,
+	    orders.states, paymenttype, paymentsubtype, deliverytype, createtime,
+	    orders.user_id, user.username, user.phone
+	    FROM orders INNER JOIN store ON orders.store_no=store.store_no
+	    INNER JOIN user ON orders.user_id=user.id
+	    WHERE order_no=#{orderNo}
+	</select>
+	<update id="updateStates">
+	    UPDATE orders SET states=#{states} WHERE order_no=#{order_no}
+	</update>
+</mapper>

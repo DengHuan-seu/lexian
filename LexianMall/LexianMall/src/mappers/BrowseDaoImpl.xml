@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.browse.dao.impl.BrowseDaoImpl">
+	<select id="findBrowse" resultType="BrowsePo">
+		SELECT A.commodity_no, B.name AS commodity_name, B.pictureurl, C.commodity_price
+		FROM browse AS A INNER JOIN commodity AS B ON A.commodity_no=B.commodity_no
+		INNER JOIN minpricecommodityview AS C ON A.commodity_no=C.commodity_no 
+		<if test="userId!=null">
+			AND A.user_id=#{userId}
+		</if>
+		<if test="maxnum!=0">
+			GROUP BY A.commodity_no ORDER BY COUNT(A.commodity_no) DESC LIMIT 0, #{maxnum}
+		</if>
+		<if test="maxnum==0">
+			order by browsetime desc
+		</if>
+	</select>
+
+	<insert id="addBrowse">
+		INSERT INTO browse(browsetime,user_id,commodity_no)
+		values(now(),#{userId},#{commodity_no})
+	</insert>
+</mapper>

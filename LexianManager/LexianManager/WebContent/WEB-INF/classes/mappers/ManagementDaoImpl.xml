@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.lexian.manager.management.dao.impl.ManagementDaoImpl">
+	<!-- 查看权限(roleId 不填表示查找全部权限) -->
+	<select id="findPrivileges" resultType="PrivilegePo">
+		SELECT privilege.id, privilege.url, privilege.name, privilege.description 
+		FROM privilege
+		<if test="roleId!=0">
+			INNER JOIN (
+			SELECT role_privilege.privilege_id FROM role_privilege
+			WHERE role_id=#{roleId} 
+			) AS rpi
+			ON (rpi.privilege_id=privilege.id)
+		</if>
+		<if test="privilegeName!=null and privilegeName!=''">
+			WHERE name like concat("%",#{privilegeName},"%") 
+		</if>
+	</select>
+	
+	<select id="findMenus"  resultType="menuPo">
+		SELECT id, name, url, backurl, parentId,
+		(SELECT NAME FROM menu WHERE menu.id = a.parentId) AS parentName 
+		FROM menu A 
+		<if test="menuName!=null and menuName!=''">
+		    WHERE A.name like concat('%',#{menuName},'%')
+		</if>
+	</select>
+	
+	<update id="updateMenu" >
+	 	UPDATE menu SET name = #{name}
+ 		<if test="backUrl!=null and backUrl!=''">
+ 			,backUrl=#{backUrl}
+ 		</if>
+	 	WHERE id = #{id}
+	</update>
+	
+	<select id="findRoles"  resultType="RolePo">
+		SELECT id, name, description, createtime, updatetime
+		FROM role WHERE 1=1
+		<if test="roleName!=null ">
+			AND name LIKE concat("%",#{roleName},"%")
+		</if>
+	</select>
+	
+	<select id="findRoleByName" resultType="RolePo">
+	    SELECT id, name, description, createtime, updatetime
+		FROM role WHERE name=#{roleName}
+	</select>
+	
+	<select id="updateRole">
+	    UPDATE role SET name=#{name}, description=#{description}, updatetime=now()
+	    WHERE id=#{id}
+	</select>
+	
+	<select id="addRole">
+	    INSERT INTO role(name, description, createtime, updatetime)
+	    VALUES(#{name}, #{description}, now(), now())
+	</select>
+	
+	<delete id="deletePrivilegeInRole">
+	    DELETE FROM role_privilege WHERE role_id=#{roleId}
+	</delete>
+	
+	<insert id="addPrivilegeToRole">
+	    INSERT INTO role_privilege(role_id, privilege_id)
+	    VALUES(#{role_id}, #{privilege_id})
+	</insert>
+	
+	<select id="findRoleMenus" resultType="RoleMenuPo">
+	    SELECT A.id, A.name, A.parentId, B.role_id
+		FROM menu A 
+		LEFT JOIN 
+		(SELECT menu_id, role_id FROM role_menu WHERE role_id=#{roldId}) AS B
+		ON A.id=B.menu_id 
+		ORDER BY A.parentId
+	</select>
+	
+	<insert id="addRoleMenus" parameterType="Map">
+	 	INSERT INTO role_menu VALUES 
+	 	<foreach collection="menuIds" separator="," item="item">
+	 	    (#{roleId},#{item})
+	 	</foreach>
+	</insert>
+	 
+	<delete id="deleteRoleMenus"> 
+	  	DELETE FROM role_menu WHERE role_id = #{roleId}
+	</delete>
+	
+	<select id="findManagers" resultType="ManagerPo">
+	    SELECT id, name, password, info, createtime, updatetime, status FROM manager
+	    <if test="managerName!=null">
+	        WHERE name LIKE concat('%',#{managerName},'%')
+	    </if>
+	</select>
+	
+	<insert id="addManager" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO manager(name, password, info, createtime, updatetime, status)
+		VALUES(#{name}, #{password}, #{info}, now(), now(), 1)
+	</insert>
+	
+	<insert id="addManagerRole">
+	    INSERT INTO role_manager(role_id, manager_id)
+	    VALUES(#{role_id}, #{manager_id})
+	</insert>
+	
+	<update id="updateManager">
+	    UPDATE manager SET info=#{info}, updatetime=now()
+	    WHERE id=#{id}
+	</update>
+	
+	<delete id="deleteManagerRoles">
+	    DELETE FROM role_manager WHERE manager_id=#{managerId}
+	</delete>
+	
+	<select id="findManagerRoles" resultType="RolePo">
+	    SELECT role.id, role.name, role.description
+		FROM role INNER JOIN role_manager ON role.id=role_manager.role_id
+		WHERE role_manager.manager_id=#{managerId}
+	</select>
+	
+	<delete id="deleteManager">
+	    DELETE FROM manager WHERE id=#{managerId}
+	</delete>
+	
+	<update id="updateManagerState">
+	    UPDATE manager SET status=#{status} WHERE id=#{id}
+	</update>
+	
+	<update id="resetPassword">
+	    UPDATE manager SET password=#{password} WHERE id=#{id}
+	</update>
+</mapper>

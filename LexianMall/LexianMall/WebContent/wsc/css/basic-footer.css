@@ -1,0 +1,7 @@
+footer{background-color:#f8f8f8;font-size: 12px;}
+footer a{color: rgb(127, 127, 127);}
+.footer-item0{width: 70%;margin: auto;}
+.footer-item0 .border-default{border-left: 1px solid #c3c3c3;margin-left: -1px;}
+.footer-item0 a{display: inline-block;width:25%;float:left;margin: 15px 0;text-align: center;}
+.footer-item1{text-align: center;}
+.footer-item1 a{display: inline-block;width:15%;margin: 15px 0;text-align: center;}

@@ -1,0 +1,124 @@
+/*title*/
+.order-detail .title{
+    color: #FF4200;
+}
+.order-detail .item{
+    font-size: 15px;
+    height: 30px;
+    line-height: 30px;
+    
+}
+.item .label{
+    margin-left: 20px;
+    font-weight: bold;
+}
+.order-num .em{
+    margin-right: 20px;
+}
+.order-content{
+    border: 1px solid #E9E5E3;
+    margin-top: 20px;
+}
+.content-top{
+    background-color: #EBF0F2;
+}
+.content-main{
+    width:  94%;
+    margin: 10px auto;
+}
+.content-info{
+    width: 97%;
+    margin: 10px auto;
+}
+.item{
+	text-indent:16px
+}
+.order-person,.order-info,.order-time{
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+}
+ .order-time,.time{
+     width: 15%;
+ }
+ .order-info,.info{
+     width: 40%;
+ }
+ .order-person,.person{
+     width: 35%;
+ }
+ .info-detail .label{
+     width: 15%;
+ }
+.receiver-info{
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+ .receiver-info .item{
+     height: 15px;
+     line-height: 15px;
+     font-weight: bold;
+     
+ }
+
+
+ .order-goods{
+     width: 98%;
+     margin: 10px auto;
+     text-align: center;
+ }
+ 
+ .order-goods th{
+	font-size:18px;
+ }
+ 
+ .order-goods td{
+ 	font-size:14px;
+ 	padding: 5px;
+ }
+ 
+ .order-goods tr:nth-child(2n){
+ 	background-color: #eeeeee;
+ }
+
+.order-bottom{
+     background-color: #EBF0F2;
+     text-align: center;
+     padding: 20px 0;
+ }
+
+ .bottom-content{
+     width: 15%;
+     margin: 20px 30px;
+ }
+ .bottom-content .total{
+     color: red;
+ }
+/**/
+.order-goods{
+    width: 100%;
+    border: 1px solid #e9e5e3;
+
+}
+.order-goods .goods-top{
+    background: #f5f5f5;
+}
+.order-goods tr th{
+    border-right: 1px solid #E9E5E3;
+    border-bottom: 1px solid #E9E5E3;
+    height: 60px;;
+}
+.order-goods tr td{
+    border-right: 1px solid #E9E5E3;
+    border-bottom: 1px solid #E9E5E3;
+}
+.goods-details span{display: block;float: left;width: 170px;border-right: 1px solid #e9e5e3;}
+.goods-details .goods-pic{width: 303px;}
+.goods-details .goods-pic img{margin-top: 20px}
+.goods-spacial1 span{height: 60px;line-height: 60px;}
+.goods-spacial2 span{height: 100px;}
+.goods-option{width: 144px}
+span.goods-right-border{border-right: none}
+.wzt{
+	border-bottom:1px solid #e9e5e3
+}

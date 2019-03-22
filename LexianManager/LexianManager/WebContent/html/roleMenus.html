@@ -1,0 +1,133 @@
+<!DOCTYPE html 
+        >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>角色菜单</title>
+	<link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css" />
+	<link rel="stylesheet" type="text/css" href="../css/rolemanage.css" />
+	<link rel="stylesheet" type="text/css" href="../css/asyncbox/asyncbox.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<style type="text/css">
+		#rolestable tr td {
+			text-align: left;
+		}
+		
+		#box {
+			width: 100%
+		}
+		
+		.chbox {
+			display: inline-block;
+			margin: 0 !important;
+			width: 19.5%;
+		}
+		
+		.power-list span {
+			margin-right: 0px;
+			margin-bottom: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main_section">
+		<div class="nav">
+			<div class="nav-left floatLeft">
+				<span><img src="../img/navt.jpg" alt="" /></span> <span>管理员管理</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>查看角色信息</span>
+				<span><img src="../img/rright.jpg" alt="" /></span> <span>修改角色菜单</span>
+				<span><a href="javascript:location.href='roleList.html'">返回</a></span>
+			</div>
+		</div>
+		<div class="content">
+			<form action="">
+				<div>
+					<label>角色名称：</label>
+					<input id="roleName" type="text" disabled="disabled"/>
+				</div>
+				<div class="zrole-power clear" style="margin-top: 10px;">
+					<div style="display: inline-block; margin-left: -500px; padding-left: 500px; vertical-align: top; margin-bottom: 10px">
+						<span class="span_title">角色权限</span>
+					</div>
+					<div class="inline-block power-list " id="box"></div>
+				</div>
+				<div class="button">
+					<input id="save" type="button" value="保存" style="cursor: pointer;"/>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/validate.js"></script>
+	<script type="text/javascript" src="../js/String.js"></script>
+	<script type="text/javascript" src="../js/AsyncBox.v1.4.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var roleId = decodeURI(util.getParam("roleId"));
+			$("#roleName").val(decodeURIComponent(util.getParam("roleName")));
+			$.getJSON("/LexianManager/management/findRoleMenus.do",
+				{
+					"roleId" : roleId
+				},
+				function(json) {
+					json = json.rows || [];
+					for ( var i = 0; i < json.length; i++) {
+						$("#box").append("<div><div><span style='display:inline-block;width:19.5%'><label id='?' />?</label></div><div id='?'></div></div><br />"
+							.format(
+								json[i].menuId,
+								json[i].menuName,
+								json[i].menuId + "child"));
+						if (json[i].subMenus.length) {
+							for ( var j = 0; j < json[i].subMenus.length; j++) {
+								if ((j + 1) % 5 == 0) {
+									$("#" + json[i].menuId + "child").append(
+										"<span class='chbox'><input id='?' type='checkbox' ? />?</span><br />"
+											.format(
+												json[i].subMenus[j].menuId,
+												json[i].subMenus[j].checked ?  "checked" : "",
+												json[i].subMenus[j].menuName));
+								} else {
+									$("#" + json[i].menuId + "child").append(
+										"<span class='chbox'><input id='?' type='checkbox' ? />?</span>"
+											.format(
+												json[i].subMenus[j].menuId,
+												json[i].subMenus[j].checked ? "checked" : "",
+												json[i].subMenus[j].menuName));
+								}
+							}
+						}
+					}
+				})
+	
+			$("#save").click(
+				function() {
+					var checkbox = $("#box input:checkbox:checked");
+					if (checkbox.size() == 0) {
+						asyncbox.tips("请选择需要添加的菜单", asyncbox.Level.error);
+						return;
+					}
+					var ids = "";
+					checkbox.each(function() {
+						if (ids != "")
+							ids = ids.append(",");
+						ids = ids.append($(this).attr("id"));
+					});
+					var data = {
+						roleId : roleId,
+						menuIds : ids
+					};
+					util.differentRequest("/management/changeRoleMenus.do", data,
+							"添加角色菜单成功", todosomething());
+				});
+	
+			function todosomething() {
+				window.location.href = "roleList.html";
+			}
+		});
+	</script>
+</body>
+</html>
